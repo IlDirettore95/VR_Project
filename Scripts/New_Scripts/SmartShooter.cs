@@ -31,7 +31,6 @@ public class SmartShooter : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
-
         }
     }
 }

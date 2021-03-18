@@ -5,7 +5,6 @@ using UnityEngine;
 public class SmartProjectile : MonoBehaviour
 {
     public float speed;
-    public float scanSpeed;
     public GameObject rayPoint;
     private bool hasTarget = false;
     GameObject enemyTarget;
@@ -28,11 +27,8 @@ public class SmartProjectile : MonoBehaviour
 
         if (!hasTarget)
         {
-            //transform.Rotate(0, scanSpeed * Time.deltaTime, 0, Space.Self);
-
-            //RaycastHit[] hit = Physics.SphereCastAll(rayPoint.transform.position, 5.0f, new Vector3(1, 0, 0));
             Collider[] col = Physics.OverlapSphere(rayPoint.transform.position, 5.0f);
-            //if (Physics.Raycast(rayPoint.transform.position, new Vector3(1, 0, 0), out hit, 300.0f))
+            
             if (col.Length != 0) 
             {
                 List<GameObject> enemies = new List<GameObject>();
@@ -63,7 +59,6 @@ public class SmartProjectile : MonoBehaviour
         }
         else
         {
-            //transform.Translate(enemyTarget.transform.position * speed * Time.deltaTime, Space.World);
             transform.LookAt(enemyTarget.transform);
         }
 
