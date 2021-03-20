@@ -3,25 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-[AddComponentMenu("Control Script/FPS Input with Jump")]
-public class FPSInput_Jump : MonoBehaviour
+[AddComponentMenu("Control Script/FPS Input with Jump and Jetpack")]
+
+public class FPSInput_Jump_Jetpack : MonoBehaviour
 {
     public float speed = 6.0f;
     public float gravity = -9.8f;
-    public float mass = 1f;
+    public float gravityMultiplier = 2f;
     public float jumpSpeed = 9.0f;
-    public float fuel = 100f;
+    private float fuel;
     public int maxFuel = 100;
-    public int minFuel = 0;
-    public int dischargingRate = 20;
-    public int chargingRate = 40;
+    public const int minFuel = 0;
+    public int dischargingRate = 50;
+    public int dischargingActivation = 10;
+    public int chargingRate = 10;
     private bool jetpack = false;
 
     private CharacterController _charController;
     private float _deltaY = 0f; //Remember your Y velocity e.g. during a jump
+
     // Start is called before the first frame update
     void Start()
     {
+        fuel = maxFuel;
         _charController = GetComponent<CharacterController>();
     }
 
@@ -35,8 +39,6 @@ public class FPSInput_Jump : MonoBehaviour
         //Vertical movement (jumping)
         if (_charController.isGrounded )
         {
-            
-            jetpack = false;
             if (fuel < maxFuel)
             {
                 fuel += chargingRate * Time.deltaTime;
@@ -53,20 +55,27 @@ public class FPSInput_Jump : MonoBehaviour
         
         else
         {
-            if (Input.GetButton("Jump") && jetpack && fuel > 0 )
+            if (Input.GetButtonDown("Jump") && !jetpack && fuel > 0)
             {
-                fuel -= dischargingRate *  Time.deltaTime;
+                fuel -= dischargingActivation;
                 if (fuel < minFuel) fuel = minFuel;
-                _deltaY = jumpSpeed;
-            }
-            else if (Input.GetButtonDown("Jump") && !jetpack)
-            {
+                if (fuel == minFuel) jetpack = false;
                 _deltaY = jumpSpeed;
                 jetpack = true;
             }
-                
+            else if (Input.GetButton("Jump") && jetpack)
+            {
+                fuel -= dischargingRate * Time.deltaTime;
+                if (fuel < minFuel) fuel = minFuel;
+                if (fuel == minFuel) jetpack = false;
+                _deltaY = jumpSpeed;
+            }
+            else if(Input.GetButtonUp("Jump"))
+            {
+                jetpack = false;
+            }
             
-            _deltaY += gravity * mass * Time.deltaTime;
+            _deltaY += gravity * gravityMultiplier * Time.deltaTime;
             
         }
        
@@ -77,4 +86,10 @@ public class FPSInput_Jump : MonoBehaviour
         movement = transform.TransformDirection(movement);
         _charController.Move(movement);
     }
+
+    public void resetY()
+    {
+        _deltaY = 0;
+    }
+
 }
