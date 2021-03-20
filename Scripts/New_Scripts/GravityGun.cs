@@ -42,12 +42,16 @@ public class GravityGun : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire2"))
                 isLaunching = true;
+            isRepulsing = false;
         }
-
-        if (Input.GetButtonDown("Fire2"))
+        else
         {
-            isRepulsing = true;
+            if (Input.GetButtonDown("Fire2"))
+            {
+                isRepulsing = true;
+            }
         }
+       
     }
 
     private void FixedUpdate()
@@ -56,9 +60,13 @@ public class GravityGun : MonoBehaviour
             Attract();
         else if (!isAttracting)
             Release();
-        
-        if(isLaunching)
+
+        if (isLaunching)
+        {
             Throw();
+            isAttracting = false;
+        }
+            
 
         if (isRepulsing)
             Repulse();
