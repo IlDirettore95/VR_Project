@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class WeaponManager : MonoBehaviour
 {
+    [SerializeField]
     private PlayerWeapon primaryWeapon;
+
     private PlayerWeapon currentWeapon;
 
     [SerializeField]
     private Transform weaponHolder;
+
+    [SerializeField]
+    private Transform aimWeaponHolder;
 
     // Start is called before the first frame update
     void Start()
