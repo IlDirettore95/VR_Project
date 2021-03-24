@@ -9,10 +9,6 @@ public class GravityGun : MonoBehaviour
 
     public float launchSpeed;
 
-    public float radius = 10f;
-
-    public float waveRange = 3f;
-
     private Camera cam;
 
     private GameObject target;
@@ -22,7 +18,6 @@ public class GravityGun : MonoBehaviour
     public float weaponRange = 12f;
     private bool isAttracting;
     private bool isLaunching;
-    private bool isRepulsing;
     
     // Start is called before the first frame update
     void Start()
@@ -43,11 +38,6 @@ public class GravityGun : MonoBehaviour
             if (Input.GetButtonDown("Fire2"))
                 isLaunching = true;
         }
-
-        if (Input.GetButtonDown("Fire2"))
-        {
-            isRepulsing = true;
-        }
     }
 
     private void FixedUpdate()
@@ -59,9 +49,6 @@ public class GravityGun : MonoBehaviour
         
         if(isLaunching)
             Throw();
-
-        if (isRepulsing)
-            Repulse();
     }
 
     private void Attract()
@@ -113,24 +100,5 @@ public class GravityGun : MonoBehaviour
             target = null;
             isLaunching = false;
         }
-    }
-
-    private void Repulse()
-    {
-        RaycastHit[] hit;
-        hit = Physics.SphereCastAll(cam.transform.position, radius, cam.transform.forward, waveRange);
-
-        foreach (RaycastHit r in hit)
-        {
-            GameObject g = r.transform.gameObject;
-            if (g.tag.Equals("CanGrab"))
-            {
-                targetRig = g.GetComponent<Rigidbody>();
-                targetRig.AddForce(floatPoint.transform.forward * launchSpeed, ForceMode.Impulse);
-            }
-        }
-
-        isRepulsing = false;
-
     }
 }
