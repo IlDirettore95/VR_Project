@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmartShooter : MonoBehaviour
+public class SmartShooter : PlayerWeapon
 {
     private Camera _camera;
     public GameObject projectilePrefab;

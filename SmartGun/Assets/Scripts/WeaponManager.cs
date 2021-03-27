@@ -4,31 +4,46 @@ using UnityEngine;
 
 public class WeaponManager : MonoBehaviour
 {
-    [SerializeField]
-    private PlayerWeapon primaryWeapon;
-
-    private PlayerWeapon currentWeapon;
-
-    [SerializeField]
-    private Transform weaponHolder;
-
-    [SerializeField]
-    private Transform aimWeaponHolder;
+    private int numberOfweapons = 2;
+    private PlayerWeapon[] weapons;
+    private int currentWeapon;
+    private const int gravityGunID = 0;
+    private const int smartGunID = 1;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        EquipWeapon(primaryWeapon);
+        weapons = new PlayerWeapon [numberOfweapons];
+        weapons[0] = GetComponent<Shooter>();
+       weapons[1] = GetComponent<SmartShooter>();
+
+        setCurrentWeapon(0);
+
     }
 
-    void EquipWeapon(PlayerWeapon _weapon)
-    {
-        currentWeapon = _weapon;
-    }
-
-    // Update is called once per frame
-    void Update()
+    public void setCurrentWeapon(int indexOfWeapon)
     {
         
+        //design by contract: una sola arma per volta 
+        weapons[currentWeapon].enabled = false;//disabilito arma corrente prima di sostituirla
+        
+        currentWeapon = indexOfWeapon;
+        
+        weapons[currentWeapon].enabled = true;// abilito arma nuova
+    }
+    
+    void Update()
+    {
+        //carico 
+        if (currentWeapon!= gravityGunID && Input.GetKeyDown(KeyCode.Alpha1) )
+        {
+            setCurrentWeapon(gravityGunID);
+        }
+        
+        else if (currentWeapon != smartGunID && Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            setCurrentWeapon(smartGunID);
+        }
     }
 }
