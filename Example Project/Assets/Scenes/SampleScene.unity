@@ -4068,7 +4068,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh15862
+  m_Name: pb_Mesh18286
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -21241,7 +21241,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 244521194}
 --- !u!33 &627945518
@@ -27102,7 +27102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989780062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1, z: -5}
+  m_LocalPosition: {x: 0, y: 1.1, z: 182}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
@@ -27191,9 +27191,9 @@ MonoBehaviour:
   gravityMultiplier: 2
   jumpSpeed: 10
   jetPackY: 6
-  runningSpeed: 12
+  runningSpeed: 10
   walkingSpeed: 6
-  flyingSpeed: 5
+  flyingSpeed: 4
   maxFuel: 120
   dischargingRate: 60
   dischargingActivation: 20
