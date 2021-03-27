@@ -24,6 +24,7 @@ public class Shooter : PlayerWeapon
     // Start is called before the first frame update
     void Start()
     {
+       
         _camera = GetComponent<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;

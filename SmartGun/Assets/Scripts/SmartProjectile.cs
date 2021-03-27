@@ -12,7 +12,7 @@ public class SmartProjectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(projectileLife());
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -49,6 +49,7 @@ public class SmartProjectile : MonoBehaviour
 
         if (col.Length != 0)
         {
+           
             List<GameObject> enemies = new List<GameObject>();
             GameObject hitObject;
             for (int i = 0; i < col.Length; i++)
@@ -74,5 +75,12 @@ public class SmartProjectile : MonoBehaviour
                 else c++;
             }
         }
+    }
+
+    private IEnumerator projectileLife()
+    {
+        yield return new WaitForSeconds(3);
+        
+        Destroy(gameObject);
     }
 }

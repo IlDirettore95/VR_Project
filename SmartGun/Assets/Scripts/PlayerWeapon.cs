@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class PlayerWeapon : MonoBehaviour
 {
+   
+
     // Start is called before the first frame update
-  
+
 }

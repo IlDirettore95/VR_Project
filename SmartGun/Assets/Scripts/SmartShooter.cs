@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using UnityEngine;
 
 public class SmartShooter : PlayerWeapon
@@ -9,11 +10,13 @@ public class SmartShooter : PlayerWeapon
     public GameObject firePoint;
     private int MAXRELOAD = 30;
     private int serbatoio;
+    
     float fireRate= 20f;
 
     // Start is called before the first frame update
     void Start()
     {
+       
         _camera = GetComponent<Camera>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -35,6 +38,8 @@ public class SmartShooter : PlayerWeapon
     {
         if (Input.GetButtonDown("Fire1"))
         {
+            
+
             InvokeRepeating("Shoot", 0f, 1f/fireRate);
         }
         else if (Input.GetButtonUp("Fire1"))
@@ -54,6 +59,7 @@ public class SmartShooter : PlayerWeapon
     {
         if(serbatoio > 0)
         {
+            
             Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
             serbatoio--;
             Debug.Log(serbatoio);
