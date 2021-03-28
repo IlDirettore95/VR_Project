@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Death))]
+[RequireComponent(typeof(PlayerStatus))]
 [AddComponentMenu("Control Script/FPS Input with Jump and Jetpack")]
 
 public class FPSInput_Jump_Jetpack : MonoBehaviour
@@ -15,8 +15,6 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
     public float runningSpeed = 12f;
     public float walkingSpeed = 6f;
     public float flyingSpeed = 6f;
-    public int maxFuel = 120;
-    public const int minFuel = 0;
     public int dischargingRate = 60;
     public int dischargingActivation = 20;
     public int chargingRate = 30;
@@ -28,33 +26,28 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
     private float fuel;
     private float startOfFall;
     private bool hasFallen = false;
+    private bool isJumping = false;
     
 
     private CharacterController _charController;
-    private Death _deathController;
+    private PlayerStatus _status;
     private float _deltaY = 0f; //Remember your Y velocity e.g. during a jump
 
     // Start is called before the first frame update
     void Start()
     {
-        fuel = maxFuel;
         _charController = GetComponent<CharacterController>();
-        _deathController = GetComponent<Death>();
+        _status = GetComponent<PlayerStatus>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //The player's jetpack will start charging whenever he is grounded and it will continue until he reactivates the jetpack
-        if (canCharge)
+        if (canCharge && !_status.IsFullFuel())
         {
-            if (fuel < maxFuel)
-            {
-                fuel += chargingRate * Time.deltaTime;
-                if (fuel > maxFuel) { fuel = maxFuel; }
-            }
+            _status.RecoverFuel(chargingRate * Time.deltaTime);
         }
-        Debug.Log("fuel: " +fuel);
         float deltaX = Input.GetAxis("Horizontal");
         float deltaZ = Input.GetAxis("Vertical");
         float speed = walkingSpeed;
@@ -62,56 +55,65 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !isFalling)
         {
             speed = runningSpeed;
-
         }
-
+        Debug.Log("deltY =" + _deltaY);
+        Debug.Log("is grounded= " + _charController.isGrounded);
         //Vertical movement (jumping)
-        if (_charController.isGrounded )
+        if (_charController.isGrounded)
         {
             if (hasFallen && (startOfFall - transform.position.y) > fallDamageThreashold)
             {
-                _deathController.Hurt((startOfFall - transform.position.y - fallDamageThreashold));
+                _status.Hurt((startOfFall - transform.position.y - fallDamageThreashold));
             }
             canCharge = true;
             isFalling = false;
             hasFallen = false;
+            isJumping = false;
             if (Input.GetButtonDown("Jump"))
             {
-                _deltaY = jumpSpeed;  
+                _deltaY = jumpSpeed;
+                isJumping = true;
             }
         }
         else
         {
-            if(!hasFallen)
+            if(!hasFallen && !jetpack)
             {
                 hasFallen = true;
                 startOfFall = transform.position.y;
+                if(!isJumping) _deltaY = 0;
             }
-            if (Input.GetButtonDown("Jump") && !jetpack && fuel > 0)
+            if (Input.GetButtonDown("Jump") && !jetpack && _status.HasEnoughFuel())
             {
-                fuel -= dischargingActivation;
-                if (fuel < minFuel) fuel = minFuel;
-                if (fuel == minFuel) jetpack = false;
+                _status.ConsumeFuel(dischargingActivation);
                 _deltaY = jetPackY;
-                jetpack = true;
                 canCharge = false;
-            }
-            else if (Input.GetButton("Jump") && jetpack)
-            {
-                fuel -= dischargingRate * Time.deltaTime;
-                if (fuel < minFuel) fuel = minFuel;
-                if (fuel == minFuel)
+                if (_status.HasEnoughFuel()) jetpack = true;
+                else
                 {
                     jetpack = false;
                     isFalling = true;
+                    hasFallen = false;
                 }
+            }
+            else if (Input.GetButton("Jump") && jetpack)
+            {
+                _status.ConsumeFuel(dischargingRate * Time.deltaTime);
                 _deltaY = jetPackY;
                 speed = flyingSpeed;
+                if (!_status.HasEnoughFuel())
+                {
+                    jetpack = false;
+                    isFalling = true;
+                    hasFallen = false;
+                }
+                
             }
             else if(Input.GetButtonUp("Jump") && jetpack)
             {
                 jetpack = false;
                 isFalling = true;
+                hasFallen = false;
             }
             
             _deltaY += gravity * gravityMultiplier * Time.deltaTime;
