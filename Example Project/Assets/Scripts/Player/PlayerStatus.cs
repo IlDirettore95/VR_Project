@@ -178,5 +178,6 @@ public class PlayerStatus : MonoBehaviour
         _health = MaxHealth;
         _stamina = MaxStamina;
         _fuel = MaxFuel;
+        isAlive = true;
     }
 }

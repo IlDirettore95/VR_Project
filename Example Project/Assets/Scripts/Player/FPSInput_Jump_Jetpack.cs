@@ -81,12 +81,13 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
             {
                 hasFallen = true;
                 startOfFall = transform.position.y;
-                if(!isJumping) _deltaY = 0;
+                if(!isJumping && !isFalling) _deltaY = 0;
             }
             if (Input.GetButtonDown("Jump") && !jetpack && _status.HasEnoughFuel())
             {
                 _status.ConsumeFuel(dischargingActivation);
                 _deltaY = jetPackY;
+                speed = flyingSpeed;
                 canCharge = false;
                 if (_status.HasEnoughFuel()) jetpack = true;
                 else
