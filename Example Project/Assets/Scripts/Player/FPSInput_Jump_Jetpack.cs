@@ -56,8 +56,6 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
         {
             speed = runningSpeed;
         }
-        Debug.Log("deltY =" + _deltaY);
-        Debug.Log("is grounded= " + _charController.isGrounded);
         //Vertical movement (jumping)
         if (_charController.isGrounded)
         {
