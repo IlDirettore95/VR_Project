@@ -8,6 +8,7 @@ public class WeaponManager : MonoBehaviour
     private PlayerWeapon[] weapons;
     private bool[] isDiscovered;
     private GameObject[] models3d;
+    private ParticleSystem[] particles;
     private int currentWeapon;
     private const int gravityGunID = 0;
     private const int smartGunID = 1;
@@ -15,7 +16,10 @@ public class WeaponManager : MonoBehaviour
 //modelli 3d
     public GameObject gravitygun;
     public GameObject smartgun;
+    public ParticleSystem gravitygun_particle;
+    public ParticleSystem smartgun_fire;
     
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +27,7 @@ public class WeaponManager : MonoBehaviour
         weapons = new PlayerWeapon [numberOfweapons];
         isDiscovered = new bool[numberOfweapons];
         models3d = new GameObject[numberOfweapons];
+        particles = new ParticleSystem[numberOfweapons];
         
         weapons[0] = GetComponent<Shooter>();
        weapons[1] = GetComponent<SmartShooter>();
@@ -32,6 +37,11 @@ public class WeaponManager : MonoBehaviour
 
        models3d[0] = gravitygun;
        models3d[1] = smartgun;
+
+       particles[0] = gravitygun_particle;
+       gravitygun_particle.Stop();
+       particles[1] = smartgun_fire;
+       smartgun_fire.Stop();
 
        //setCurrentWeapon(0);
 
@@ -44,6 +54,7 @@ public class WeaponManager : MonoBehaviour
         weapons[currentWeapon].enabled = false;//disabilito arma corrente prima di sostituirla
         models3d[currentWeapon].GetComponent<Renderer>().enabled = false;
         
+        particles[currentWeapon].Stop();
         currentWeapon = indexOfWeapon;
         
         weapons[currentWeapon].enabled = true;// abilito arma nuova
@@ -73,5 +84,18 @@ public class WeaponManager : MonoBehaviour
             if(discovered)
                 setCurrentWeapon(smartGunID);
         }
+    }
+
+    public void play()
+    {
+        particles[currentWeapon].Play();
+        
+    }
+
+    public void stop()
+    {
+
+        particles[currentWeapon].Stop();
+
     }
 }

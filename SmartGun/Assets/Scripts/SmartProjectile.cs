@@ -38,8 +38,10 @@ public class SmartProjectile : MonoBehaviour
         else
         {
             if (enemyTarget != null)
+            {
                 speed = 10f;
                 transform.LookAt(enemyTarget.transform);
+            }
         }
 
     }

@@ -10,15 +10,17 @@ public class SmartShooter : PlayerWeapon
     public GameObject firePoint;
     private int MAXRELOAD = 30;
     private int serbatoio;
+    private WeaponManager wm;
+
     
-    float fireRate= 20f;
+    public float fireRate= 2f;
 
     // Start is called before the first frame update
     void Start()
     {
        
         _camera = GetComponent<Camera>();
-
+        wm = GetComponent<WeaponManager>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -36,14 +38,15 @@ public class SmartShooter : PlayerWeapon
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && serbatoio > 0)
         {
             
-
+            wm.play();
             InvokeRepeating("Shoot", 0f, 1f/fireRate);
         }
         else if (Input.GetButtonUp("Fire1"))
         {
+            wm.stop();
             CancelInvoke("Shoot");
         }
 
@@ -57,12 +60,21 @@ public class SmartShooter : PlayerWeapon
 
     void Shoot()
     {
-        if(serbatoio > 0)
+        if (serbatoio > 0)
         {
-            
+
+
             Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
             serbatoio--;
+
+
             Debug.Log(serbatoio);
         }
+
+        else
+        {
+            wm.stop();
+        }
+        
     }
 }
