@@ -28,7 +28,7 @@ public class ReactionIA : MonoBehaviour
         {
 
             transform.LookAt(_perception.GetPlayerPosition());
-            _rb.MovePosition(transform.forward*Time.deltaTime);
+            _rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
         }
     }
 }

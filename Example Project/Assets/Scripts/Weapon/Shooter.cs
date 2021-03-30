@@ -82,7 +82,6 @@ public class Shooter : MonoBehaviour
                 isLaunching = true;
             }
         }
-        
     }
 
     private void FixedUpdate()

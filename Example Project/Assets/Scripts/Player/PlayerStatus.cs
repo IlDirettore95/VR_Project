@@ -9,15 +9,30 @@ public class PlayerStatus : MonoBehaviour
     
     public float deathHeight;
 
-
-    [SerializeField] private float MaxHealth = 20.0f;
-    [SerializeField] private float MaxStamina = 100.0f;
-    [SerializeField] private float MaxFuel = 120.0f;
+    /*
+     * This class handle Player status and statistics like
+     * health, stamina and jetpack's fuel, provides also aux methods for editing, monitoring and questioning
+     * about player's status;
+    */
+    //Player's stats
+    [SerializeField] private float MaxHealth;
+    [SerializeField] private float MaxStamina;
+    [SerializeField] private float MaxFuel;
     private float _health;
     private float _stamina;
     private float _fuel;
 
+    /*Life regeneration handling
+     * After a cooldown, if the player has not been hurt he will start to regenerate
+     */
+    private float nextTimeRegeneration;
+    public float regenerationCooldown;
+    public float regenerationRate;
+
+    //player status
     private bool isAlive;
+
+
     //This script will teleport the player to the starting point once he reached the deathHeight
 
     // Start is called before the first frame update
@@ -32,7 +47,11 @@ public class PlayerStatus : MonoBehaviour
 
         isAlive = true;
     }
-
+    // Update is called once per frame
+    private void Update()
+    {
+        if (isAlive && Time.time > nextTimeRegeneration) Heal(regenerationRate * Time.deltaTime);
+    }
     // Update is called once per frame
     void LateUpdate()
     {
@@ -42,6 +61,7 @@ public class PlayerStatus : MonoBehaviour
             transform.rotation = rotation;
             reset();
             GetComponent<FPSInput_Jump_Jetpack>().resetY();
+            GetComponent<MovementSystem>().reset();
         }
     }
 
@@ -111,24 +131,34 @@ public class PlayerStatus : MonoBehaviour
         _health -= damage;
         if (_health < 0) _health = 0;
         if (_health == 0) isAlive = false;
+
+        //Setting regeneration Cooldown
+        if(isAlive) nextTimeRegeneration = Time.time + regenerationCooldown;
     }
 
     public void Heal(float cure)
     {
-        _health += cure;
-        if (_health > MaxHealth) _health = MaxHealth;
+        if(isAlive)
+        {
+            _health += cure;
+            if (_health > MaxHealth) _health = MaxHealth;
+        }
+        
     }
 
-    public void ConsumeEnergy(float consumed)
+    public void ConsumeStamina(float consumed)
     {
         _stamina -= consumed;
         if (_stamina < 0) _stamina = 0;
     }
 
-    public void RecoverEnergy(float recovery)
+    public void RecoverStamina(float recovery)
     {
-        _stamina += recovery;
-        if (_stamina > MaxStamina) _stamina = MaxStamina;
+        if(isAlive)
+        {
+            _stamina += recovery;
+            if (_stamina > MaxStamina) _stamina = MaxStamina;
+        }   
     }
 
     public void ConsumeFuel(float discharge)
@@ -163,7 +193,7 @@ public class PlayerStatus : MonoBehaviour
         return _health == MaxHealth;
     }
 
-    public bool IsFullEnergy()
+    public bool IsFullStamina()
     {
         return _stamina == MaxStamina;
     }

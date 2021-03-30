@@ -18,6 +18,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     {
         rb.freezeRotation = true;
         rb.useGravity = false;
+        attractionSpeed *= Vector3.Distance(target, rb.position);
         if (rb.position.Equals(target)) return;
         else rb.position = Vector3.MoveTowards(rb.position, target, attractionSpeed);
     }

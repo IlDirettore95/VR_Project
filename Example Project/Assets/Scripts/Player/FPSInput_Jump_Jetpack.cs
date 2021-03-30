@@ -15,9 +15,14 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
     public float runningSpeed = 12f;
     public float walkingSpeed = 6f;
     public float flyingSpeed = 6f;
-    public int dischargingRate = 60;
-    public int dischargingActivation = 20;
-    public int chargingRate = 30;
+
+    public float dischargingRate = 60;
+    public float dischargingActivation = 20;
+    public float chargingRate = 30;
+    public float consumingRate = 20;
+    public float recoveringRate = 35;
+    public float recoverCooldown = 4;
+    private float nextTimeRecover;
     public float fallDamageThreashold;
 
     private bool jetpack = false;
@@ -27,6 +32,7 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
     private float startOfFall;
     private bool hasFallen = false;
     private bool isJumping = false;
+    private bool running = false;
     
 
     private CharacterController _charController;
@@ -52,13 +58,24 @@ public class FPSInput_Jump_Jetpack : MonoBehaviour
         float deltaZ = Input.GetAxis("Vertical");
         float speed = walkingSpeed;
 
-        if (Input.GetKey(KeyCode.LeftShift) && !isFalling)
+        if (Input.GetKey(KeyCode.LeftShift) && !isFalling && _status.HasEnoughEnergy())
         {
+            running = true;
             speed = runningSpeed;
+            if(_charController.isGrounded) _status.ConsumeStamina(consumingRate * Time.deltaTime);
+            if (!_status.HasEnoughEnergy()) nextTimeRecover = Time.time + recoverCooldown;
+        }
+        else
+        {
+            running = false;
         }
         //Vertical movement (jumping)
         if (_charController.isGrounded)
         {
+            if(!running && Time.time > nextTimeRecover)
+            {
+                _status.RecoverStamina(recoveringRate * Time.deltaTime);
+            }
             if (hasFallen && (startOfFall - transform.position.y) > fallDamageThreashold)
             {
                 _status.Hurt((startOfFall - transform.position.y - fallDamageThreashold));
