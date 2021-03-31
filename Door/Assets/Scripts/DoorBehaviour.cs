@@ -38,8 +38,8 @@ public class DoorBehaviour : MonoBehaviour
             {
                 opening = Time.deltaTime * speed;
                 TotalOpening += opening;
-                leftDoor.transform.Translate(-opening, 0, 0, Space.World);
-                rightDoor.transform.Translate(opening, 0, 0, Space.World);
+                leftDoor.transform.Translate(-opening, 0, 0, Space.Self);
+                rightDoor.transform.Translate(-opening, 0, 0, Space.Self);
             }
             
             
@@ -56,8 +56,8 @@ public class DoorBehaviour : MonoBehaviour
                 {
                     closing = Time.deltaTime * speed;
                     TotalClosing += closing;
-                    leftDoor.transform.Translate(closing,0,0,Space.World);
-                    rightDoor.transform.Translate(-closing,0,0,Space.World);
+                    leftDoor.transform.Translate(closing,0,0,Space.Self);
+                    rightDoor.transform.Translate(closing,0,0,Space.Self);
                 }
                 
                 
