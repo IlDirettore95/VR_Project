@@ -9,6 +9,19 @@ public class DoorBehaviour : MonoBehaviour
 
     public GameObject rightDoor;
     
+    
+
+    private bool hasCollided = false;
+    private bool hasGone = false;
+    private float maxOpening = 1.25f;
+    private float maxClosing = 1.25f;
+    private float TotalOpening = 0f;
+    private float TotalClosing = 0f;
+    private float opening = 0;
+    private float closing = 0;
+    private float speed = 1f;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -18,21 +31,61 @@ public class DoorBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hasCollided)
+        {
+            
+            if (TotalOpening < maxOpening)
+            {
+                opening = Time.deltaTime * speed;
+                TotalOpening += opening;
+                leftDoor.transform.Translate(-opening, 0, 0, Space.World);
+                rightDoor.transform.Translate(opening, 0, 0, Space.World);
+            }
+            
+            
+                TotalClosing = maxClosing- TotalOpening;
+            
+
+
+        }
         
+        else if(hasGone)
+            {
+                
+                if (TotalClosing < maxClosing)
+                {
+                    closing = Time.deltaTime * speed;
+                    TotalClosing += closing;
+                    leftDoor.transform.Translate(closing,0,0,Space.World);
+                    rightDoor.transform.Translate(-closing,0,0,Space.World);
+                }
+                
+                
+                
+                    TotalOpening = maxOpening - TotalClosing;
+                
+
+            }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject obj = other.GetComponent<GameObject>();
-        if (obj != null)
-            openDoor();
-        
-        
+        GameObject pl = other.gameObject;
+        if (pl!=null && pl.tag.Equals("PLayer"))
+        {
+            hasCollided = true;
+            hasGone = false;
+        }
+
     }
 
-    private void openDoor()
+    private void OnTriggerExit(Collider other)
     {
-        leftDoor.transform.Translate(-1.25F,0,0);
-        rightDoor.transform.Translate(1.25F,0,0);
+        GameObject pl = other.gameObject;
+        if (pl!=null && pl.tag.Equals("PLayer"))
+        {
+            hasGone = true;
+            hasCollided = false;
+        }
     }
 }
