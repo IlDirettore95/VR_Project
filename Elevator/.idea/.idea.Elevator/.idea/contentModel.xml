@@ -8,9 +8,12 @@
       <e p="Assets" t="Include">
         <e p="scripts" t="Include">
           <e p="FPSInput_Jump_Jetpack.cs" t="Include" />
+          <e p="HUD.cs" t="Include" />
           <e p="MouseLook.cs" t="Include" />
+          <e p="MovementSystem.cs" t="Include" />
           <e p="NewBehaviourScript.cs" t="Include" />
           <e p="PlatformBehaviour.cs" t="Include" />
+          <e p="PlayerStatus.cs" t="Include" />
         </e>
       </e>
       <e p="Elevator.sln" t="IncludeFlat" />

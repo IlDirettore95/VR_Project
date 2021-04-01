@@ -32,7 +32,7 @@ public class PlatformBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (onEnter)
         {
