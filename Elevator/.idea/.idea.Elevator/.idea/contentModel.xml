@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Simone\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Simone\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_Elevator.-138077493.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Simone\Documents\GitHub\VR_Project\Elevator" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="scripts" t="Include">
+          <e p="FPSInput_Jump_Jetpack.cs" t="Include" />
+          <e p="MouseLook.cs" t="Include" />
+          <e p="NewBehaviourScript.cs" t="Include" />
+          <e p="PlatformBehaviour.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Elevator.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
