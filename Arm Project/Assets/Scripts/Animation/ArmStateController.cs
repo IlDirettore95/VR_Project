@@ -6,12 +6,14 @@ public class ArmStateController : MonoBehaviour
 {
     Animator animator;
     Shooter shooter;
+    MovementSystem moveSys;
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         shooter = GetComponentInParent<Shooter>();
+        moveSys = GetComponentInParent<MovementSystem>();
     }
 
     // Update is called once per frame
@@ -21,6 +23,7 @@ public class ArmStateController : MonoBehaviour
         bool isThrowing = shooter.GetIsLaunching();
         bool isReleasing = shooter.GetIsReleasing();
         bool isRepulsing = shooter.GetIsRepulsing();
+        bool isRunning = moveSys.IsRunning();
 
         if (isGrabbing)
         {
@@ -45,5 +48,18 @@ public class ArmStateController : MonoBehaviour
             animator.SetBool("IsRepulsing", true);
         }
         else animator.SetBool("IsRepulsing", false);
+
+        if (isRunning && !isGrabbing)
+        {
+            animator.SetBool("IsRunning", true);
+        }
+        else animator.SetBool("IsRunning", false);
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            animator.SetBool("FuckYou", true);
+        }
+        else animator.SetBool("FuckYou", false);
+
     }
 }
