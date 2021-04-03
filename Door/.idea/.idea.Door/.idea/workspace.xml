@@ -10,9 +10,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DoorBehaviourSmall.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/Scripts/DoorBehaviour.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/DoorBehaviourSmall.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1qWPQTk7bxF4UOLOHsg0zibldTy" />
@@ -58,6 +62,7 @@
       <updated>1617192360645</updated>
       <workItem from="1617192365710" duration="7528000" />
       <workItem from="1617224667494" duration="970000" />
+      <workItem from="1617444480632" duration="940000" />
     </task>
     <servers />
   </component>

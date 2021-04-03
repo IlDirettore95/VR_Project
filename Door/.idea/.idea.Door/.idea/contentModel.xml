@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="DoorBehaviour.cs" t="Include" />
+          <e p="DoorBehaviourSmall.cs" t="Include" />
           <e p="FPSInput_Jump_Jetpack.cs" t="Include" />
           <e p="MouseLook.cs" t="Include" />
         </e>
