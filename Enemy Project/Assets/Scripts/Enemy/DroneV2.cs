@@ -3,23 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class DroneV2 : MonoBehaviour
+public class DroneV2 : MonoBehaviour, ReactiveObject
 {
     public float movementSpeed;
     public float attackDistance = 5f;
     public float triggerDistance = 20f;
 
     private bool isTriggered;
+    private bool isPlayerAffected;
 
     private Transform playerTransform;
     private GameObject player;
-    Rigidbody r;
+    Rigidbody rb;
+    public Transform firePoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        r = GetComponent<Rigidbody>();
-        r.useGravity = false;
+        isTriggered = false;
+        isPlayerAffected = false;
+
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+
         player = GameObject.Find("Player");
         playerTransform = player.transform;
     }
@@ -27,52 +34,107 @@ public class DroneV2 : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Collider[] col = Physics.OverlapSphere(transform.position, 5.0f);
-        Vector3 dist;
-        if (col.Length != 0)
+        if (!isPlayerAffected)
         {
-            for (int i = 0; i < col.Length; i++)
+            float playerDistance = (transform.position - playerTransform.position).magnitude;
+            if (playerDistance <= triggerDistance && !isTriggered)
             {
-                dist = (col[i].ClosestPoint(transform.position) - transform.position);
-                if (!isTriggered)
+                isTriggered = true;
+            }
+            else
+            {
+                isTriggered = false;
+            }
+
+            if (isTriggered)
+            {
+                RaycastHit hit;
+                Vector3 lastPosition = new Vector3();
+                Vector3 direzione = new Vector3();
+
+                transform.LookAt(playerTransform.position);
+
+                if (Physics.Raycast(firePoint.position, firePoint.forward, out hit))
                 {
-                    if (dist.magnitude > 1f)
+                    if (hit.transform.CompareTag("Player"))
                     {
-                        r.AddForce(dist);
+                        lastPosition = hit.transform.position;
+                        direzione = transform.position - playerTransform.position;
+                        if (playerDistance >= attackDistance)
+                        {
+                            rb.velocity = -direzione.normalized * 4;
+                        }
+                        else
+                        {
+                            rb.velocity = direzione.normalized * 6;
+                        }
                     }
                     else
                     {
-                        r.AddForce(dist * 4);
+                        direzione = transform.position - lastPosition;
+                        rb.velocity = direzione.normalized * 4;
                     }
                 }
-                else
+            }
+
+            Collider[] col = Physics.OverlapSphere(transform.position, 5.0f);
+            Vector3 dist;
+            if (col.Length != 0)
+            {
+                for (int i = 0; i < col.Length; i++)
                 {
-                    r.velocity = -dist.normalized * 6;
+                    dist = (col[i].ClosestPoint(transform.position) - transform.position);
+                    if (!isTriggered)
+                    {
+                        if (dist.magnitude > 1f)
+                        {
+                            rb.AddForce(dist);
+                        }
+                        else
+                        {
+                            rb.AddForce(-dist.normalized);
+                        }
+                    }
+                    else
+                    {
+                        rb.AddForce(-dist.normalized);                  
+                    }
                 }
             }
         }
-
-        float playerDistance = (transform.position - playerTransform.position).magnitude;
-        float movementSpeed = playerDistance;
-        Debug.Log("Player distance: " + playerDistance);
-        if(playerDistance <= triggerDistance)
+        else if(rb.velocity == new Vector3(0, 0, 0))
         {
-            transform.LookAt(playerTransform.position);
-            isTriggered = true;
-
-            if (playerDistance >= attackDistance)
-            {
-                r.velocity = -(transform.position - playerTransform.position).normalized * 6;
-            }
-
-            if (playerDistance <= attackDistance)
-            {
-                r.velocity = (transform.position - playerTransform.position).normalized * 6;
-            }
+            isPlayerAffected = false;
+            rb.useGravity = false;
         }
-        else
-        {
-            isTriggered = false;
-        }
+    }
+
+    public void ReactToAttraction(Vector3 target, float attractionSpeed)
+    {
+        isPlayerAffected = true;
+        rb.useGravity = false;
+        attractionSpeed *= Vector3.Distance(target, rb.position);
+        if (rb.position.Equals(target)) return;
+        else rb.position = Vector3.MoveTowards(rb.position, target, attractionSpeed);
+    }
+
+    public void ReactToRepulsing(Vector3 direction, float repulsingSpeed)
+    {
+        isPlayerAffected = true;
+        rb.useGravity = true;
+        rb.AddForce(direction * repulsingSpeed, ForceMode.Impulse);
+    }
+
+    public void ReactToReleasing()
+    {
+        isPlayerAffected = false;
+        rb.velocity = Vector3.zero;
+        rb.useGravity = false;
+    }
+
+    public void ReactToLaunching(Vector3 direction, float launchingSpeed)
+    {
+        rb.AddForce(direction * launchingSpeed, ForceMode.Impulse);
+        rb.useGravity = true;
     }
 }
