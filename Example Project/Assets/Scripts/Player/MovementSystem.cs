@@ -10,6 +10,7 @@ public class MovementSystem : MonoBehaviour
      * Idle: the player is not moving at all
      * Walking: the player is moving with WASD and grounded
      * Running: the player is moving with WASD and has pressed LeftShift
+     * Crouching: the player crouch whith CTRL, in this status he can only walk, stand up or jumping
      * HasJumped: the player isn't grounded due to a jump
      * Tired: the player consumed all the stamina and need to re-click LeftShift in order to run when the stamina will be recovered
     */
@@ -18,6 +19,7 @@ public class MovementSystem : MonoBehaviour
     private bool running = false;
     private bool falling = false;
     private bool jetpack = false;
+    private bool crouching = false;
     private bool hasJumped = false;
     private bool tired = false;
 
@@ -59,6 +61,12 @@ public class MovementSystem : MonoBehaviour
     public float fConsumigRate;
     public float fActivationCost;
 
+    //Crouching Height
+    public float normalHeight = 2f;
+    public float crouchingHeight = 1f;
+    public float crounchOnBuildUp = 3f;
+    public float crounchOffBuildUp = 1f;
+
     private CharacterController _charController;
     private PlayerStatus _status;
 
@@ -83,6 +91,10 @@ public class MovementSystem : MonoBehaviour
         return falling;
     }
 
+    public bool IsCrouching()
+    {
+        return crouching;
+    }
     public bool IsUsingJetpack()
     {
         return jetpack;
@@ -109,7 +121,8 @@ public class MovementSystem : MonoBehaviour
     {
         deltaX = Input.GetAxis("Horizontal");
         deltaZ = Input.GetAxis("Vertical");
-        Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
+        //Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
+
         //Setting player status according to the listened inputs
         if (_charController.isGrounded)
         {
@@ -135,10 +148,25 @@ public class MovementSystem : MonoBehaviour
             hasJumped = false;
             ySpeed = initialGravity; //resetting Gravity
 
+            if(Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                if(!crouching)
+                {
+                    crouching = true;
+                    //Resize character controller
+                    _charController.height = crouchingHeight;
+                }
+                else
+                {
+                    crouching = false;
+                    _charController.height = normalHeight;
+                }
+            }
+
             //Is the player moving?
             if ((deltaX != 0 || deltaZ != 0))
             {
-                if(Input.GetKey(KeyCode.LeftShift) && _status.HasEnoughEnergy() && !tired)
+                if(Input.GetKey(KeyCode.LeftShift) && _status.HasEnoughEnergy() && !tired && !crouching)
                 {
                     //running
                     running = true;
@@ -191,6 +219,9 @@ public class MovementSystem : MonoBehaviour
                     //The player is no more Grounded, he has jumped while walking or running
                     hasJumped = true;
 
+                    //Reset Player height if he was crouching
+                    crouching = false;
+                    _charController.height = normalHeight;
                     deltaY = jumpSpeed;
 
                     //Lerping from speed to falling speed
@@ -203,6 +234,10 @@ public class MovementSystem : MonoBehaviour
                 hasJumped = true;
                 idle = false;
 
+                //Reset Player height if he was crouching
+                crouching = false;
+                _charController.height = normalHeight;
+
                 deltaY = jumpSpeed;
             }
             else
@@ -212,7 +247,7 @@ public class MovementSystem : MonoBehaviour
                 walking = false;
 
                 //even when idle the speed will lerp to walking speed
-                //Lerping from speed to running speed
+                //Lerping from speed to walking speed
                 speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
             }
         }
@@ -319,8 +354,8 @@ public class MovementSystem : MonoBehaviour
         style.normal.textColor = Color.white;
         int size = 380;
         float posX = 1700;
-        float posY = 700;
-        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY, style);
+        float posY = 600;
+        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nCrouching= " + crouching + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY, style);
     }
 
     public void reset()
