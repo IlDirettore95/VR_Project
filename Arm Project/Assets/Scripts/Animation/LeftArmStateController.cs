@@ -27,5 +27,11 @@ public class LeftArmStateController : MonoBehaviour
             animator.SetBool("IsRunning", true);
         }
         else animator.SetBool("IsRunning", false);
+
+        if (Input.GetKey(KeyCode.Mouse2))
+        {
+            animator.SetBool("OpenShield", true);
+        }
+        else animator.SetBool("OpenShield", false);
     }
 }
