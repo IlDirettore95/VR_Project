@@ -42,7 +42,7 @@ public class ArmStateController : MonoBehaviour
             animator.SetBool("IsReleasing", true);
         }
         else animator.SetBool("IsReleasing", false);
-
+        /*
         if (isRepulsing)
         {
             animator.SetBool("IsRepulsing", true);
@@ -60,6 +60,6 @@ public class ArmStateController : MonoBehaviour
             animator.SetBool("FuckYou", true);
         }
         else animator.SetBool("FuckYou", false);
-
+        */
     }
 }
