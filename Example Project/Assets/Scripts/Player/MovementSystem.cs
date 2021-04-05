@@ -157,7 +157,7 @@ public class MovementSystem : MonoBehaviour
             //NotGrounded
             if(wasGrounded)
             {
-                SettingGroundedState();
+                SettingNotGroundedState();
             }
 
             if(Input.GetButtonDown("Jump") && _status.HasEnoughFuel())
