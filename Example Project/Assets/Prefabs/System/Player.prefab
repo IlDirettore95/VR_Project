@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 6001862773926426402}
   - component: {fileID: 6001862773926426403}
   m_Layer: 0
-  m_Name: Player 1
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -399,8 +399,8 @@ MonoBehaviour:
   fActivationCost: 20
   normalHeight: 2
   crouchingHeight: 1
-  crounchOnBuildUp: 3
-  crounchOffBuildUp: 1
+  crouchOnBuildUp: 3
+  crouchOffBuildUp: 1
 --- !u!1 &6001862774882691044
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,8 +444,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
-  m_Intensity: 0.5
-  m_Range: 3
+  m_Intensity: 0.2
+  m_Range: 4
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
