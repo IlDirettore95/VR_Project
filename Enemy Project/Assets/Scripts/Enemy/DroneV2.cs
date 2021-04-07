@@ -7,7 +7,7 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
 {
     public float movementSpeed;
     public float attackDistance = 5f;
-    public float triggerDistance = 20f;
+    public float triggerDistance = 40f;
 
     private bool isTriggered;
     private bool isPlayerAffected;

@@ -48,13 +48,13 @@ public class ArmStateController : MonoBehaviour
             animator.SetBool("IsRepulsing", true);
         }
         else animator.SetBool("IsRepulsing", false);
-
+        */
         if (isRunning && !isGrabbing)
         {
             animator.SetBool("IsRunning", true);
         }
         else animator.SetBool("IsRunning", false);
-
+        /*
         if (Input.GetKeyDown(KeyCode.P))
         {
             animator.SetBool("FuckYou", true);

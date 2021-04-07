@@ -21,6 +21,8 @@ public class Shooter : MonoBehaviour
     public float attractionRange;
     public float launchingSpeed;
 
+    private GameObject grabbedObj;
+
     public bool GetIsAttracting()
     {
         return isAttracting;
@@ -66,6 +68,7 @@ public class Shooter : MonoBehaviour
                     if (target != null)
                     {
                         _reactiveComponent = target;
+                        grabbedObj = hitObject;
                         isAttracting = true;
                     }
                 }
@@ -100,6 +103,20 @@ public class Shooter : MonoBehaviour
             {
                 isAttracting = false;
                 isLaunching = true;
+            }
+            if(Input.mouseScrollDelta.y != 0)
+            {
+                float scale = 1f;
+                Rigidbody obj_rb = grabbedObj.GetComponent<Rigidbody>();
+                obj_rb.mass += Input.mouseScrollDelta.y * scale;
+                if (obj_rb.mass > 1)
+                {
+                    obj_rb.useGravity = true;
+                }
+                else
+                {
+                    obj_rb.useGravity = false;
+                }
             }
         }
     }
