@@ -102,7 +102,7 @@ public class MovementSystem : MonoBehaviour
     {
         deltaX = Input.GetAxis("Horizontal");
         deltaZ = Input.GetAxis("Vertical");
-        Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
+        //Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
 
         //Setting player status according to the listened inputs
         if (_charController.isGrounded)

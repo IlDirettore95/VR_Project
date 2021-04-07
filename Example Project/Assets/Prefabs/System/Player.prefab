@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 6001862773901984311}
   - component: {fileID: 6001862773901984310}
   - component: {fileID: 6001862773901984305}
-  - component: {fileID: 6001862773901984307}
   - component: {fileID: 6001862773901984316}
   - component: {fileID: 4010686659625650609}
   m_Layer: 0
@@ -131,29 +130,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 2
-  sensitivityHor: 4
-  sensitivityVert: 4
+  sensitivityHor: 3
+  sensitivityVert: 3
   minimumVert: -90
   maximumVert: 90
   _rotationX: 0
---- !u!114 &6001862773901984307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6001862773901984309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a461e73400ea93c4289b02aa00a173e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floatingPoint: {fileID: 6001862772989047855}
-  repulsingSpeed: 40
-  repulsingRange: 10
-  attractionSpeed: 0.08
-  attractionRange: 8
-  launchingSpeed: 30
 --- !u!114 &6001862773901984316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,13 +207,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78d410f4358acb48973a8be7e8db5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attractionKey: 0
-  releasingKey: 0
-  launchingKey: 0
-  repulsingKey: 0
+  attractionKey: 323
+  launchingKey: 324
   increaseKey: 0
   decreaseKey: 0
-  nailgunKey: 0
+  shootingKey: 0
+  attractionSpeed: 8
+  launchingSpeed: 2
+  shootingSpeed: 0
 --- !u!1 &6001862773926426394
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,8 +333,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 1
-  sensitivityHor: 4
-  sensitivityVert: 4
+  sensitivityHor: 3
+  sensitivityVert: 3
   minimumVert: -45
   maximumVert: 45
   _rotationX: 0
@@ -368,7 +350,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1008a625ca5dfc4483d7115ea8a5648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathHeight: -250
   MaxHealth: 20
   MaxStamina: 100
   MaxFuel: 120
