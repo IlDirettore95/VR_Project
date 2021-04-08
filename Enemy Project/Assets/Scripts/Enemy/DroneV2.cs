@@ -49,7 +49,7 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
             if (isTriggered)
             {
                 RaycastHit hit;
-                Vector3 lastPosition = new Vector3();
+                Vector3 lastPosition = new Vector3(0,0,0);
                 Vector3 direzione = new Vector3();
 
                 transform.LookAt(playerTransform.position);
@@ -58,22 +58,18 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
                 {
                     if (hit.transform.CompareTag("Player"))
                     {
-                        lastPosition = hit.transform.position;
-                        direzione = transform.position - playerTransform.position;
-                        if (playerDistance >= attackDistance)
-                        {
-                            rb.velocity = -direzione.normalized * 4;
-                        }
-                        else
-                        {
-                            rb.velocity = direzione.normalized * 6;
-                        }
+                        lastPosition = playerTransform.position;
                     }
-                    else
-                    {
-                        direzione = transform.position - lastPosition;
-                        rb.velocity = direzione.normalized * 4;
-                    }
+                }
+
+                direzione = transform.position - lastPosition;
+                if (playerDistance >= attackDistance)
+                {
+                    rb.velocity = -direzione.normalized * 4;
+                }
+                else
+                {
+                    rb.velocity = direzione.normalized * 4;
                 }
             }
 
@@ -86,6 +82,7 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
                     dist = (col[i].ClosestPoint(transform.position) - transform.position);
                     if (!isTriggered)
                     {
+                        
                         if (dist.magnitude > 1f)
                         {
                             rb.AddForce(dist);
@@ -94,10 +91,12 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
                         {
                             rb.AddForce(-dist.normalized);
                         }
+                        
+                        //rb.AddForce(1/dist.x, 1 / dist.y, 1 / dist.z);
                     }
                     else
                     {
-                        rb.AddForce(-dist.normalized);                  
+                        rb.AddForce(-dist.normalized * 2);                  
                     }
                 }
             }
@@ -106,6 +105,15 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
         {
             isPlayerAffected = false;
             rb.useGravity = false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<ReactiveObject>() != null)
+        {
+            isPlayerAffected = true;
+            rb.useGravity = true;
         }
     }
 
