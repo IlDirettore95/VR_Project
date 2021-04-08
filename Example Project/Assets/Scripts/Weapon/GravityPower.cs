@@ -74,11 +74,7 @@ public class GravityPower : MonoBehaviour
             }
             else
             {
-                if (Input.GetKeyDown(launchingKey))
-                {
-                    Debug.Log("AIUTO");
-                    Launching();
-                }
+                if (Input.GetKeyDown(launchingKey)) Launching();
 
                 else if (Input.GetKeyDown(increaseKey)) Increasing();
 
@@ -100,12 +96,14 @@ public class GravityPower : MonoBehaviour
             target.ReactToReleasing();
             target = null;
             releasing = false;
+            attracting = false;
         }
         if(launching)
         {
             target.ReactToLaunching(launchingSpeed);
             target = null;
             launching = false;
+            attracting = false;
         }
 
         
@@ -127,7 +125,7 @@ public class GravityPower : MonoBehaviour
 
     private void Releasing()
     {
-        attracting = false;
+        
         releasing = true;
     }
 
@@ -165,5 +163,14 @@ public class GravityPower : MonoBehaviour
         float posY = _camera.pixelHeight / 2 - size / 2;
 
         GUI.Label(new Rect(posX, posY, size, size), "[ o ]", style);
+
+        //For testing purposes
+        GUIStyle style2 = new GUIStyle();
+        style2.fontSize = 22;
+        style2.normal.textColor = Color.white;
+        size = 380;
+        posX = 100;
+        posY = 600;
+        GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching + "\nIncreasing= " + increasing + "\nDecreasing= " + decreasing + "\nShooting= " + shooting, style2);
     }
 }

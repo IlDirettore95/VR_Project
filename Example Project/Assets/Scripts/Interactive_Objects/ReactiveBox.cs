@@ -63,9 +63,11 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
 
     public void ReactToLaunching(float launchingSpeed)
     {
-        Debug.Log("AIUTO");
-        rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+        
         rb.freezeRotation = false;
         rb.useGravity = true;
+        //Add a torque to add randomness to movements
+        rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
+        rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 }
