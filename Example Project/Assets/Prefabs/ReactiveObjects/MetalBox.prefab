@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6729089710942161519}
+  - component: {fileID: 6729089710942161518}
   - component: {fileID: 6729089710942161513}
   - component: {fileID: 6729089710942161515}
   - component: {fileID: 6729089710942161509}
   - component: {fileID: 6729089710942161508}
   - component: {fileID: 4472597906849655105}
   m_Layer: 0
-  m_Name: MetalBox Medium
+  m_Name: MetalBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,11 +31,19 @@ Transform:
   m_GameObject: {fileID: 6729089710942161514}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 3, z: 190}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+--- !u!33 &6729089710942161518
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6729089710942161514}
+  m_Mesh: {fileID: 0}
 --- !u!23 &6729089710942161513
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7772,7 +7781,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6729089710942161514}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1

@@ -63,7 +63,6 @@ public class GravityPower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(attracting);
         if (!shooting)
         {
             if(!attracting)
@@ -131,7 +130,6 @@ public class GravityPower : MonoBehaviour
 
     private void Launching()
     {
-        Debug.Log("AIUTO");
         launching = true;
         attracting = false;
     }
