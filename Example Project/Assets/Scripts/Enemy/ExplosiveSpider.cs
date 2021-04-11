@@ -83,7 +83,7 @@ public class ExplosiveSpider : MonoBehaviour, ReactiveEnemy
             
             //Finding the player
             _agent.destination = _player.position;
-            transform.LookAt(_player.position);
+            //transform.LookAt(_player.position);
         }
         else if (triggered)
         {
@@ -95,7 +95,7 @@ public class ExplosiveSpider : MonoBehaviour, ReactiveEnemy
 
             //Finding the player
             _agent.destination = _player.position;
-            transform.LookAt(_player.position);
+            //transform.LookAt(_player.position);
 
             //Follow the player
             if(_agent.remainingDistance <= attackDistance)

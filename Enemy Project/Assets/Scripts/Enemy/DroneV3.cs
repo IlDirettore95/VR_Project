@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-public class DroneV2 : MonoBehaviour, ReactiveObject
+public class DroneV3 : MonoBehaviour, ReactiveObject
 {
     public float movementSpeed;
     public float attackDistance = 5f;
@@ -19,6 +18,9 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
     public Transform firePoint;
     Vector3 lastPosition;
 
+    private RaycastHit[] hits;
+    public Transform[] firePoints;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,9 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
         player = GameObject.Find("Player");
         playerTransform = player.transform;
         lastPosition = new Vector3(0, 0, 0);
+
+        //hits = new RaycastHit[6];
+        //firePoints = new Transform[6];
     }
 
     // Update is called once per frame
@@ -40,83 +45,60 @@ public class DroneV2 : MonoBehaviour, ReactiveObject
     {
         if (!isPlayerAffected)
         {
+            
             float playerDistance = (transform.position - playerTransform.position).magnitude;
             if (playerDistance <= triggerDistance && !isTriggered)
             {
                 isTriggered = true;
             }
 
-            if (isTriggered)
+            Vector3 direzione;
+
+            if (!isTriggered)
             {
                 RaycastHit hit;
+                float dist;
                 
-                Vector3 direzione = new Vector3();
-
-                transform.LookAt(playerTransform.position);
-
-                if (Physics.Raycast(firePoint.position, firePoint.forward, out hit))
+                for (int i = 0; i < firePoints.Length; i++)
                 {
-                    if (hit.transform.CompareTag("Player"))
+                    if (Physics.Raycast(firePoints[i].position, firePoints[i].forward, out hit))
                     {
-                        playerOnSight = true;
-                        lastPosition = playerTransform.position;
-                    }
-                    else
-                    {
-                        playerOnSight = false;
+                        
+                        ///dist = Vector3.Distance(transform.position, hit.transform.position);
+                        if(hit.distance < 6f)
+                        {
+                            Debug.Log("dist: " + hit.distance);
+                            //direzione = Vector3.MoveTowards(transform.position, hit.point, 1f);
+                            //rb.MovePosition(direzione);
+                            //direzione = hit.transform.position - transform.position;
+                            direzione = hit.point - transform.position;
+                            rb.AddForce(-direzione.normalized * 5);
+                        }
+                        else if(hit.distance < 3f)
+                        {
+                            Debug.Log("dist: " + hit.distance);
+                            direzione = hit.point - transform.position;
+                            rb.AddForce(-direzione.normalized * 10);
+                        }
                     }
                 }
-
-                direzione = transform.position - lastPosition;
+            }
+            else
+            {
+                transform.LookAt(playerTransform.position);
+                lastPosition = playerTransform.position;
+                
                 if (playerDistance >= attackDistance)
                 {
-                    //rb.velocity = -direzione.normalized * 4;
-                    rb.AddForce(-direzione.normalized * 4);
+                    direzione = transform.position - lastPosition;
+                    rb.AddForce(-direzione);
                     rb.velocity = rb.velocity.normalized * 4;
                 }
-                else if(playerDistance < attackDistance)
+                else if (playerDistance < attackDistance)
                 {
-                    //rb.velocity = direzione.normalized * 4;
-                    //rb.AddForce(direzione.normalized * 4);
-                    rb.velocity = new Vector3(0,0,0);
+                    rb.velocity = Vector3.zero;
                 }
             }
-
-            Collider[] col = Physics.OverlapSphere(transform.position, 5.0f);
-            Vector3 dist;
-            
-            if (col.Length != 0)
-            {
-                for (int i = 0; i < col.Length; i++)
-                {
-                    dist = (col[i].ClosestPoint(transform.position) - transform.position);
-                    if (!isTriggered)
-                    {
-                        
-                        if (dist.magnitude > 1f)
-                        {
-                            rb.AddForce(dist); //si allontana dall'oggetto
-                            
-                        }
-                        else
-                        {
-                            rb.AddForce(-dist.normalized); //si avvicina all'oggetto
-                            
-                        }
-                        
-                        //rb.AddForce(1/dist.x, 1 / dist.y, 1 / dist.z);
-                    }
-                    else
-                    {
-                        rb.AddForce(dist);                  
-                    }
-                }
-            }
-        }
-        else if(rb.velocity == new Vector3(0, 0, 0))
-        {
-            isPlayerAffected = false;
-            rb.useGravity = false;
         }
     }
 
