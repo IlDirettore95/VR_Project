@@ -107,7 +107,7 @@ public class Shooter : MonoBehaviour
             _reactiveComponent.ReactToLaunching(floatingPoint.transform.forward, launchingSpeed);
             _reactiveComponent = null;
             isLaunching = false;
-        }
+        }*/
     }
 
     private void OnGUI()

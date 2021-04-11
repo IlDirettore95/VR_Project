@@ -23,16 +23,6 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb.AddForce(direction * repulsingSpeed, ForceMode.Impulse);
     }
 
-   
-
-    public void ReactToLaunching(Vector3 direction, float launchingSpeed)
-    {
-        rb.AddForce(direction * launchingSpeed, ForceMode.Impulse);
-        rb.freezeRotation = false;
-        rb.velocity = Vector3.zero;
-        rb.useGravity = true;
-    }
-
     public void ReactToIncreasing()
     {
         throw new NotImplementedException();
