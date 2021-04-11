@@ -2,15 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneV3 : MonoBehaviour, ReactiveObject
+[RequireComponent(typeof(Rigidbody))]
+public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
 {
-    public float movementSpeed;
-    public float attackDistance = 5f;
-    public float triggerDistance = 40f;
+    private bool idle = true;
+    private bool walking = false;
+    private bool triggered = false;
+    private bool isPlayerAffected = false;
+    private bool dead = false;
 
-    private bool isTriggered;
-    private bool isPlayerAffected;
-    private bool playerOnSight;
+    //Enemy status
+    public float MaxHealth;
+    private float _health;
+
+    //Speed
+    public float walkingSpeed;
+    public float triggeredSpeed;
+    public float walkingSpeedBuildUp;
+    public float triggeredSpeedBuildUp;
+
+    //Trigger
+    public float triggerPlayerDistance;
+    public float triggerEnemyDistance;
+
+    //Attack
+    public float attackDistance = 5f;
+    public float attackDamage;
 
     private Transform playerTransform;
     private GameObject player;
@@ -18,26 +35,16 @@ public class DroneV3 : MonoBehaviour, ReactiveObject
     public Transform firePoint;
     Vector3 lastPosition;
 
-    private RaycastHit[] hits;
-    public Transform[] firePoints;
-
     // Start is called before the first frame update
     void Start()
     {
-        isTriggered = false;
-        isPlayerAffected = false;
-        playerOnSight = false;
-
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.freezeRotation = true;
 
         player = GameObject.Find("Player");
         playerTransform = player.transform;
-        lastPosition = new Vector3(0, 0, 0);
-
-        //hits = new RaycastHit[6];
-        //firePoints = new Transform[6];
+        lastPosition = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -45,54 +52,33 @@ public class DroneV3 : MonoBehaviour, ReactiveObject
     {
         if (!isPlayerAffected)
         {
-            
             float playerDistance = (transform.position - playerTransform.position).magnitude;
-            if (playerDistance <= triggerDistance && !isTriggered)
+            if (playerDistance <= triggerPlayerDistance && !triggered)
             {
-                isTriggered = true;
+                triggered = true;
             }
 
             Vector3 direzione;
 
-            if (!isTriggered)
+            if (!triggered)
             {
-                RaycastHit hit;
-                float dist;
-                
-                for (int i = 0; i < firePoints.Length; i++)
-                {
-                    if (Physics.Raycast(firePoints[i].position, firePoints[i].forward, out hit))
-                    {
-                        
-                        ///dist = Vector3.Distance(transform.position, hit.transform.position);
-                        if(hit.distance < 6f)
-                        {
-                            Debug.Log("dist: " + hit.distance);
-                            //direzione = Vector3.MoveTowards(transform.position, hit.point, 1f);
-                            //rb.MovePosition(direzione);
-                            //direzione = hit.transform.position - transform.position;
-                            direzione = hit.point - transform.position;
-                            rb.AddForce(-direzione.normalized * 5);
-                        }
-                        else if(hit.distance < 3f)
-                        {
-                            Debug.Log("dist: " + hit.distance);
-                            direzione = hit.point - transform.position;
-                            rb.AddForce(-direzione.normalized * 10);
-                        }
-                    }
-                }
+                Scan(transform.forward);
+                Scan(-transform.forward);
+                Scan(transform.up);
+                Scan(-transform.up);
+                Scan(transform.right);
+                Scan(-transform.right);
             }
             else
             {
                 transform.LookAt(playerTransform.position);
                 lastPosition = playerTransform.position;
-                
+
                 if (playerDistance >= attackDistance)
                 {
                     direzione = transform.position - lastPosition;
                     rb.AddForce(-direzione);
-                    rb.velocity = rb.velocity.normalized * 4;
+                    rb.velocity = rb.velocity.normalized * triggeredSpeed;
                 }
                 else if (playerDistance < attackDistance)
                 {
@@ -100,6 +86,33 @@ public class DroneV3 : MonoBehaviour, ReactiveObject
                 }
             }
         }
+        else if (rb.velocity == Vector3.zero)
+        {
+            isPlayerAffected = false;
+            rb.useGravity = false;
+        }
+    }
+
+    private void Scan(Vector3 direction)
+    {
+        RaycastHit hit;
+        Vector3 direzione;
+
+        if (Physics.Raycast(transform.position, direction, out hit))
+        {
+            direzione = hit.point - transform.position;
+            
+            if (hit.distance < 4f)
+            {
+                rb.AddForce(-direzione.normalized * walkingSpeed);
+            }
+            else if (hit.distance < 2f)
+            {
+                rb.AddForce(-direzione.normalized * walkingSpeed * 2);
+            }
+        }
+
+        //if (rb.velocity.magnitude > triggeredSpeed) rb.velocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -108,7 +121,7 @@ public class DroneV3 : MonoBehaviour, ReactiveObject
         {
             isPlayerAffected = true;
             rb.useGravity = true;
-            isTriggered = true;
+            triggered = true;
         }
     }
 
@@ -139,5 +152,16 @@ public class DroneV3 : MonoBehaviour, ReactiveObject
     {
         rb.AddForce(direction * launchingSpeed, ForceMode.Impulse);
         rb.useGravity = true;
+    }
+
+    public void Hurt(float damage)
+    {
+        _health -= damage;
+        if (_health < 0) _health = 0;
+    }
+
+    public void TriggerNearbyEnemies()
+    {
+        
     }
 }
