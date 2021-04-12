@@ -25,6 +25,7 @@ public class LaserProjectile : MonoBehaviour
         {
 
         }
+    
         Destroy(gameObject);
     }
 

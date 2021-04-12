@@ -43,6 +43,8 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     // Start is called before the first frame update
     void Start()
     {
+        _health = MaxHealth;
+
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.freezeRotation = true;
@@ -57,7 +59,7 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     {
         if (dead)
         {
-            Destroy(gameObject);
+            Die();
         }
         if (!isPlayerAffected)
         {
@@ -141,12 +143,13 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
         if (collider != null)
         {
             Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
-            if(colliderRb.velocity.magnitude > 0)
+            if(colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
                 isPlayerAffected = true;
                 rb.useGravity = true;
                 triggered = true;
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
+                Debug.Log("Damage = " + damage);
                 Hurt(damage);
             }
         }
@@ -160,7 +163,8 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
 
     private void Die()
     {
-        //@TODO
+        Debug.Log("Drone morto");
+        Destroy(gameObject);
     }
 
     public void ReactToAttraction(Vector3 target, float attractionSpeed)

@@ -531,7 +531,7 @@ MonoBehaviour:
   triggerEnemyDistance: 0
   attackDistance: 10
   attackDamage: 0
-  fireCooldown: 2
+  fireCooldown: 0.5
   firePoint: {fileID: 340293838}
   projectilePrefab: {fileID: 6428772395143186225, guid: a448146925cebef43bcf3c39b8405c00,
     type: 3}
