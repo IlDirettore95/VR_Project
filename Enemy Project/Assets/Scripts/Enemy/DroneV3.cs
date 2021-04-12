@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
 {
+    //Enemy state
     private bool idle = true;
     private bool walking = false;
     private bool triggered = false;
@@ -26,13 +27,17 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     public float triggerEnemyDistance;
 
     //Attack
-    public float attackDistance = 5f;
+    public float attackDistance;
     public float attackDamage;
+    public float fireCooldown;
+    private float nextTimeFire;
+    public Transform firePoint;
+    public GameObject projectilePrefab;
 
+    //AI
     private Transform playerTransform;
     private GameObject player;
     Rigidbody rb;
-    public Transform firePoint;
     Vector3 lastPosition;
 
     // Start is called before the first frame update
@@ -50,12 +55,17 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (dead)
+        {
+            Destroy(gameObject);
+        }
         if (!isPlayerAffected)
         {
             float playerDistance = (transform.position - playerTransform.position).magnitude;
             if (playerDistance <= triggerPlayerDistance && !triggered)
             {
                 triggered = true;
+                nextTimeFire = Time.time + fireCooldown;
             }
 
             Vector3 direzione;
@@ -83,6 +93,11 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
                 else if (playerDistance < attackDistance)
                 {
                     rb.velocity = Vector3.zero;
+                    if(Time.time >= nextTimeFire)
+                    {
+                        Shoot();
+                        nextTimeFire = Time.time + fireCooldown;
+                    }
                 }
             }
         }
@@ -115,14 +130,37 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
         //if (rb.velocity.magnitude > triggeredSpeed) rb.velocity = Vector3.zero;
     }
 
+    private void Shoot()
+    {
+        Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.GetComponent<ReactiveObject>() != null)
+        ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
+        if (collider != null)
         {
-            isPlayerAffected = true;
-            rb.useGravity = true;
-            triggered = true;
+            Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
+            if(colliderRb.velocity.magnitude > 0)
+            {
+                isPlayerAffected = true;
+                rb.useGravity = true;
+                triggered = true;
+                float damage = colliderRb.mass * colliderRb.velocity.magnitude;
+                Hurt(damage);
+            }
         }
+    }
+
+    public void Hurt(float damage)
+    {
+        _health -= damage;
+        if (_health <= 0) dead = true;
+    }
+
+    private void Die()
+    {
+        //@TODO
     }
 
     public void ReactToAttraction(Vector3 target, float attractionSpeed)
@@ -154,14 +192,8 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
         rb.useGravity = true;
     }
 
-    public void Hurt(float damage)
-    {
-        _health -= damage;
-        if (_health < 0) _health = 0;
-    }
-
     public void TriggerNearbyEnemies()
     {
-        
+        //@TODO
     }
 }
