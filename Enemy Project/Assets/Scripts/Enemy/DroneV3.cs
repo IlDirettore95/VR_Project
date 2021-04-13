@@ -6,6 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
 {
+    //Enemy manager
+    private EnemiesManager enemyManager;
+    public int areaID;
+    public int enemyID;
+
     //Enemy state
     private bool idle = true;
     private bool walking = false;
@@ -38,8 +43,8 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     //AI
     private Transform playerTransform;
     private GameObject player;
-    Rigidbody rb;
-    Vector3 lastPosition;
+    private Rigidbody rb;
+    private Vector3 lastPosition;
 
     //Player Interaction
     private Transform target;
@@ -58,6 +63,8 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
         lastPosition = Vector3.zero;
 
         target = GameObject.Find("ObjectGrabber").transform;
+
+        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
     }
 
     // Update is called once per frame
@@ -73,6 +80,7 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
             if (playerDistance <= triggerPlayerDistance && !triggered)
             {
                 triggered = true;
+                enemyManager.TriggerArea(areaID);
                 nextTimeFire = Time.time + fireCooldown;
             }
 
@@ -134,8 +142,6 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
                 rb.AddForce(-direzione.normalized * walkingSpeed * 2);
             }
         }
-
-        //if (rb.velocity.magnitude > triggeredSpeed) rb.velocity = Vector3.zero;
     }
 
     private void Shoot()
@@ -170,7 +176,20 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     private void Die()
     {
         Debug.Log("Drone morto");
-        Destroy(gameObject);
+        enemyManager.CollectEnemy(gameObject);
+    }
+
+    public void Revive()
+    {
+        idle = true;
+        walking = false;
+        triggered = false;
+        isPlayerAffected = false;
+        dead = false;
+
+        _health = MaxHealth;
+        rb.velocity = Vector3.zero;
+        rb.useGravity = false;
     }
 
     public void ReactToAttraction(float attractionSpeed)
@@ -209,8 +228,28 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
         throw new NotImplementedException();
     }
 
-    public void TriggerNearbyEnemies()
+    private void AlertNearbyEnemies(int ID) //Alert other enemies in the same area (ID), wich will transit on hostile state
     {
-        //@TODO
+        throw new NotImplementedException();
+    }
+
+    public void MoveTo(Vector3 point)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Patrol(Vector3[] path)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void BeTriggered()
+    {
+        triggered = true;
+    }
+
+    public void SetAreaID(int ID)
+    {
+        areaID = ID;
     }
 }
