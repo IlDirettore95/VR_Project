@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* A reactive object is an object which reacts to player's gravity powers
+ */
 public interface ReactiveObject 
 {
-    void ReactToAttraction(Vector3 target, float attractionSpeed);
+    void ReactToAttraction(float attractionSpeed);
 
-    void ReactToRepulsing(Vector3 direction, float repulsingSpeed);
+    void ReactToRepulsing();
 
     void ReactToReleasing();
 
-    void ReactToLaunching(Vector3 direction, float launchingSpeed);
+    void ReactToLaunching(float launchingSpeed);
+
+    void ReactToIncreasing();
+
+    void ReactToDecreasing();
 }

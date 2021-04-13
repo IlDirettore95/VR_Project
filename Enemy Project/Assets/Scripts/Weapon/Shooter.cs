@@ -21,26 +21,6 @@ public class Shooter : MonoBehaviour
     public float attractionRange;
     public float launchingSpeed;
 
-    public bool GetIsAttracting()
-    {
-        return isAttracting;
-    }
-
-    public bool GetIsReleasing()
-    {
-        return isReleasing;
-    }
-
-    public bool GetIsLaunching()
-    {
-        return isLaunching;
-    }
-
-    public bool GetIsRepulsing()
-    {
-        return isRepulsing;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -106,7 +86,7 @@ public class Shooter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(isAttracting)
+        /*if(isAttracting)
         {
             _reactiveComponent.ReactToAttraction(floatingPoint.transform.position, attractionSpeed);
         }
@@ -127,7 +107,7 @@ public class Shooter : MonoBehaviour
             _reactiveComponent.ReactToLaunching(floatingPoint.transform.forward, launchingSpeed);
             _reactiveComponent = null;
             isLaunching = false;
-        }
+        }*/
     }
 
     private void OnGUI()

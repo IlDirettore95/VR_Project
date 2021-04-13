@@ -292,7 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 234362033}
   m_Layer: 0
-  m_Name: FloatingPoint
+  m_Name: ObjectGrabber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -784,7 +784,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 457d8e3b5d4ce6847a3d46c24696400d, type: 3}
+  m_Script: {fileID: 11500000, guid: fa1807195fbb8f6409d03aff7aa367cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 2
@@ -802,15 +802,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a461e73400ea93c4289b02aa00a173e4, type: 3}
+  m_Script: {fileID: 11500000, guid: b78d410f4358acb48973a8be7e8db5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floatingPoint: {fileID: 234362033}
-  repulsingSpeed: 80
-  repulsingRange: 10
-  attractionSpeed: 20
-  attractionRange: 10
-  launchingSpeed: 120
+  attractionKey: 324
+  launchingKey: 323
+  increaseKey: 0
+  decreaseKey: 0
+  shootingKey: 0
+  attractionSpeed: 8
+  launchingSpeed: 100
+  shootingSpeed: 1
 --- !u!1 &1046771730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,10 +1514,11 @@ GameObject:
   - component: {fileID: 1644773178}
   - component: {fileID: 1644773177}
   - component: {fileID: 1644773176}
-  - component: {fileID: 1644773175}
   - component: {fileID: 1644773174}
+  - component: {fileID: 1644773175}
   - component: {fileID: 1644773173}
   - component: {fileID: 1644773172}
+  - component: {fileID: 1644773180}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1532,23 +1535,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1644773171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c5430eb4d4497b4d84090babc8a94f1, type: 3}
+  m_Script: {fileID: 11500000, guid: e1008a625ca5dfc4483d7115ea8a5648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: -9.8
-  gravityMultiplier: 2
-  jumpSpeed: 9
-  jetPackY: 7
-  runningSpeed: 12
-  walkingSpeed: 6
-  flyingSpeed: 6
-  dischargingRate: 60
-  dischargingActivation: 20
-  chargingRate: 30
-  consumingRate: 20
-  recoveringRate: 35
-  recoverCooldown: 4
-  fallDamageThreashold: 0
+  MaxHealth: 100
+  MaxStamina: 100
+  MaxFuel: 120
+  regenerationCooldown: 8
+  regenerationRate: 2
 --- !u!114 &1644773173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1558,15 +1552,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1644773171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1008a625ca5dfc4483d7115ea8a5648, type: 3}
+  m_Script: {fileID: 11500000, guid: 40d53f2494564934da8eb95a02121878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathHeight: 0
-  MaxHealth: 100
-  MaxStamina: 100
-  MaxFuel: 100
-  regenerationCooldown: 2
-  regenerationRate: 100
+  gravity: 9.8
+  initialGravity: 9.8
+  jumpSpeed: 6
+  jetpackYSpeed: 6
+  walkingSpeed: 6
+  runningSpeed: 10
+  jetpackXZSpeed: 5
+  fallingSpeed: 2
+  runningBuildUp: 4
+  walkingBuildUp: 2
+  fallingBuildUp: 0.33
+  jetpackBuildUp: 4
+  minDeltaY: -80
+  fallDamageThreashold: 15
+  sRecoverRate: 35
+  sConsumingRate: 25
+  sCooldown: 2
+  fRecoverRate: 40
+  fConsumigRate: 60
+  fActivationCost: 20
+  normalHeight: 2
+  crouchingHeight: 1
+  crouchOnBuildUp: 4
+  crouchOffBuildUp: 3
 --- !u!143 &1644773174
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1594,14 +1606,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1644773171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 457d8e3b5d4ce6847a3d46c24696400d, type: 3}
+  m_Script: {fileID: 11500000, guid: fa1807195fbb8f6409d03aff7aa367cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   axes: 1
   sensitivityHor: 9
   sensitivityVert: 9
-  minimumVert: -45
-  maximumVert: 45
+  minimumVert: -90
+  maximumVert: 90
   _rotationX: 0
 --- !u!136 &1644773176
 CapsuleCollider:
@@ -1679,6 +1691,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1644773180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644773171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd802f8fda5b2f347a919a4c33b4baba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1717535690
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,7 +23,9 @@ public class LaserProjectile : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
-
+            PlayerStatus playerStatus = collision.gameObject.GetComponent<PlayerStatus>();
+            playerStatus.Hurt(damage);
+            Debug.Log("Player hurted with damage: " + damage);
         }
     
         Destroy(gameObject);
