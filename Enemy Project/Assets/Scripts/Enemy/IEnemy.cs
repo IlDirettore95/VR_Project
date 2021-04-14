@@ -6,6 +6,8 @@ public interface IEnemy
 {
     void Hurt(float damage); //Take damage and decrease enemy healt
 
+    void Revive();
+
     void BeTriggered(); //Transit to the hostile state and start to chase the player
 
     void MoveTo(Vector3 point); //Move the enemy from the current position to point position in input

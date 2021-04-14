@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
+public class DroneV3 : MonoBehaviour, IEnemy, ReactiveEnemy
 {
     //Enemy manager
     private EnemiesManager enemyManager;
@@ -48,6 +48,7 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
 
     //Player Interaction
     private Transform target;
+    private float speed;  //Used to calculate damage when the enemy is launched by the player against static objects
 
     // Start is called before the first frame update
     void Start()
@@ -122,6 +123,10 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
             isPlayerAffected = false;
             rb.useGravity = false;
         }
+        else
+        {
+            speed = rb.velocity.magnitude;
+        }
     }
 
     private void Scan(Vector3 direction)
@@ -164,6 +169,15 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
                 Debug.Log("Damage = " + damage);
                 Hurt(damage);
             }
+        }
+        else
+        {
+            isPlayerAffected = true;
+            rb.useGravity = true;
+            triggered = true;
+            float damage = rb.mass * speed;
+            Debug.Log("Damage = " + damage);
+            Hurt(damage);
         }
     }
 
@@ -251,5 +265,10 @@ public class DroneV3 : MonoBehaviour, ReactiveObject, IEnemy
     public void SetAreaID(int ID)
     {
         areaID = ID;
+    }
+
+    public void ReactToExplosion(float damage)
+    {
+        throw new NotImplementedException();
     }
 }

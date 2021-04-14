@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7531338053422724764}
   - component: {fileID: 7531338053422724767}
   - component: {fileID: 7531338053422724766}
+  - component: {fileID: 2562576359907380957}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Enemy
@@ -120,7 +121,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7531338053422724761}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90ba592ee9a736f4f8cf05cdf0c467e2, type: 3}
   m_Name: 
@@ -137,6 +138,33 @@ MonoBehaviour:
   attackDistance: 10
   attackDamage: 0
   fireCooldown: 0.5
+  firePoint: {fileID: 7531338054197656796}
+  projectilePrefab: {fileID: 6428772395143186225, guid: a448146925cebef43bcf3c39b8405c00,
+    type: 3}
+--- !u!114 &2562576359907380957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7531338053422724761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55b16508e5af5d45b221e02a4cbb57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  areaID: 0
+  enemyID: 0
+  MaxHealth: 0
+  walkingSpeed: 0
+  triggeredSpeed: 0
+  walkingSpeedBuildUp: 0
+  triggeredSpeedBuildUp: 0
+  triggerPlayerDistance: 0
+  triggerEnemyDistance: 0
+  attackDistance: 0
+  attackDamage: 0
+  fireCooldown: 0
   firePoint: {fileID: 7531338054197656796}
   projectilePrefab: {fileID: 6428772395143186225, guid: a448146925cebef43bcf3c39b8405c00,
     type: 3}
