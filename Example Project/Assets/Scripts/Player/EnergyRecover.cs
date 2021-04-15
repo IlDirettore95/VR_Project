@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*This class handles stamina recovery.
- * When this class is enabled it means that stamina can be recovered after the cooldown.
- * Once all the stamina is recovered this script disables itself
+/*This class handles energy recovery.
+ * When this class is enabled it means that energy can be recovered after the cooldown.
+ * Once all the energy is recovered this script disables itself
  */
-public class StaminaRecover : MonoBehaviour
+public class EnergyRecover : MonoBehaviour
 {
     public float recoverCooldown;
     public float recoverRate;
@@ -30,7 +30,7 @@ public class StaminaRecover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.time >= nextTimeRecover && _playerStatus.IsAlive()) _playerStatus.RecoverStamina(recoverRate * Time.deltaTime);
-        if (_playerStatus.IsFullStamina()) enabled = false;
+        if(Time.time >= nextTimeRecover && _playerStatus.IsAlive()) _playerStatus.RecoverEnergy(recoverRate * Time.deltaTime);
+        if (_playerStatus.IsFullEnergy()) enabled = false;
     }
 }

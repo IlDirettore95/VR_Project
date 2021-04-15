@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6574212619612682551}
   - component: {fileID: 6574212619612682550}
   - component: {fileID: 6574212619612682549}
-  - component: {fileID: 6574212619612682548}
+  - component: {fileID: 6728338905591920371}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -230,6 +230,7 @@ MonoBehaviour:
   MaxHealth: 20
   MaxStamina: 100
   MaxFuel: 120
+  MaxEnergy: 0
   regenerationCooldown: 8
   regenerationRate: 2
 --- !u!114 &6574212619612682549
@@ -244,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd802f8fda5b2f347a919a4c33b4baba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6574212619612682548
+--- !u!114 &6728338905591920371
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,33 +254,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 6574212619612682509}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40d53f2494564934da8eb95a02121878, type: 3}
+  m_Script: {fileID: 11500000, guid: 160bb1f450f50d242a1edc7e1635cbe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idle: 0
+  walking: 0
+  running: 0
+  falling: 0
+  jetpack: 0
+  crouching: 0
+  crouched: 0
+  hasJumped: 0
+  tired: 0
+  wasGrounded: 0
   gravity: 9.8
   initialGravity: 9.8
   jumpSpeed: 6
-  jetpackYSpeed: 6
   walkingSpeed: 3
   runningSpeed: 6
-  jetpackXZSpeed: 5
+  crouchingSpeed: 1
   fallingSpeed: 2
   runningBuildUp: 4
   walkingBuildUp: 2
-  fallingBuildUp: 0.33
-  jetpackBuildUp: 4
+  fallingBuildUp: 0.25
+  crouchOnBuildUp: 1
+  crouchOffBuildUp: 1
+  crouchingBuildUp: 5
+  currentBuildUp: 0
+  currentStateBuildUp: 0
+  deltaY: 0
   minDeltaY: -80
-  fallDamageThreashold: 15
-  sRecoverRate: 35
-  sConsumingRate: 25
-  sCooldown: 2
-  fRecoverRate: 40
-  fConsumigRate: 60
-  fActivationCost: 20
+  currentTargetSpeed: 0
+  startFallingY: -Infinity
+  fallDamageThreashold: 10
+  tiredThreashold: 0.5
+  staminaConsumingRate: 15
+  staminaJumpCost: 20
   normalHeight: 2
   crouchingHeight: 1
-  crouchOnBuildUp: 4
-  crouchOffBuildUp: 3
 --- !u!1 &6574212619621665826
 GameObject:
   m_ObjectHideFlags: 0

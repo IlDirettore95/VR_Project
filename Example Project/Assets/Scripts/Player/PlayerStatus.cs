@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,22 +10,21 @@ public class PlayerStatus : MonoBehaviour
      * This class handle Player status and statistics like
      * health, stamina and jetpack's fuel, provides also aux methods for editing, monitoring and questioning
      * about player's status;
+     * every time the player get hurt the Health regeneration Componenti is disabled and renabled reinitializing his function
     */
+
     //Player's stats
     [SerializeField] private float MaxHealth;
     [SerializeField] private float MaxStamina;
     [SerializeField] private float MaxFuel;
+    [SerializeField] private float MaxEnergy;
 
     private float _health;
     private float _stamina;
     private float _fuel;
+    private float _energy;
 
-    /*Life regeneration handling
-     * After a cooldown, if the player has not been hurt he will start to regenerate
-     */
-    private float nextTimeRegeneration;
-    public float regenerationCooldown;
-    public float regenerationRate;
+    private HealthRegeneration _healRegeneration;
 
     //player status
     private bool isAlive;
@@ -36,13 +36,11 @@ public class PlayerStatus : MonoBehaviour
         _health = MaxHealth;
         _stamina = MaxStamina;
         _fuel = MaxFuel;
+        _energy = MaxEnergy;
 
         isAlive = true;
-    }
-    // Update is called once per frame
-    private void Update()
-    {
-        if (isAlive && Time.time > nextTimeRegeneration) Heal(regenerationRate * Time.deltaTime);
+
+        _healRegeneration = GetComponent<HealthRegeneration>();
     }
 
     public float GetMaxHealth() => MaxHealth;
@@ -51,11 +49,15 @@ public class PlayerStatus : MonoBehaviour
 
     public float GetMaxFuel() => MaxFuel;
 
+    public float GetMaxEnergy() => MaxEnergy;
+
     public float GetHealth() => _health;
 
     public float GetStamina() => _stamina;
 
     public float GetFuel() => _fuel;
+
+    public float GetEnergy() => _energy;
 
     public void SetMaxHealth(float mh) => MaxHealth = mh;
 
@@ -63,23 +65,23 @@ public class PlayerStatus : MonoBehaviour
 
     public void SetMaxFuel(float mf) => MaxFuel = mf;
 
-    public void SetHealth(float h) => _health = h;
-
-    public void SetStamina(float s) => _stamina = s;
-
-    public void SetFuel(float f) => _fuel = f;
+    public void SetMaxEnergy(float me) => MaxEnergy = me;
 
     public bool IsAlive() => isAlive;
 
-    public bool HasEnoughEnergy() => _stamina > 0;
+    public bool HasEnoughStamina() => _stamina > 0;
 
     public bool HasEnoughFuel() => _fuel > 0;
+
+    public bool HasEnoughEnergy() => _energy > 0;
 
     public bool IsFullHealth() => _health == MaxHealth;
 
     public bool IsFullStamina() => _stamina == MaxStamina;
 
     public bool IsFullFuel() => _fuel == MaxFuel;
+
+    public bool IsFullEnergy() => _energy == MaxEnergy;
 
     //If a player's health drops below 0 the player should be considered alive
     public void Hurt(float damage)
@@ -88,18 +90,18 @@ public class PlayerStatus : MonoBehaviour
         if (_health < 0) _health = 0;
         if (_health == 0) isAlive = false;
 
-        //Setting regeneration Cooldown
-        if(isAlive) nextTimeRegeneration = Time.time + regenerationCooldown;
+        if (isAlive)
+        {
+            _healRegeneration.enabled = false;
+            _healRegeneration.enabled = true;
+        }
     }
 
     public void Heal(float cure)
     {
-        if(isAlive)
-        {
-            _health += cure;
-            if (_health > MaxHealth) _health = MaxHealth;
-        }
-        
+
+        _health += cure;
+        if (_health > MaxHealth) _health = MaxHealth;   
     }
 
     public void ConsumeStamina(float consumed)
@@ -110,11 +112,8 @@ public class PlayerStatus : MonoBehaviour
 
     public void RecoverStamina(float recovery)
     {
-        if(isAlive)
-        {
-            _stamina += recovery;
-            if (_stamina > MaxStamina) _stamina = MaxStamina;
-        }   
+        _stamina += recovery;
+        if (_stamina > MaxStamina) _stamina = MaxStamina;  
     }
 
     public void ConsumeFuel(float discharge)
@@ -129,13 +128,26 @@ public class PlayerStatus : MonoBehaviour
         if (_fuel > MaxFuel) _fuel = MaxFuel;
     }
 
-    
+    public void ConsumeEnergy(float discharge)
+    {
+        _energy -= discharge;
+        if (_energy < 0) _energy = 0;
+    }
+
+    public void RecoverEnergy(float charge)
+    {
+        _energy += charge;
+        if (_energy > MaxFuel) _energy = MaxFuel;
+    }
+
+
 
     public void reset()
     {
         _health = MaxHealth;
         _stamina = MaxStamina;
         _fuel = MaxFuel;
+        _energy = MaxEnergy;
         isAlive = true;
     }
 }

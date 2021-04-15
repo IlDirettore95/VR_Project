@@ -5,96 +5,93 @@ using UnityEngine;
 public class MovementSystem : MonoBehaviour
 {
     /*This script handles the movement system
-     * The player could be in the idle, walking, running, falling status
-     * This class also provides methods for questioning about player's movment status;
-     * Idle: the player is not moving at all
-     * Walking: the player is moving with WASD and grounded
-     * Running: the player is moving with WASD and has pressed LeftShift
-     * Crouching: the player crouch whith CTRL, in this status he can only walk, stand up or jumping
-     * HasJumped: the player isn't grounded due to a jump
-     * Tired: the player consumed all the stamina and need to re-click LeftShift in order to run when the stamina will be recovered
-     * WasGrounded: the player was grounded during last frame. This state is used to capture in what frame the player changes from grounded to notgrounded
-    */
-    private bool idle = false;
-    private bool walking = false;
-    private bool running = false;
-    private bool falling = false;
-    private bool jetpack = false;
-    private bool crouching = false;
-    private bool hasJumped = false;
-    private bool tired = false;
-    private bool wasGrounded = false;
+      * The player could be in the idle, walking, running, falling status
+      * This class also provides methods for questioning about player's movment status;
+      * Idle: the player is not moving at all
+      * Walking: the player is moving with WASD and grounded
+      * Running: the player is moving with WASD and has pressed LeftShift
+      * Crouched: the player crouch whith C, in this status he can only walk, stand up or jumping
+      * Crouching: the player is transitioning from crouched/stand to stand/crouched state
+      * HasJumped: the player isn't grounded due to a jump
+      * Tired: the player consumed all the stamina and need to re-click LeftShift in order to run when the stamina will be recovered
+      * WasGrounded: the player was grounded during last frame. This state is used to capture in what frame the player changes from grounded to notgrounded
+     */
+    [HideInInspector] public bool idle = false;
+    [HideInInspector] public bool walking = false;
+    [HideInInspector] public bool running = false;
+    [HideInInspector] public bool falling = false;
+    [HideInInspector] public bool jetpack = false;
+    [HideInInspector] public bool crouching = false;
+    [HideInInspector] public bool crouched = false;
+    [HideInInspector] public bool hasJumped = false;
+    [HideInInspector] public bool tired = false;
+    [HideInInspector] public bool wasGrounded = false;
+    [HideInInspector] public bool isGrounded = false;
+
+    //Isgrounded Threashold
+    public float isGroundedThreashold;
 
     //Y Speed variables
     public float gravity;
-    private float ySpeed;
+    private float ySpeed; //Accumulated gravity
     public float initialGravity;
     public float jumpSpeed;
-    public float jetpackYSpeed;
+
     //X and Z Speed variables
     public float walkingSpeed;
     public float runningSpeed;
-    public float jetpackXZSpeed;
+    public float crouchingSpeed;
     public float fallingSpeed;
+
     //Buildups for lerping
     public float runningBuildUp;
     public float walkingBuildUp;
     public float fallingBuildUp;
-    public float jetpackBuildUp;
+    public float crouchOnBuildUp; //crouching transition on
+    public float crouchOffBuildUp; //crouching transition off
+    public float crouchingBuildUp; //X,Z speed
+    [HideInInspector] public float currentBuildUp; //Player's current build up speed
+    [HideInInspector] public float currentStateBuildUp; //BuildUp's current state, everytime a speed is changed is reset to 0
+
     //X,Y,Z deltas
     private float deltaX = 0f;
-    private float deltaY = 0f;
+    [HideInInspector] public float deltaY = 0f;
     public float minDeltaY; //Limit speed while falling
     private float deltaZ = 0f;
     private float speed = 0f; //Player's general speed
+    [HideInInspector] public float currentTargetSpeed = 0f; //Player's current targeted speed, if it doesn't change it will be the speed after lerping
 
     //Fall Damage
-    private float startFallingY = float.NegativeInfinity;
+    [HideInInspector] public float startFallingY = float.NegativeInfinity;
     public float fallDamageThreashold;
 
     //Stamina handling for running
-    public float sRecoverRate;
-    public float sConsumingRate;
-    public float sCooldown; //Once consumed stamina will recover after a cooldown
-    private float sNextTime; //The time on which stamina will start to recover
-
-    //Fuel handling for jetpack
-    public float fRecoverRate;
-    public float fConsumigRate;
-    public float fActivationCost;
+    [Range(0, 1)] public float tiredThreashold;
+    public float staminaConsumingRate; //for running
+    public float staminaJumpCost; //for jumping
 
     //Crouching Height
-    public float normalHeight = 2f;
-    public float crouchingHeight = 1f;
-    public float crouchOnBuildUp = 3f;
-    public float crouchOffBuildUp = 1f;
-    private float currentStateBuildUp; //This variable has to be resetted whenever crouching state varies 
+    public float normalHeight;
+    public float crouchingHeight;
+    private float crouchingStateBuildUp; //This variable has to be resetted whenever crouching state varies 
+
+    //Grouded state
+    public float checkGroudedRadius;
+
+    //Sliding on edges
+    public float slidingFactor;
 
     private CharacterController _charController;
-    private PlayerStatus _status;
-
-    //Aux methods for external questioning on player movment status
-    public bool IsIdle(){return idle;}
-
-    public bool IsWalking(){return walking;}
-
-    public bool IsRunning(){return running;}
-
-    public bool IsFalling(){return falling;}
-
-    public bool IsCrouching(){return crouching;}
-
-    public bool IsUsingJetpack(){return jetpack;}
-
-    public bool IsJumping(){return hasJumped;}
-
-    public bool IsTired(){return tired;}
+    private PlayerStatus _playerStatus;
+    private StaminaRecover _staminaRecover;
+   
 
     // Start is called before the first frame update
     void Start()
     {
         _charController = GetComponent<CharacterController>();
-        _status = GetComponent<PlayerStatus>();
+        _playerStatus = GetComponent<PlayerStatus>();
+        _staminaRecover = GetComponent<StaminaRecover>();
     }
 
     // Update is called once per frame
@@ -102,90 +99,80 @@ public class MovementSystem : MonoBehaviour
     {
         deltaX = Input.GetAxis("Horizontal");
         deltaZ = Input.GetAxis("Vertical");
-        //Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
+        Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
 
         //Setting player status according to the listened inputs
-        if (_charController.isGrounded)
+        SetIsGrounded();
+
+        //Check for edges
+        if(!isGrounded) SlidingEdges();
+
+        if (isGrounded)
         {
 
             //Fall damage and setting the grounded state
             if (!wasGrounded)
             {
-                if(falling) HandlingFallDamage();
+                if (falling) HandlingFallDamage();
 
                 SettingGroundedState();
-
             }
 
-            //Stamina Recover, if the player is at full stamina is no more considered tired
-            StaminaRecover();
-
-            //Fuel Recover
-            FuelRecover();         
-
             //Crouching status
-            if(Input.GetKeyDown(KeyCode.C)) SettingCrouchStatus();
+            if (Input.GetKeyDown(KeyCode.C) && !crouching) SettingCrouchStatus();
 
             //Is the player moving?
             if ((deltaX != 0 || deltaZ != 0))
             {
                 //DeltaZ != 1 means that the player cant run backward
-                if (Input.GetKey(KeyCode.LeftShift) && _status.HasEnoughEnergy() && !tired && !crouching && deltaZ != -1) Run();
-
-                //If the player is tired he needs to re-click LeftShift in order to running or he could wait all the stamina is recoverd
-                else if (Input.GetKeyDown(KeyCode.LeftShift) && _status.HasEnoughEnergy() && tired) Run();
+                if (Input.GetKey(KeyCode.LeftShift) && !tired && !crouching && !crouched && deltaZ != -1) Run();
 
                 //The player is surely walking
-                else
-                {
-                    Walk();
-                }
-                if (Input.GetButtonDown("Jump")) Jump();
+                else Walk();
+
+                if (Input.GetButtonDown("Jump") && !tired) Jump();
             }
-            else if (Input.GetButtonDown("Jump")) Jump();
+            //Jumping
+            else if (Input.GetButtonDown("Jump") && !tired) Jump();
 
             else
             {
                 Idle();
             }
-
-            wasGrounded = true;
         }
+        //NotGrounded
         else
         {
-
-            //NotGrounded
-            if(wasGrounded)
+            if (wasGrounded)
             {
                 SettingNotGroundedState();
+                //turn off stamina recovering while not grounded
+                if (_staminaRecover.enabled == true) _staminaRecover.enabled = false;
             }
-
-            if(Input.GetButtonDown("Jump") && _status.HasEnoughFuel())
-            {
-                JetpackActivation();
-            }
-            else if(Input.GetButton("Jump") && jetpack && _status.HasEnoughFuel())
-            {
-                Jetpack();
-            }
-            else if(Input.GetButtonUp("Jump"))
-            {
-                JetpackDeactivation();
-            }
-            else
-            {
-                Falling();
-            }
-
-            wasGrounded = false;
         }
 
-        Crouch();
+        if(crouching) Crouch();
 
-        if (!idle)
+        //Stamina Recover, if the player is at full stamina is no more considered tired
+        StaminaRecover();
+        
+
+    }
+
+    //Do to script dependecies to jetpack script, falling status and character move are moved in the late Update
+    private void LateUpdate()
+    {
+        if (!isGrounded && !jetpack) Falling();
+        
+        //last controls on was grounded boolean
+        if (isGrounded)
         {
-            Move();
+            if (!wasGrounded) wasGrounded = true;
         }
+        else
+            if (wasGrounded) wasGrounded = false;
+
+        Move();
     }
 
     private void OnGUI()
@@ -197,22 +184,7 @@ public class MovementSystem : MonoBehaviour
         int size = 380;
         float posX = 1700;
         float posY = 600;
-        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nCrouching= " + crouching + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY, style);
-    }
-
-    //aux method for resetting movment system
-    public void reset()
-    {
-        deltaX = 0;
-        deltaZ = 0;
-        deltaY = 0;
-
-        idle = true;
-        walking = false;
-        running = false;
-        falling = false;
-        jetpack = false;
-
+        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nCrouching= " + crouching + "\nCrouched= " + crouched + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY + "\nIsGrounded= " + isGrounded, style);
     }
 
     /* Handling fall damage
@@ -221,25 +193,10 @@ public class MovementSystem : MonoBehaviour
     private void HandlingFallDamage()
     {
         float fallDistance = startFallingY - transform.position.y;
-        if (fallDistance > fallDamageThreashold) _status.Hurt(fallDistance - fallDamageThreashold);
+        if (fallDistance > fallDamageThreashold) _playerStatus.Hurt(fallDistance - fallDamageThreashold);
         startFallingY = float.NegativeInfinity;
     }
-    
-    /*This method handles stamina recover while grounded and after a cooldown
-     */
-    private void StaminaRecover()
-    {
-        if (!running && Time.time > sNextTime) _status.RecoverStamina(sRecoverRate * Time.deltaTime);
-        if (tired && _status.IsFullStamina()) tired = false;
-    }
-   
-    /* This method handles fuel recovering while grounded
-     */
-    private void FuelRecover()
-    {
-        _status.RecoverFuel(fRecoverRate * Time.deltaTime);
-    }
-    
+
     /*Setting the player's status when he becomes grounded
      */
     private void SettingGroundedState()
@@ -257,8 +214,18 @@ public class MovementSystem : MonoBehaviour
         walking = false;
         running = false;
         idle = false;
+
         //Erease accumulated gravity in case the player fall down walking or running
-        if (!hasJumped) deltaY = 0;
+        if (!hasJumped) deltaY = 0f;
+
+        //Crouching off if the character was crouched or was trasitioning into crouched status
+        if(crouched || crouching)
+        {
+            if(!crouched || !crouching) crouchingStateBuildUp = 1 - crouchingStateBuildUp;
+            crouched = true;
+            crouching = true;
+            
+        }  
     }
 
     /*Setting the crouch status when the player precc the crouch button
@@ -266,37 +233,58 @@ public class MovementSystem : MonoBehaviour
     private void SettingCrouchStatus()
     {
         //Crouching state changes
-        if (!crouching)
-        {
-            crouching = true;
-        }
+
         //If nothing is near above the player
-        else if (!Physics.SphereCast(new Ray(transform.position, Vector3.up), _charController.radius, (normalHeight - crouchingHeight) / 2))
+        if (crouched && Physics.SphereCast(new Ray(transform.position, Vector3.up), _charController.radius, (normalHeight - crouchingHeight) / 2))
         {
             crouching = false;
         }
+        else
+        {
+            crouching = true;
+        }
 
-        currentStateBuildUp = 0f;
+        crouchingStateBuildUp = 0f;
     }
-   
+
     /*Lerping for Crouch smoothness
      * This method adjust Player size and y position during crouching tranistion
     */
     private void Crouch()
     {
-        if(_charController.height != crouchingHeight && crouching)
+        float lastHeight = _charController.height;
+        if (!crouched)
         {
-            float lastHeight = _charController.height;
-            currentStateBuildUp += crouchOnBuildUp * Time.deltaTime;
-            _charController.height = Mathf.Lerp(normalHeight, crouchingHeight, currentStateBuildUp);
-            _charController.Move(new Vector3(0, -((lastHeight - _charController.height) / 2), 0));
+            
+            crouchingStateBuildUp += crouchOnBuildUp * Time.deltaTime;
+            _charController.height = Mathf.Lerp(normalHeight, crouchingHeight, crouchingStateBuildUp);
+            if (!hasJumped)
+            {
+                RaycastHit hit;
+                Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit);
+                if (hit.distance <= (lastHeight / 2 + _charController.skinWidth + _charController.stepOffset)) _charController.Move(Vector3.down * hit.distance);
+            }
+            if (_charController.height == crouchingHeight)
+            {
+                crouching = false;
+                crouched = true;
+            }
         }
-        else if(_charController.height != normalHeight && !crouching)
+        else
         {
-            float lastHeight = _charController.height;
-            currentStateBuildUp += crouchOffBuildUp * Time.deltaTime;
-            _charController.height = Mathf.Lerp(crouchingHeight, normalHeight, currentStateBuildUp);
-            _charController.Move(new Vector3(0, -(lastHeight - _charController.height) / 2, 0));
+            crouchingStateBuildUp += crouchOffBuildUp * Time.deltaTime;
+            _charController.height = Mathf.Lerp(crouchingHeight, normalHeight, crouchingStateBuildUp);
+            if (!hasJumped)
+            {
+                RaycastHit hit;
+                Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit);
+                if (hit.distance <= lastHeight / 2 + _charController.skinWidth + _charController.stepOffset) _charController.Move(Vector3.up * (_charController.height / 2 + _charController.skinWidth - hit.distance));
+            }
+            if (_charController.height == normalHeight)
+            {
+                crouching = false;
+                crouched = false;
+            }
         }
     }
 
@@ -315,12 +303,8 @@ public class MovementSystem : MonoBehaviour
         speed = Mathf.Lerp(speed, runningSpeed, runningBuildUp * Time.deltaTime);
 
         //Stamina consuming
-        _status.ConsumeStamina(sConsumingRate * Time.deltaTime);
-        if (!_status.HasEnoughEnergy())
-        {
-            sNextTime = Time.time + sCooldown;
-            tired = true;
-        }
+        _staminaRecover.enabled = false;
+        _playerStatus.ConsumeStamina(staminaConsumingRate * Time.deltaTime);
     }
 
     /* Handling walking status and lerping speed tp walk speed 
@@ -332,23 +316,34 @@ public class MovementSystem : MonoBehaviour
         running = false;
         idle = false;
 
-        //Lerping from speed to running speed
-        speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
+        if((!crouched && crouching) || crouched)
+        {
+            //Lerping from speed to running speed
+            speed = Mathf.Lerp(speed, crouchingSpeed, crouchingBuildUp * Time.deltaTime);
+        }
+        else if((crouched && crouching) || !crouched)
+        {
+            //Lerping from speed to running speed
+            speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
+        }
+
+        
     }
 
     /* Handles jumping
      */
     private void Jump()
     {
+        //Stamina cost
+        _playerStatus.ConsumeStamina(staminaJumpCost);
+
         //The player is no more Grounded, he has jumped while walking or running
         hasJumped = true;
         idle = false;
 
-        //Reset Player height if he was crouching
-        crouching = false;
-        _charController.height = normalHeight;
-
         deltaY = jumpSpeed;
+
+        ySpeed = initialGravity;
 
         //Lerping from speed to falling speed
         speed = Mathf.Lerp(speed, fallingSpeed, fallingBuildUp * Time.deltaTime);
@@ -368,70 +363,6 @@ public class MovementSystem : MonoBehaviour
         speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
     }
 
-    /* Handles the jetpack activation. Consumes fuel and start to lerping to jetpackXZ speed
-     */
-    private void JetpackActivation()
-    {
-        //Jetpack Activation
-        jetpack = true;
-        falling = false;
-
-        //Lerping from speed to falling speed
-        speed = Mathf.Lerp(speed, jetpackXZSpeed, jetpackBuildUp * Time.deltaTime);
-
-        deltaY = jetpackYSpeed;
-
-        ySpeed = initialGravity; //resetting Gravity
-
-        startFallingY = float.NegativeInfinity;
-
-        _status.ConsumeFuel(fActivationCost);
-        if (!_status.HasEnoughFuel())
-        {
-            falling = true;
-            jetpack = false;
-        }
-    }
-    
-    /*Handles Jetpack usage. 
-     */
-    private void Jetpack()
-    {
-        //Jetpack
-        //Lerping from speed to falling speed
-        speed = Mathf.Lerp(speed, jetpackXZSpeed, jetpackBuildUp * Time.deltaTime);
-        deltaY = jetpackYSpeed;
-
-        startFallingY = float.NegativeInfinity;
-
-        _status.ConsumeFuel(fConsumigRate * Time.deltaTime);
-        if (!_status.HasEnoughFuel())
-        {
-            falling = true;
-            jetpack = false;
-        }
-    }
-    
-    /*Handles the jetpack's deactivation. Then the starting falling y will be updated and the 
-     * player will start to fall
-     */
-    private void JetpackDeactivation()
-    {
-        //Jetpack disactivation
-        falling = true;
-        jetpack = false;
-
-        //Lerping from speed to falling speed
-        speed = Mathf.Lerp(speed, fallingSpeed, fallingBuildUp * Time.deltaTime);
-
-        //Acceleration due to gravity and locking to limit speed
-        ySpeed += gravity * Time.deltaTime;
-        deltaY -= ySpeed * Time.deltaTime;
-        deltaY = Mathf.Clamp(deltaY, minDeltaY, float.PositiveInfinity);
-
-        startFallingY = transform.position.y;
-    }
-
     /*Handles the falling state. During the falling state the starting falling y will be updated to ensure a correct calculation of the fall damage
      */
     private void Falling()
@@ -447,6 +378,9 @@ public class MovementSystem : MonoBehaviour
         deltaY -= ySpeed * Time.deltaTime;
         deltaY = Mathf.Clamp(deltaY, minDeltaY, float.PositiveInfinity);
 
+        
+
+        //Updating strat falling position for handleing fall damage
         if (transform.position.y > startFallingY) startFallingY = transform.position.y;
     }
 
@@ -466,4 +400,59 @@ public class MovementSystem : MonoBehaviour
         _charController.Move(movement);
     }
 
+    /*This method handles stamina recovering.
+     * If the player is at 0 points of stamina he will be considered tired.
+     * If he is tired and has more than tiredThreashold in % of stamina he won't be considered tired
+     */
+    private void StaminaRecover()
+    {
+        if (!running && !_playerStatus.IsFullStamina() && _staminaRecover.enabled == false) _staminaRecover.enabled = true;
+        if (!_playerStatus.HasEnoughStamina()) tired = true;
+        else if (tired && (_playerStatus.GetStamina() / _playerStatus.GetMaxStamina()) >= tiredThreashold) tired = false;
+    }
+
+    /* This script uses this method to establish if the character is grounded or not
+     */
+    public void SetIsGrounded()
+    {
+        RaycastHit hit;
+        Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroudedRadius, out hit);
+        isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold);
+    }
+
+    /* This method will set the new targeted speed and the new build up for lerping
+     */
+    public void SetSpeed(float newSpeed, float newBuildUp)
+    {
+        currentTargetSpeed = newSpeed;
+        currentBuildUp = newBuildUp;
+        crouchingStateBuildUp = 0f;
+    }
+
+    /* This method is used to add a vertical speed to the movement.
+     * Whenever this happens accumulated gravity will be deleted
+     */
+    public void SetYSpeed(float newSpeed)
+    {
+        deltaY = newSpeed;
+
+        ySpeed = initialGravity; //resetting Gravity
+
+        startFallingY = float.NegativeInfinity;
+    }
+
+    private void SlidingEdges()
+    {
+        RaycastHit hit;
+        Vector3 charPosition = _charController.transform.position;
+        Vector3 origin = new Vector3(charPosition.x, charPosition.y - (_charController.height / 2 - _charController.radius), charPosition.z);
+        Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit);
+        if(hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold))
+        {
+            Vector3 slidingMovement = transform.position - hit.point;
+            slidingMovement.y = 0f;
+            slidingMovement *= slidingFactor;
+            _charController.Move(slidingMovement * Time.deltaTime);
+        } 
+    }
 }
