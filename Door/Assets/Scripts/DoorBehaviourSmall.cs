@@ -67,7 +67,7 @@ public class DoorBehaviourSmall : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GameObject pl = other.gameObject;
-        if (pl!=null && pl.tag.Equals("PLayer"))
+        if (pl!=null && pl.tag.Equals("Player"))
         {
             hasCollided = true;
             hasGone = false;
@@ -78,7 +78,7 @@ public class DoorBehaviourSmall : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         GameObject pl = other.gameObject;
-        if (pl!=null && pl.tag.Equals("PLayer"))
+        if (pl!=null && pl.tag.Equals("Player"))
         {
             hasGone = true;
             hasCollided = false;
