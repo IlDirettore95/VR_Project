@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
@@ -40,6 +41,7 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     public GameObject projectilePrefab;
 
     //AI
+    protected NavMeshAgent _agent;
     protected Transform playerTransform;
     protected GameObject player;
     protected Rigidbody rb;
@@ -57,25 +59,29 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 
     private void OnCollisionEnter(Collision collision)
     {
-        ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
+       ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
         if (collider != null)
         {
             Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
             if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
                 isPlayerAffected = true;
+                //_agent.enabled = false;
+                rb.isKinematic = false;
                 rb.useGravity = true;
                 triggered = true;
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
                 Debug.Log("Damage = " + damage);
                 Hurt(damage);
+                rb.AddForce(colliderRb.velocity.normalized * 30, ForceMode.Impulse);
+                Debug.Log("forza: " + colliderRb.mass * colliderRb.velocity);
             }
         }
         else
         {
-            isPlayerAffected = true;
-            rb.useGravity = true;
-            triggered = true;
+            //isPlayerAffected = true;
+            //rb.useGravity = true;
+            //triggered = true;
             float damage = rb.mass * speed;
             Debug.Log("Damage = " + damage);
             Hurt(damage);
@@ -136,7 +142,12 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public virtual void ReactToAttraction(float attractionSpeed)
     {
-        throw new System.NotImplementedException();
+        _agent.enabled = false;
+        rb.isKinematic = false;
+        isPlayerAffected = true;
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+        rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
     public virtual void ReactToRepulsing()
@@ -146,12 +157,18 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public virtual void ReactToReleasing()
     {
-        throw new System.NotImplementedException();
+        isPlayerAffected = false;
+        rb.useGravity = false;
+        rb.isKinematic = true;
+        _agent.enabled = true;
     }
 
     public virtual void ReactToLaunching(float launchingSpeed)
     {
-        throw new System.NotImplementedException();
+        rb.freezeRotation = false;
+        rb.useGravity = true;
+        rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
+        rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 
     public virtual void ReactToIncreasing()

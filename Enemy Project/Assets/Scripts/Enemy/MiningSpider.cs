@@ -6,7 +6,6 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class MiningSpider : Enemy
 {
-    private NavMeshAgent _agent;
     private bool exploding = false;
 
     //Explosion
@@ -25,11 +24,13 @@ public class MiningSpider : Enemy
         playerTransform = GameObject.Find("Player").transform;
         _playerStatus = playerTransform.GetComponent<PlayerStatus>();
         _health = MaxHealth;
+        target = GameObject.Find("ObjectGrabber").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (_health == 0)
         {
             Explode();
@@ -55,6 +56,7 @@ public class MiningSpider : Enemy
             {
                 //Is no more calm
                 //Debug.Log("TRIGGERED");
+                //Debug.Log("rb velocity = " + rb.velocity.magnitude);
 
                 //Lerping speed to triggered speed
                 speed = Mathf.Lerp(speed, triggeredSpeed, triggeredSpeedBuildUp * Time.deltaTime);
@@ -66,7 +68,7 @@ public class MiningSpider : Enemy
                 //Follow the player
                 if (_agent.remainingDistance <= attackDistance)
                 {
-                    Debug.Log("EXPLODE");
+                    //Debug.Log("EXPLODE");
                     exploding = true;
                     nextTimeExplosion = Time.time + explosionCooldown;
                 }
@@ -96,6 +98,17 @@ public class MiningSpider : Enemy
 
             }
         }
+        else if (rb.velocity == Vector3.zero)
+        {
+            isPlayerAffected = false;
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            _agent.enabled = true;
+        }
+        else
+        {
+            speed = rb.velocity.magnitude;
+        }
     }
 
     private void Explode()
@@ -110,6 +123,18 @@ public class MiningSpider : Enemy
     {
         Explode();
         Debug.Log("Sono esploso per colpa di un Ragno!");
+    }
+
+    public override void ReactToAttraction(float attractionSpeed)
+    {
+        _agent.enabled = false;
+        
+        rb.isKinematic = false;
+        isPlayerAffected = true;
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+
+        rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
 }
