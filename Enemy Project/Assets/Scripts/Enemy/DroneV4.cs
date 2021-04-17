@@ -149,7 +149,14 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     private void Shoot()
     {
-        Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        {
+            if (hit.transform.gameObject.tag.Equals("Player"))
+            {
+                Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -266,5 +273,15 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
     public void SetID(int id)
     {
         enemyID = id;
+    }
+
+    public int GetAreaID()
+    {
+        return areaID;
+    }
+
+    public void SetAreaID(int id)
+    {
+        areaID = id;
     }
 }

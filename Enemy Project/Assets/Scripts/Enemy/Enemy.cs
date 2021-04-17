@@ -58,6 +58,11 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         areaID = ID;
     }
 
+    public int GetAreaID()
+    {
+        return areaID;
+    }
+
     public void SetID(int id)
     {
         enemyID = id;

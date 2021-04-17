@@ -4,9 +4,14 @@ using UnityEngine;
 
 public interface IEnemy
 {
+    
     int GetID();
 
     void SetID(int id);
+
+    int GetAreaID();
+
+    void SetAreaID(int id);
 
     void Hurt(float damage); //Take damage and decrease enemy healt
 

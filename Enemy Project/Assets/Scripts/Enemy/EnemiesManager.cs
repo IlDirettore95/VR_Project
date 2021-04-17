@@ -78,6 +78,8 @@ public class EnemiesManager : MonoBehaviour
         //Instantiate the enemies assigned in the area identified by areaID.
         //Reactivate previously killed enemies.
 
+        if (enemiesArea[areaID].Count != 0) return;  //If the player pass multiple time through the EnemiesAreaTrigger, this prevent the spawning of more enemies than expected
+
         foreach (SpawnPoint sp in spawnPoints[areaID])
         {
             int enemyType = sp.GetEnemyType();
@@ -88,6 +90,7 @@ public class EnemiesManager : MonoBehaviour
                 enemiesPool[enemyType].RemoveAt(0);
 
                 enemy.transform.position = sp.transform.position;
+                enemy.GetComponent<IEnemy>().SetAreaID(areaID);
                 enemy.SetActive(true);
                 //enemy.GetComponent<IEnemy>().Revive();
             }
@@ -103,12 +106,14 @@ public class EnemiesManager : MonoBehaviour
 
     public void CollectEnemy(GameObject enemy)
     {
-        //When an enemy dies, this method move the enemy game object to an hidden space point in the scene, in order to be reallocated in the future.
-        //At the same time the enemy behaviour is disactivated.
+        //When an enemy dies, this method disables it and make it available in the pool.
 
-        //enemy.GetComponent<Renderer>().enabled = false;
         enemy.SetActive(false);
-        //enemy.transform.position = transform.position;
-        //enemiesPool[0].Add(enemy);
+
+        IEnemy e = enemy.GetComponent<IEnemy>();
+        int enemyID = e.GetID();
+        int areaID = e.GetAreaID();
+        enemiesPool[enemyID].Add(enemy);
+        enemiesArea[areaID].Remove(enemy);
     }
 }
