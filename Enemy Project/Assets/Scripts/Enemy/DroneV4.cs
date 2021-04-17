@@ -2,8 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneV4 : Enemy
+public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
 {
+    //Enemy manager
+    private EnemiesManager enemyManager;
+    public int areaID;
+    public int enemyID;
+
+    //Enemy state
+    private bool idle = true;
+    private bool walking = false;
+    private bool triggered = false;
+    private bool isPlayerAffected = false;
+    private bool dead = false;
+
+    //Enemy status
+    public float MaxHealth;
+    private float _health;
+
+    //Speed
+    public float walkingSpeed;
+    public float triggeredSpeed;
+    public float walkingSpeedBuildUp;
+    public float triggeredSpeedBuildUp;
+
+    //Trigger
+    public float triggerPlayerDistance;
+    public float triggerEnemyDistance;
+
+    //Attack
+    public float attackDistance;
+    public float attackDamage;
+    public float fireCooldown;
+    private float nextTimeFire;
+    public Transform firePoint;
+    public GameObject projectilePrefab;
+
+    //AI
+    private Transform playerTransform;
+    private GameObject player;
+    private Rigidbody rb;
+    private Vector3 lastPosition;
+    private PlayerStatus _playerStatus;
+
+    //Player Interaction
+    private Transform target;
+    private float speed;  //Used to calculate damage when the enemy is launched by the player against static objects
+
     // Start is called before the first frame update
     void Start()
     {
@@ -107,7 +152,71 @@ public class DroneV4 : Enemy
         Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
     }
 
-    public override void ReactToAttraction(float attractionSpeed)
+    private void OnCollisionEnter(Collision collision)
+    {
+        ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
+        if (collider != null)
+        {
+            Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
+            if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
+            {
+                isPlayerAffected = true;
+                rb.useGravity = true;
+                triggered = true;
+                float damage = colliderRb.mass * colliderRb.velocity.magnitude;
+                Debug.Log("Damage = " + damage);
+                Hurt(damage);
+            }
+        }
+        else
+        {
+            float damage = rb.mass * speed;
+            Debug.Log("Damage = " + damage);
+            Hurt(damage);
+        }
+    }
+
+    public void Hurt(float damage)
+    {
+        _health -= damage;
+        if (_health <= 0) dead = true;
+    }
+
+    protected void Die()
+    {
+        Debug.Log("Nemico morto");
+        enemyManager.CollectEnemy(gameObject);
+    }
+
+    public void Revive()
+    {
+        idle = true;
+        walking = false;
+        triggered = false;
+        isPlayerAffected = false;
+        dead = false;
+
+        _health = MaxHealth;
+        rb.velocity = Vector3.zero;
+        rb.useGravity = false;
+    }
+
+    public void BeTriggered()
+    {
+        triggered = true;
+    }
+
+    public virtual void MoveTo(Vector3 point)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void Patrol(Vector3[] path)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void ReactToAttraction(float attractionSpeed)
     {
         isPlayerAffected = true;
         rb.useGravity = false;
@@ -115,16 +224,47 @@ public class DroneV4 : Enemy
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
-    public override void ReactToReleasing()
+    public virtual void ReactToRepulsing()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void ReactToReleasing()
     {
         isPlayerAffected = false;
         rb.useGravity = false;
     }
 
-    public override void ReactToLaunching(float launchingSpeed)
+    public virtual void ReactToLaunching(float launchingSpeed)
     {
+        rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+    }
+
+    public virtual void ReactToIncreasing()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void ReactToDecreasing()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void ReactToExplosion(float damage)
+    {
+        Hurt(damage);
+    }
+
+    public int GetID()
+    {
+        return enemyID;
+    }
+
+    public void SetID(int id)
+    {
+        enemyID = id;
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class MiningSpider : Enemy
 {
     private bool exploding = false;
@@ -25,6 +24,7 @@ public class MiningSpider : Enemy
         _playerStatus = playerTransform.GetComponent<PlayerStatus>();
         _health = MaxHealth;
         target = GameObject.Find("ObjectGrabber").transform;
+        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
     }
 
     // Update is called once per frame
@@ -123,18 +123,6 @@ public class MiningSpider : Enemy
     {
         Explode();
         Debug.Log("Sono esploso per colpa di un Ragno!");
-    }
-
-    public override void ReactToAttraction(float attractionSpeed)
-    {
-        _agent.enabled = false;
-        
-        rb.isKinematic = false;
-        isPlayerAffected = true;
-        rb.useGravity = false;
-        rb.freezeRotation = true;
-
-        rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
 }

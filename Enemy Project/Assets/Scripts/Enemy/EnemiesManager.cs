@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemiesManager : MonoBehaviour
 {
-    private int maxDronePrefabs;
+    public int[] maxEnemiesPrefabs;
+
     public GameObject[] enemiesPrefabs;  //Enemies prefabs. Each element contain a different prefabs.
     private Dictionary<int, List<GameObject>> enemiesPool;  //Pool of all the enemies available. Each element contains an array of enemies of the same type.
     private Dictionary<int, List<GameObject>> enemiesArea;  //Each element of this table cointains the enemies present in an area.
@@ -13,25 +14,10 @@ public class EnemiesManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemiesPool = new Dictionary<int, List<GameObject>>();
-        spawnPoints = new Dictionary<int, List<SpawnPoint>>();
-        enemiesArea = new Dictionary<int, List<GameObject>>();
+        InstantiatePrefabs();
 
-        GameObject spawnpoints = GameObject.FindGameObjectWithTag("SpawnPoints");
-        SpawnPoint[] spawnpoint = spawnpoints.GetComponentsInChildren<SpawnPoint>();
-        foreach(SpawnPoint sp in spawnpoint)
-        {
-            spawnPoints[sp.GetAreaID()].Add(sp);
-        }
-        
-        for(int i = 0; i < enemiesPrefabs.Length; i++)
-        {
-            for(int j = 0; j < maxDronePrefabs; j++)
-            {
-                GameObject enemy = Instantiate(enemiesPrefabs[i], transform.position, transform.rotation);
-                enemy.SetActive(false);
-            }
-        }
+        InizializeSpawnpoint();
+
     }
 
     // Update is called once per frame
@@ -44,49 +30,75 @@ public class EnemiesManager : MonoBehaviour
     {
         //Instantiate the maximum enemy prefabs available for the scene
 
+        enemiesPool = new Dictionary<int, List<GameObject>>();
 
+        for(int i = 0; i < maxEnemiesPrefabs.Length; i++)
+        {
+            enemiesPool[i] = new List<GameObject>();
+            for(int j = 0; j < maxEnemiesPrefabs[i]; j++)
+            {
+                GameObject enemy = Instantiate(enemiesPrefabs[i], transform.position, transform.rotation);
+                IEnemy e = enemy.GetComponent<IEnemy>();
+                e.SetID(i);
+                enemy.SetActive(false);
+                enemiesPool[i].Add(enemy);
+            }
+        }
+    }
+
+    private void InizializeSpawnpoint()
+    {
+        //Find all the spawnpoint present in the scene and collect them in a dictonary according to their areaID.
+
+        spawnPoints = new Dictionary<int, List<SpawnPoint>>();
+        enemiesArea = new Dictionary<int, List<GameObject>>();
+
+        GameObject spawnpoints = GameObject.FindGameObjectWithTag("SpawnPoints");
+        SpawnPoint[] spawnpoint = spawnpoints.GetComponentsInChildren<SpawnPoint>();
+        foreach (SpawnPoint sp in spawnpoint)
+        {
+            int areaID = sp.GetAreaID();
+
+            if (!spawnPoints.ContainsKey(areaID))
+            {
+                spawnPoints.Add(areaID, new List<SpawnPoint>());
+            }
+
+            spawnPoints[areaID].Add(sp);
+
+            if(!enemiesArea.ContainsKey(areaID))
+            {
+                enemiesArea.Add(areaID, new List<GameObject>());
+            }
+        }
+    }
+
+    public void PopolateArea(int areaID)
+    {
+        //Instantiate the enemies assigned in the area identified by areaID.
+        //Reactivate previously killed enemies.
+
+        foreach (SpawnPoint sp in spawnPoints[areaID])
+        {
+            int enemyType = sp.GetEnemyType();
+            GameObject enemy = enemiesPool[enemyType][0];
+            if(enemy != null)  //enemy is null if no more enemies of this type is currently available
+            {
+                enemiesArea[areaID].Add(enemy);
+                enemiesPool[enemyType].RemoveAt(0);
+
+                enemy.transform.position = sp.transform.position;
+                enemy.SetActive(true);
+                //enemy.GetComponent<IEnemy>().Revive();
+            }
+        }
     }
 
     public void TriggerArea(int areaID)
     {
         //Trigger all the enemies in the area identified by areaID.
 
-        /*
-        EnemiesArea ea = enemiesArea[areaID];
-        List<GameObject> enemies = ea.GetEnemies();
-        foreach (GameObject enemy in enemies)
-        {
-            enemy.GetComponent<IEnemy>().BeTriggered();
-        }
-        */
-    }
-
-    public void PopolateArea(int areaID)
-    {
-        //Instantiate the enemies assigned in the area identified by areaID.
-        //Reactivate the behavior of previously killed enemies.
-
-        foreach(SpawnPoint sp in spawnPoints[areaID])
-        {
-            GameObject enemy = enemiesPool[sp.GetEnemyType()][0];
-            enemy.transform.position = sp.transform.position;
-            enemy.SetActive(true);
-            enemy.GetComponent<IEnemy>().Revive();
-        }
-
-
-        /*
-        EnemiesArea ea = enemiesArea[areaID];
-        List<GameObject> sp = enemiesArea[areaID].GetSpawnPoints();
-        List<GameObject> enemies = ea.GetEnemies();
-        for(int i = 0; i < enemies.Capacity; i++)
-        {
-            enemies[i].transform.position = sp[i].transform.position;
-            enemies[i].GetComponent<DroneV3>().Revive();
-            enemies[i].SetActive(true);
-            
-        }
-        */
+        
     }
 
     public void CollectEnemy(GameObject enemy)

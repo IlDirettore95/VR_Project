@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 {
     //Enemy manager
@@ -57,6 +58,16 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         areaID = ID;
     }
 
+    public void SetID(int id)
+    {
+        enemyID = id;
+    }
+
+    public int GetID()
+    {
+        return enemyID;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
        ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
@@ -66,7 +77,7 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
             if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
                 isPlayerAffected = true;
-                //_agent.enabled = false;
+                _agent.enabled = false;
                 rb.isKinematic = false;
                 rb.useGravity = true;
                 triggered = true;
@@ -79,9 +90,6 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         }
         else
         {
-            //isPlayerAffected = true;
-            //rb.useGravity = true;
-            //triggered = true;
             float damage = rb.mass * speed;
             Debug.Log("Damage = " + damage);
             Hurt(damage);
@@ -109,7 +117,6 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         dead = false;
 
         _health = MaxHealth;
-        rb.velocity = Vector3.zero;
         rb.useGravity = false;
     }
 
