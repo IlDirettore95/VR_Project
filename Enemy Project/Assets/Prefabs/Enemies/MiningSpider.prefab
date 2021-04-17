@@ -291,8 +291,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.809863, y: 0.9115013, z: 0.6958504}
-  m_Center: {x: 0.000037133694, y: 0.9886678, z: -0.004693985}
+  m_Size: {x: 0.8033991, y: 0.92696023, z: 0.7249603}
+  m_Center: {x: 0.003174305, y: 0.9963974, z: 0.00049209595}
 --- !u!54 &9154340357943826808
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 0
   enemyID: 0
-  MaxHealth: 1
+  MaxHealth: 5
   walkingSpeed: 3
   triggeredSpeed: 6
   walkingSpeedBuildUp: 0

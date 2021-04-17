@@ -40,6 +40,7 @@ public class EnemiesManager : MonoBehaviour
                 GameObject enemy = Instantiate(enemiesPrefabs[i], transform.position, transform.rotation);
                 IEnemy e = enemy.GetComponent<IEnemy>();
                 e.SetID(i);
+                e.Initialize();
                 enemy.SetActive(false);
                 enemiesPool[i].Add(enemy);
             }
@@ -92,7 +93,7 @@ public class EnemiesManager : MonoBehaviour
                 enemy.transform.position = sp.transform.position;
                 enemy.GetComponent<IEnemy>().SetAreaID(areaID);
                 enemy.SetActive(true);
-                //enemy.GetComponent<IEnemy>().Revive();
+                enemy.GetComponent<IEnemy>().Revive();
             }
         }
     }

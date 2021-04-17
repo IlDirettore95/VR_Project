@@ -13,6 +13,8 @@ public interface IEnemy
 
     void SetAreaID(int id);
 
+    void Initialize();
+
     void Hurt(float damage); //Take damage and decrease enemy healt
 
     void Revive();

@@ -16,12 +16,15 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     protected bool idle = true;
     protected bool walking = false;
     protected bool triggered = false;
-    protected bool isPlayerAffected = false;
+   // protected bool isPlayerAffected = false;
     protected bool dead = false;
+    protected bool attracted = false;
+    protected bool throwed = false;
 
     //Enemy status
     public float MaxHealth;
     protected float _health;
+    public float damageThreashold;
 
     //Speed
     public float walkingSpeed;
@@ -81,7 +84,7 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
             Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
             if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
-                isPlayerAffected = true;
+                throwed = true;
                 _agent.enabled = false;
                 rb.isKinematic = false;
                 rb.useGravity = true;
@@ -89,22 +92,27 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
                 Debug.Log("Damage = " + damage);
                 Hurt(damage);
-                rb.AddForce(colliderRb.velocity.normalized * 30, ForceMode.Impulse);
-                Debug.Log("forza: " + colliderRb.mass * colliderRb.velocity);
             }
         }
         else
         {
-            float damage = rb.mass * speed;
-            Debug.Log("Damage = " + damage);
-            Hurt(damage);
+            if(rb.velocity.magnitude > damageThreashold)
+            {
+                float damage = rb.mass * speed;
+                Debug.Log("Damage = " + damage);
+                Hurt(damage);
+            }
         }
     }
 
     public void Hurt(float damage)
     {
-        _health -= damage;
-        if (_health <= 0) dead = true;
+        if (!dead && damage >= 1)
+        {
+            triggered = true;
+            _health -= damage;
+            if (_health <= 0) dead = true;
+        }  
     }
 
     protected void Die()
@@ -112,17 +120,20 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         Debug.Log("Nemico morto");
         enemyManager.CollectEnemy(gameObject);
     }
-
-    public void Revive()
+   
+    public virtual void Revive()
     {
         idle = true;
         walking = false;
         triggered = false;
-        isPlayerAffected = false;
+        throwed = false;
+        attracted = false;
         dead = false;
 
         _health = MaxHealth;
         rb.useGravity = false;
+        rb.isKinematic = true;
+        _agent.enabled = true;
     }
 
     public void BeTriggered()
@@ -154,9 +165,11 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public virtual void ReactToAttraction(float attractionSpeed)
     {
+        triggered = true;
         _agent.enabled = false;
         rb.isKinematic = false;
-        isPlayerAffected = true;
+        attracted = true;
+        throwed = false;
         rb.useGravity = false;
         rb.freezeRotation = true;
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
@@ -169,14 +182,17 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public virtual void ReactToReleasing()
     {
-        isPlayerAffected = false;
-        rb.useGravity = false;
-        rb.isKinematic = true;
-        _agent.enabled = true;
+        attracted = false;
+        throwed = true;
+        rb.useGravity = true;
+        rb.freezeRotation = false;
+        rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
     }
 
     public virtual void ReactToLaunching(float launchingSpeed)
     {
+        attracted = false;
+        throwed = true;
         rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
@@ -196,5 +212,10 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     public virtual void ReactToExplosion(float damage)
     {
         Hurt(damage);
+    }
+
+    public virtual void Initialize()
+    {
+        throw new System.NotImplementedException();
     }
 }

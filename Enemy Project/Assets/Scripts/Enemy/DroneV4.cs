@@ -107,7 +107,7 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
                 }
                 else if (playerDistance < attackDistance)
                 {
-                    rb.velocity = Vector3.zero;
+                    //rb.velocity = Vector3.zero;
                     if (Time.time >= nextTimeFire)
                     {
                         Shoot();
@@ -116,7 +116,7 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
                 }
             }
         }
-        else if (rb.velocity == Vector3.zero)
+        else if (rb.velocity.magnitude <= 1.5)
         {
             isPlayerAffected = false;
             rb.useGravity = false;
@@ -213,17 +213,17 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
         triggered = true;
     }
 
-    public virtual void MoveTo(Vector3 point)
+    public void MoveTo(Vector3 point)
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void Patrol(Vector3[] path)
+    public void Patrol(Vector3[] path)
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void ReactToAttraction(float attractionSpeed)
+    public void ReactToAttraction(float attractionSpeed)
     {
         isPlayerAffected = true;
         rb.useGravity = false;
@@ -231,36 +231,38 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
-    public virtual void ReactToRepulsing()
+    public void ReactToRepulsing()
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void ReactToReleasing()
+    public void ReactToReleasing()
     {
         isPlayerAffected = false;
         rb.useGravity = false;
     }
 
-    public virtual void ReactToLaunching(float launchingSpeed)
+    public void ReactToLaunching(float launchingSpeed)
     {
         rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
+        rb.velocity = Vector3.zero;
+        rb.velocity += target.forward * 10;
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 
-    public virtual void ReactToIncreasing()
+    public void ReactToIncreasing()
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void ReactToDecreasing()
+    public void ReactToDecreasing()
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void ReactToExplosion(float damage)
+    public void ReactToExplosion(float damage)
     {
         Hurt(damage);
     }
@@ -283,5 +285,22 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
     public void SetAreaID(int id)
     {
         areaID = id;
+    }
+
+    public void Initialize()
+    {
+        _health = MaxHealth;
+
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+
+        player = GameObject.Find("Player");
+        playerTransform = player.transform;
+        lastPosition = Vector3.zero;
+
+        target = GameObject.Find("ObjectGrabber").transform;
+
+        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
     }
 }
