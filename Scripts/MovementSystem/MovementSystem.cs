@@ -50,8 +50,8 @@ public class MovementSystem : MonoBehaviour
     public float crouchOnBuildUp; //crouching transition on
     public float crouchOffBuildUp; //crouching transition off
     public float crouchingBuildUp; //X,Z speed
-    [HideInInspector] public float currentBuildUp; //Player's current build up speed
-    [HideInInspector] public float currentStateBuildUp; //BuildUp's current state, everytime a speed is changed is reset to 0
+    private float currentBuildUp; //Player's current build up speed
+    private float currentStateBuildUp; //BuildUp's current state, everytime a speed is changed is reset to 0
 
     //X,Y,Z deltas
     private float deltaX = 0f;
@@ -59,7 +59,8 @@ public class MovementSystem : MonoBehaviour
     public float minDeltaY; //Limit speed while falling
     private float deltaZ = 0f;
     private float speed = 0f; //Player's general speed
-    [HideInInspector] public float currentTargetSpeed = 0f; //Player's current targeted speed, if it doesn't change it will be the speed after lerping
+    private float currentTargetSpeed = 0f;
+    private float oldTargetSpeed = 0f; 
 
     //Fall Damage
     [HideInInspector] public float startFallingY = float.NegativeInfinity;
@@ -99,7 +100,7 @@ public class MovementSystem : MonoBehaviour
     {
         deltaX = Input.GetAxis("Horizontal");
         deltaZ = Input.GetAxis("Vertical");
-        Debug.Log("deltaY= " + deltaY + " gravity= " + ySpeed + " speed= " + speed + " t= " + Time.time);
+        Debug.Log("speed= " + speed);
 
         //Setting player status according to the listened inputs
         SetIsGrounded();
@@ -130,10 +131,10 @@ public class MovementSystem : MonoBehaviour
                 //The player is surely walking
                 else Walk();
 
-                if (Input.GetButtonDown("Jump") && !tired) Jump();
+                if (Input.GetButtonDown("Jump")) Jump();
             }
             //Jumping
-            else if (Input.GetButtonDown("Jump") && !tired) Jump();
+            else if (Input.GetButtonDown("Jump")) Jump();
 
             else
             {
@@ -171,7 +172,7 @@ public class MovementSystem : MonoBehaviour
         }
         else
             if (wasGrounded) wasGrounded = false;
-
+        HandlingSpeed();
         Move();
     }
 
@@ -300,7 +301,7 @@ public class MovementSystem : MonoBehaviour
         tired = false;
 
         //Lerping from walk speed to running speed
-        speed = Mathf.Lerp(speed, runningSpeed, runningBuildUp * Time.deltaTime);
+        SetSpeed(runningSpeed, runningBuildUp);
 
         //Stamina consuming
         _staminaRecover.enabled = false;
@@ -316,15 +317,16 @@ public class MovementSystem : MonoBehaviour
         running = false;
         idle = false;
 
-        if((!crouched && crouching) || crouched)
+        if((!crouched && crouching) || (crouched && !crouching))
         {
-            //Lerping from speed to running speed
-            speed = Mathf.Lerp(speed, crouchingSpeed, crouchingBuildUp * Time.deltaTime);
+            
+            //Lerping from speed to crouching speed
+            SetSpeed(crouchingSpeed, crouchingBuildUp);
         }
-        else if((crouched && crouching) || !crouched)
+        else if((crouched && crouching) || (!crouched && !crouching))
         {
-            //Lerping from speed to running speed
-            speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
+            //Lerping from speed to walking speed
+            SetSpeed(walkingSpeed, walkingBuildUp);
         }
 
         
@@ -334,8 +336,6 @@ public class MovementSystem : MonoBehaviour
      */
     private void Jump()
     {
-        //Stamina cost
-        _playerStatus.ConsumeStamina(staminaJumpCost);
 
         //The player is no more Grounded, he has jumped while walking or running
         hasJumped = true;
@@ -346,7 +346,7 @@ public class MovementSystem : MonoBehaviour
         ySpeed = initialGravity;
 
         //Lerping from speed to falling speed
-        speed = Mathf.Lerp(speed, fallingSpeed, fallingBuildUp * Time.deltaTime);
+        SetSpeed(fallingSpeed, fallingBuildUp);
     }
 
     /* Handles the idle state. In this state the speed will lerp to walk speed.
@@ -360,7 +360,7 @@ public class MovementSystem : MonoBehaviour
 
         //even when idle the speed will lerp to walking speed
         //Lerping from speed to walking speed
-        speed = Mathf.Lerp(speed, walkingSpeed, walkingBuildUp * Time.deltaTime);
+        SetSpeed(0f, 0f);
     }
 
     /*Handles the falling state. During the falling state the starting falling y will be updated to ensure a correct calculation of the fall damage
@@ -371,7 +371,7 @@ public class MovementSystem : MonoBehaviour
         falling = true;
 
         //Lerping from speed to falling speed
-        speed = Mathf.Lerp(speed, fallingSpeed, fallingBuildUp * Time.deltaTime);
+        SetSpeed(fallingSpeed, fallingBuildUp);
 
         //Acceleration due to gravity and locking to limit speed
         ySpeed += gravity * Time.deltaTime;
@@ -424,9 +424,23 @@ public class MovementSystem : MonoBehaviour
      */
     public void SetSpeed(float newSpeed, float newBuildUp)
     {
+        if (currentTargetSpeed != newSpeed)
+        {
+            oldTargetSpeed = speed;
+            currentStateBuildUp = 0f;
+        }
         currentTargetSpeed = newSpeed;
         currentBuildUp = newBuildUp;
-        crouchingStateBuildUp = 0f;
+        
+    }
+
+    /* This method will update player's speed frame per frame whatever it is using the currentBuildUp.
+     * CurrentStateBuildUp is used update on the lerp
+     */
+    private void HandlingSpeed()
+    {
+        currentStateBuildUp += currentBuildUp * Time.deltaTime;
+        speed = Mathf.Lerp(oldTargetSpeed, currentTargetSpeed, currentStateBuildUp);
     }
 
     /* This method is used to add a vertical speed to the movement.
@@ -441,6 +455,8 @@ public class MovementSystem : MonoBehaviour
         startFallingY = float.NegativeInfinity;
     }
 
+    /* This method will slide the player away if he is too near the edges of a platform
+     */
     private void SlidingEdges()
     {
         RaycastHit hit;
@@ -455,4 +471,6 @@ public class MovementSystem : MonoBehaviour
             _charController.Move(slidingMovement * Time.deltaTime);
         } 
     }
+
+    
 }

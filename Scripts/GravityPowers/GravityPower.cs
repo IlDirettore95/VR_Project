@@ -16,33 +16,35 @@ public class GravityPower : MonoBehaviour
     //Keycodes
     public KeyCode attractionKey;
     public KeyCode launchingKey;
-    public KeyCode increaseKey;
-    public KeyCode decreaseKey;
-    public KeyCode shootingKey;
 
     //GravityPowers status
     private bool attracting = false;
     private bool releasing = false;
     private bool launching = false;
-    private bool increasing = false;
-    private bool decreasing = false;
-    private bool shooting = false;
 
     //ReactiveObject target
     private ReactiveObject target;
+    private Rigidbody rb;
 
     //Speeds
     public float attractionSpeed;
     public float launchingSpeed;
-    public float shootingSpeed;
+
+    //Range
+    public float attractionRange;
+
+    //Costs
+    public float attractionCost;
+    public float launchingCost;
+    private PlayerStatus _playerStatus;
+
+    //EnergyRecover
+    private EnergyRecover _energyRecover;
 
     //Aux methods for external questioning
     public bool IsAttracting() => attracting;
     public bool IsReleasing() => releasing;
     public bool IsLaunching() => launching;
-    public bool IsIncreasing() => increasing;
-    public bool IsDecreasing() => decreasing;
-    public bool IsShooting() => shooting;
 
     private Camera _camera;
 
@@ -52,6 +54,8 @@ public class GravityPower : MonoBehaviour
     void Start()
     {
         _camera = GetComponent<Camera>();
+        _energyRecover = GetComponentInParent<EnergyRecover>();
+        _playerStatus = GetComponentInParent<PlayerStatus>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
@@ -63,23 +67,24 @@ public class GravityPower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!shooting)
+        if(!attracting)
         {
-            if(!attracting)
+            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy()) Attraction();           
+        }
+        else
+        {
+            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy()) Launching();
+
+            else if (Input.GetKeyDown(attractionKey)) Releasing();
+        }
+
+        //Energy consuming
+        if(attracting)
+        {
+            _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
+            if(!_playerStatus.HasEnoughEnergy())
             {
-                if (Input.GetKeyDown(attractionKey)) Attraction();
-                    
-                else if (Input.GetKeyDown(shootingKey)) Shooting();
-            }
-            else
-            {
-                if (Input.GetKeyDown(launchingKey)) Launching();
-
-                else if (Input.GetKeyDown(increaseKey)) Increasing();
-
-                else if (Input.GetKeyDown(decreaseKey)) Decreasing();
-
-                else if (Input.GetKeyDown(attractionKey)) Releasing();
+                Releasing();
             }
         }
     }
@@ -92,6 +97,7 @@ public class GravityPower : MonoBehaviour
         }
         if(releasing)
         {
+
             target.ReactToReleasing();
             target = null;
             releasing = false;
@@ -99,6 +105,7 @@ public class GravityPower : MonoBehaviour
         }
         if(launching)
         {
+
             target.ReactToLaunching(launchingSpeed);
             target = null;
             launching = false;
@@ -111,36 +118,30 @@ public class GravityPower : MonoBehaviour
     private void Attraction()
     { 
         target = AcquireTarget();
-        if (target == null)
-        {
-            //Default action
-            return;
-        }
-        else
-        {
+        if (target != null)
+        { 
             attracting = true;
+            //energy recovery
+            _energyRecover.enabled = false;
         }
     }
 
     private void Releasing()
     {
-        
         releasing = true;
+
+        //energy recovery
+        _energyRecover.enabled = true;
     }
 
     private void Launching()
     {
         launching = true;
         attracting = false;
-    }
 
-    private void Increasing() => increasing = true;
-
-    private void Decreasing() => decreasing = true;
-
-    private void Shooting()
-    {
-        //Shoot
+        //energy cost
+        _playerStatus.ConsumeEnergy(launchingCost * rb.mass);
+        _energyRecover.enabled = true;
     }
 
     //Acquiring the target gameobject or null
@@ -149,7 +150,12 @@ public class GravityPower : MonoBehaviour
         Vector3 point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
         Ray ray = _camera.ScreenPointToRay(point);
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit)) return hit.transform.gameObject.GetComponent<ReactiveObject>();
+        if (Physics.Raycast(ray, out hit, attractionRange))
+        {
+            //I suppose this item has rigidbody
+            rb = hit.transform.gameObject.GetComponent<Rigidbody>();
+            return hit.transform.gameObject.GetComponent<ReactiveObject>();
+        }
         return null;
     }
 
@@ -169,6 +175,6 @@ public class GravityPower : MonoBehaviour
         size = 380;
         posX = 100;
         posY = 600;
-        GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching + "\nIncreasing= " + increasing + "\nDecreasing= " + decreasing + "\nShooting= " + shooting, style2);
+        GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching, style2);
     }
 }

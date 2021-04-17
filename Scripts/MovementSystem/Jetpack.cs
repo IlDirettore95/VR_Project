@@ -63,8 +63,6 @@ public class Jetpack : MonoBehaviour
             {
                 //Jetpack
 
-                //Lerping from speed to falling speed
-                _movementSystem.SetSpeed(jetpackSpeed, jetpackBuildUp);
                 //Setting Y Speed
                 _movementSystem.SetYSpeed(jetpackYSpeed);
 

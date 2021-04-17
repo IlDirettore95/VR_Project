@@ -137,7 +137,7 @@ public class PlayerStatus : MonoBehaviour
     public void RecoverEnergy(float charge)
     {
         _energy += charge;
-        if (_energy > MaxFuel) _energy = MaxFuel;
+        if (_energy > MaxEnergy) _energy = MaxEnergy;
     }
 
 
