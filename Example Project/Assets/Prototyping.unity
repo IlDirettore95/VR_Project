@@ -19881,14 +19881,15 @@ PrefabInstance:
       propertyPath: recoverRate
       value: 30
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 364211020630461279, guid: c00a2c4857574d14882486f315d3ad11,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 364211020923639391, guid: c00a2c4857574d14882486f315d3ad11,
+        type: 3}
+      propertyPath: launchingSpeed
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 1429275177215964375, guid: c00a2c4857574d14882486f315d3ad11,
         type: 3}
