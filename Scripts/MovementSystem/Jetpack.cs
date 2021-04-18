@@ -16,11 +16,13 @@ public class Jetpack : MonoBehaviour
     public float fConsumigRate;
     public float fActivationCost;
 
+    private bool wasGrounded = false;
+
     private MovementSystem _movementSystem;
     private PlayerStatus _playerStatus;
     private FuelRecover _fuelRecover;
 
-    private void Start()
+    void Start()
     {
         _movementSystem = GetComponent<MovementSystem>();
         _playerStatus = GetComponent<PlayerStatus>();
@@ -32,7 +34,12 @@ public class Jetpack : MonoBehaviour
         //Grounded
         if (_movementSystem.isGrounded)
         {
-            if (!_movementSystem.wasGrounded && !_playerStatus.IsFullFuel()) _fuelRecover.enabled = true;
+            
+            if (!wasGrounded && !_playerStatus.IsFullFuel())
+            { 
+                _movementSystem.jetpack = false;
+                _fuelRecover.enabled = true;
+            }
         }
         //Not Grounded
         else
@@ -81,5 +88,7 @@ public class Jetpack : MonoBehaviour
                 _movementSystem.startFallingY = transform.position.y;
             }
         }
+
+        wasGrounded = _movementSystem.isGrounded;
     }
 }
