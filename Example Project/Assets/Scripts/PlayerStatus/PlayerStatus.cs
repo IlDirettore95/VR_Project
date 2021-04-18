@@ -86,12 +86,12 @@ public class PlayerStatus : MonoBehaviour
     //If a player's health drops below 0 the player should be considered alive
     public void Hurt(float damage)
     {
-        _health -= damage;
-        if (_health < 0) _health = 0;
-        if (_health == 0) isAlive = false;
-
         if (isAlive)
         {
+            _health -= damage;
+            if (_health < 0) _health = 0;
+            if (_health == 0) isAlive = false;
+       
             _healRegeneration.enabled = false;
             _healRegeneration.enabled = true;
         }

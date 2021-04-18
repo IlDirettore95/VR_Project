@@ -55,7 +55,7 @@ public class MovementSystem : MonoBehaviour
 
     //X,Y,Z deltas
     private float deltaX = 0f;
-    [HideInInspector] public float deltaY = 0f;
+    private float deltaY = 0f;
     public float minDeltaY; //Limit speed while falling
     private float deltaZ = 0f;
     private float speed = 0f; //Player's general speed
@@ -82,6 +82,8 @@ public class MovementSystem : MonoBehaviour
     //Sliding on edges
     public float slidingFactor;
 
+    
+
     private CharacterController _charController;
     private PlayerStatus _playerStatus;
     private StaminaRecover _staminaRecover;
@@ -100,7 +102,6 @@ public class MovementSystem : MonoBehaviour
     {
         deltaX = Input.GetAxis("Horizontal");
         deltaZ = Input.GetAxis("Vertical");
-        Debug.Log("speed= " + speed);
 
         //Setting player status according to the listened inputs
         SetIsGrounded();
@@ -156,12 +157,10 @@ public class MovementSystem : MonoBehaviour
 
         //Stamina Recover, if the player is at full stamina is no more considered tired
         StaminaRecover();
-        
-
     }
 
     //Do to script dependecies to jetpack script, falling status and character move are moved in the late Update
-    private void LateUpdate()
+    void LateUpdate()
     {
         if (!isGrounded && !jetpack) Falling();
         
@@ -171,12 +170,15 @@ public class MovementSystem : MonoBehaviour
             if (!wasGrounded) wasGrounded = true;
         }
         else
+        {
             if (wasGrounded) wasGrounded = false;
+        }
+        
         HandlingSpeed();
         Move();
     }
 
-    private void OnGUI()
+    void OnGUI()
     {
         //For testing purposes
         GUIStyle style = new GUIStyle();
@@ -185,7 +187,7 @@ public class MovementSystem : MonoBehaviour
         int size = 380;
         float posX = 1700;
         float posY = 600;
-        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nCrouching= " + crouching + "\nCrouched= " + crouched + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY + "\nIsGrounded= " + isGrounded, style);
+        GUI.Label(new Rect(posX, posY, size, size), "Idle= " + idle + "\nWalking= " + walking + "\nRunning= " + running + "\nCrouching= " + crouching + "\nCrouched= " + crouched + "\nFalling= " + falling + "\nJetpack= " + jetpack + "\nHasJumped= " + hasJumped + "\nTired= " + tired + "\nMaxY= " + startFallingY + "\nIsGrounded= " + isGrounded + "\nWasGrounded= " + wasGrounded, style);
     }
 
     /* Handling fall damage
@@ -203,7 +205,6 @@ public class MovementSystem : MonoBehaviour
     private void SettingGroundedState()
     {
         falling = false;
-        jetpack = false;
         hasJumped = false;
         ySpeed = initialGravity; //resetting Gravity
     }
@@ -472,5 +473,19 @@ public class MovementSystem : MonoBehaviour
         } 
     }
 
-    
+    /* This power up will increase walking and running speed by a certain amount
+     */
+    public void PowerUpOn(float amount)
+    {
+        walkingSpeed += amount;
+        runningSpeed += amount;
+    }
+
+    /* This power up will increase walking and running speed by a certain amount
+     */
+    public void PowerUpOff(float amount)
+    {
+        walkingSpeed -= amount;
+        runningSpeed -= amount;
+    }
 }

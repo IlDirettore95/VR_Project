@@ -81,11 +81,20 @@ public class GravityPower : MonoBehaviour
         //Energy consuming
         if(attracting)
         {
-            _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
-            if(!_playerStatus.HasEnoughEnergy())
+            if(!target.IsDestroyed())
             {
-                Releasing();
+                _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
+                if (!_playerStatus.HasEnoughEnergy())
+                {
+                    Releasing();
+                }
             }
+            else
+            {
+                target = null;
+                attracting = false;
+            }
+            
         }
     }
 
@@ -97,7 +106,6 @@ public class GravityPower : MonoBehaviour
         }
         if(releasing)
         {
-
             target.ReactToReleasing();
             target = null;
             releasing = false;

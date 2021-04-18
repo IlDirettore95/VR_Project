@@ -154,13 +154,13 @@ GameObject:
   - component: {fileID: 364211020630461270}
   - component: {fileID: 364211020630461273}
   - component: {fileID: 364211020630461272}
-  - component: {fileID: 364211020630461275}
+  - component: {fileID: 1429275177215964375}
   - component: {fileID: 364211020630461277}
   - component: {fileID: 364211020630461276}
   - component: {fileID: 364211020630461274}
   - component: {fileID: 364211020630461269}
-  - component: {fileID: 364211020630461267}
   - component: {fileID: 364211020630461264}
+  - component: {fileID: 5925177077661672677}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -284,7 +284,7 @@ MonoBehaviour:
   MaxStamina: 100
   MaxFuel: 120
   MaxEnergy: 100
---- !u!114 &364211020630461275
+--- !u!114 &1429275177215964375
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,9 +293,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 364211020630461279}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd802f8fda5b2f347a919a4c33b4baba, type: 3}
+  m_Script: {fileID: 11500000, guid: a2f1d80b033c1a940b2f18abf1d1e9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jetpackSpeed: 5
+  jetpackYSpeed: 5
+  jetpackBuildUp: 1
+  fConsumigRate: 50
+  fActivationCost: 15
 --- !u!114 &364211020630461277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,7 +338,6 @@ MonoBehaviour:
   crouchOnBuildUp: 5
   crouchOffBuildUp: 4
   crouchingBuildUp: 4
-  deltaY: 0
   minDeltaY: -80
   startFallingY: -Infinity
   fallDamageThreashold: 10
@@ -386,23 +390,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   regenerationCooldown: 8
   regenerationRate: 2
---- !u!114 &364211020630461267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 364211020630461279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2f1d80b033c1a940b2f18abf1d1e9ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jetpackSpeed: 4
-  jetpackYSpeed: 5
-  jetpackBuildUp: 1
-  fConsumigRate: 50
-  fActivationCost: 20
 --- !u!114 &364211020630461264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +403,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recoverRate: 40
+--- !u!114 &5925177077661672677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364211020630461279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efeea282800e3bb4b90dd4abf3fb220d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 0}
+  staminaBar: {fileID: 0}
+  fuelBar: {fileID: 0}
+  energyBar: {fileID: 0}
 --- !u!1 &364211020786071849
 GameObject:
   m_ObjectHideFlags: 0
