@@ -16,7 +16,6 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     protected bool idle = true;
     protected bool walking = false;
     protected bool triggered = false;
-   // protected bool isPlayerAffected = false;
     protected bool dead = false;
     protected bool attracted = false;
     protected bool throwed = false;
@@ -99,6 +98,7 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
             if(rb.velocity.magnitude > damageThreashold)
             {
                 float damage = rb.mass * speed;
+                //damage = Mathf.Clamp(damage, 1, )
                 Debug.Log("Damage = " + damage);
                 Hurt(damage);
             }

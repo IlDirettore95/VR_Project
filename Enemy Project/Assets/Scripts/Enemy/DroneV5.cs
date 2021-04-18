@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
+public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 {
     //Enemy manager
     private EnemiesManager enemyManager;
@@ -15,6 +15,8 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
     private bool triggered = false;
     private bool isPlayerAffected = false;
     private bool dead = false;
+    protected bool attracted = false;
+    protected bool throwed = false;
 
     //Enemy status
     public float MaxHealth;
@@ -67,42 +69,35 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
         enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
     }
 
-    public void Initialize()
-    {
-        _health = MaxHealth;
-
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.freezeRotation = true;
-
-        player = GameObject.Find("Player");
-        playerTransform = player.transform;
-        lastPosition = Vector3.zero;
-
-        target = GameObject.Find("ObjectGrabber").transform;
-
-        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
-    }
-
     void FixedUpdate()
     {
-        if (dead)
+        float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
+
+        //Triggered
+        if (triggered)
         {
-            Die();
-        }
-        if (!isPlayerAffected)
-        {
-            float playerDistance = (transform.position - playerTransform.position).magnitude;
-            if (playerDistance <= triggerPlayerDistance && !triggered)
+            if (dead)
             {
-                triggered = true;
-                //enemyManager.TriggerArea(areaID);
-                nextTimeFire = Time.time + fireCooldown;
+                Die();
             }
+            else if (throwed)
+            {
+                Debug.Log("rb velocity: " + rb.velocity);
+                if (rb.velocity.magnitude < 1.5)
+                {
+                    throwed = false;
+                    rb.useGravity = false;
+                }
+                else
+                {
+                    speed = rb.velocity.magnitude;
+                }
+            }
+            else if (attracted)
+            {
 
-            Vector3 direzione;
-
-            if (!triggered)
+            }
+            else //Not playerAffected
             {
                 Scan(transform.forward);
                 Scan(-transform.forward);
@@ -110,9 +105,9 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
                 Scan(-transform.up);
                 Scan(transform.right);
                 Scan(-transform.right);
-            }
-            else
-            {
+
+                Vector3 direzione;
+
                 transform.LookAt(playerTransform.position);
                 lastPosition = playerTransform.position;
 
@@ -120,11 +115,12 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
                 {
                     direzione = transform.position - lastPosition;
                     rb.AddForce(-direzione);
-                    rb.velocity = rb.velocity.normalized * triggeredSpeed;
+                    rb.velocity.Set(rb.velocity.x, rb.velocity.y, triggeredSpeed);
                 }
                 else if (playerDistance < attackDistance)
                 {
-                    //rb.velocity = Vector3.zero;
+                    //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);
+                    rb.velocity = Vector3.zero;
                     if (Time.time >= nextTimeFire)
                     {
                         Shoot();
@@ -133,14 +129,22 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
                 }
             }
         }
-        else if (rb.velocity.magnitude <= 1.5)
-        {
-            isPlayerAffected = false;
-            rb.useGravity = false;
-        }
+        //Not triggered
         else
         {
-            speed = rb.velocity.magnitude;
+            if (playerDistance <= triggerPlayerDistance)
+            {
+                triggered = true;
+                //enemyManager.TriggerArea(areaID);
+                nextTimeFire = Time.time + fireCooldown;
+            }
+
+            Scan(transform.forward);
+            Scan(-transform.forward);
+            Scan(transform.up);
+            Scan(-transform.up);
+            Scan(transform.right);
+            Scan(-transform.right);
         }
     }
 
@@ -202,8 +206,12 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void Hurt(float damage)
     {
-        _health -= damage;
-        if (_health <= 0) dead = true;
+        if (!dead && damage >= 1)
+        {
+            triggered = true;
+            _health -= damage;
+            if (_health <= 0) dead = true;
+        }
     }
 
     protected void Die()
@@ -242,7 +250,8 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void ReactToAttraction(float attractionSpeed)
     {
-        isPlayerAffected = true;
+        attracted = true;
+        throwed = false;
         rb.useGravity = false;
         rb.freezeRotation = true;
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
@@ -255,16 +264,20 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void ReactToReleasing()
     {
-        isPlayerAffected = false;
-        rb.useGravity = false;
+        attracted = false;
+        throwed = true;
+        rb.useGravity = true;
+        rb.freezeRotation = false;
     }
 
     public void ReactToLaunching(float launchingSpeed)
     {
+        attracted = false;
+        throwed = true;
         rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
-        rb.velocity = Vector3.zero;
+        //rb.velocity = Vector3.zero;
         rb.velocity += target.forward * 10;
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
@@ -304,4 +317,20 @@ public class DroneV4 : MonoBehaviour, IEnemy, ReactiveEnemy
         areaID = id;
     }
 
+    public void Initialize()
+    {
+        _health = MaxHealth;
+
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+
+        player = GameObject.Find("Player");
+        playerTransform = player.transform;
+        lastPosition = Vector3.zero;
+
+        target = GameObject.Find("ObjectGrabber").transform;
+
+        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
+    }
 }
