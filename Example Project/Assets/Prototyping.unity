@@ -19881,6 +19881,10 @@ PrefabInstance:
       propertyPath: recoverRate
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 364211020630461279, guid: c00a2c4857574d14882486f315d3ad11,
         type: 3}
       propertyPath: m_Name
@@ -19901,5 +19905,25 @@ PrefabInstance:
       propertyPath: fActivationCost
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5925177077661672677, guid: c00a2c4857574d14882486f315d3ad11,
+        type: 3}
+      propertyPath: fuelBar
+      value: 
+      objectReference: {fileID: 1864820556}
+    - target: {fileID: 5925177077661672677, guid: c00a2c4857574d14882486f315d3ad11,
+        type: 3}
+      propertyPath: energyBar
+      value: 
+      objectReference: {fileID: 1209580563}
+    - target: {fileID: 5925177077661672677, guid: c00a2c4857574d14882486f315d3ad11,
+        type: 3}
+      propertyPath: healthBar
+      value: 
+      objectReference: {fileID: 1450880801}
+    - target: {fileID: 5925177077661672677, guid: c00a2c4857574d14882486f315d3ad11,
+        type: 3}
+      propertyPath: staminaBar
+      value: 
+      objectReference: {fileID: 535412519}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c00a2c4857574d14882486f315d3ad11, type: 3}
