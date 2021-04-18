@@ -82,7 +82,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             }
             else if (throwed)
             {
-                Debug.Log("rb velocity: " + rb.velocity);
+                //Debug.Log("rb velocity: " + rb.velocity);
                 if (rb.velocity.magnitude < 1.5)
                 {
                     throwed = false;
@@ -192,14 +192,14 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
                 rb.useGravity = true;
                 triggered = true;
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
-                Debug.Log("Damage = " + damage);
+                //Debug.Log("Damage = " + damage);
                 Hurt(damage);
             }
         }
         else
         {
             float damage = rb.mass * speed;
-            Debug.Log("Damage = " + damage);
+            //Debug.Log("Damage = " + damage);
             Hurt(damage);
         }
     }
