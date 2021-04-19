@@ -21,6 +21,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private bool attracted = false;
     private bool throwed = false;
     private bool searching = false;
+    private bool startSearch = false;
 
 
     //Enemy status
@@ -52,6 +53,10 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private Vector3 lastPosition;
     private PlayerStatus _playerStatus;
     private NavMeshAgent _agent;
+    private Vector3 lastPos;
+    private Vector3 targetPos;
+    private readonly float posBuildUp = 1f;
+    private float pos;
 
     //Player Interaction
     private Transform target;
@@ -106,12 +111,42 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             {
 
             }
+            else if (startSearch)
+            {
+                if(pos >= 1)
+                {
+                    _agent.enabled = true;
+                    searching = true;
+                    startSearch = false;
+                    _agent.destination = playerTransform.position;
+                }
+                else
+                {
+                    transform.LookAt(playerTransform.position);
+                    RaycastHit hit;
+                    //if (Physics.SphereCast(transform.position, 1f, transform.forward, out hit))
+                    if (Physics.Raycast(transform.position, transform.forward, out hit))
+                    {
+                        if (hit.transform.gameObject.tag.Equals("Player"))
+                        {
+                            startSearch = false;
+                            rb.isKinematic = false;
+                        }
+                        else
+                        {
+                            pos += posBuildUp * Time.deltaTime;
+                            transform.position = Vector3.Lerp(lastPos, targetPos, pos);
+                        }
+                    }
+                }
+            }
             else if (searching)
             {
                 //Debug.Log("searching");
                 //transform.LookAt(playerTransform.position);
                 RaycastHit hit;
-                if (Physics.SphereCast(transform.position, 1f, transform.forward, out hit))
+                //if (Physics.SphereCast(transform.position, 1f, transform.forward, out hit))
+                if(Physics.Raycast(transform.position, transform.forward, out hit))
                 {
                     if (hit.transform.gameObject.tag.Equals("Player"))
                     {
@@ -163,7 +198,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
                     }
                     else
                     {
-                        searching = true;
+                        //searching = true;
                         FindPlayer();
                     }
                 }
@@ -215,20 +250,23 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     private void FindPlayer()
     {
-        
+        lastPos = transform.position;
         Collider[] hits = Physics.OverlapSphere(transform.position, 10);
         foreach(Collider col in hits)
         {
             if (col.gameObject.name.Equals("Floor"))
             {
-                transform.position = col.ClosestPoint(transform.position);
+                targetPos = col.ClosestPoint(transform.position) + transform.up;
                 break;
             }
         }
         
         rb.isKinematic = true;
-        _agent.enabled = true;
-        _agent.destination = playerTransform.position;
+        startSearch = true;
+        pos = 0;
+
+        //_agent.enabled = true;
+        //_agent.destination = playerTransform.position;
 
         /*
         NavMeshPath path = new NavMeshPath();
