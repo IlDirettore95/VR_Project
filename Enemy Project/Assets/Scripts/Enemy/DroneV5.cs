@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 {
     //Enemy manager
@@ -15,8 +18,10 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private bool triggered = false;
     private bool isPlayerAffected = false;
     private bool dead = false;
-    protected bool attracted = false;
-    protected bool throwed = false;
+    private bool attracted = false;
+    private bool throwed = false;
+    private bool searching = false;
+
 
     //Enemy status
     public float MaxHealth;
@@ -46,6 +51,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private Rigidbody rb;
     private Vector3 lastPosition;
     private PlayerStatus _playerStatus;
+    private NavMeshAgent _agent;
 
     //Player Interaction
     private Transform target;
@@ -67,6 +73,9 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
         target = GameObject.Find("ObjectGrabber").transform;
 
         enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
+
+        _agent.GetComponent<NavMeshAgent>();
+        _agent.enabled = false;
     }
 
     void FixedUpdate()
@@ -97,34 +106,65 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             {
 
             }
+            else if (searching)
+            {
+                //Debug.Log("searching");
+                //transform.LookAt(playerTransform.position);
+                RaycastHit hit;
+                if (Physics.SphereCast(transform.position, 1f, transform.forward, out hit))
+                {
+                    if (hit.transform.gameObject.tag.Equals("Player"))
+                    {
+                        searching = false;
+                        _agent.enabled = false;
+                        rb.isKinematic = false;
+                    }
+                    else
+                    {
+                        _agent.destination = playerTransform.position;
+                    }
+                }
+            }
             else //Not playerAffected
             {
-                Scan(transform.forward);
-                Scan(-transform.forward);
-                Scan(transform.up);
-                Scan(-transform.up);
-                Scan(transform.right);
-                Scan(-transform.right);
-
                 Vector3 direzione;
 
                 transform.LookAt(playerTransform.position);
                 lastPosition = playerTransform.position;
 
-                if (playerDistance >= attackDistance)
+                RaycastHit hit;
+                if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out hit))
                 {
-                    direzione = transform.position - lastPosition;
-                    rb.AddForce(-direzione);
-                    rb.velocity.Set(rb.velocity.x, rb.velocity.y, triggeredSpeed);
-                }
-                else if (playerDistance < attackDistance)
-                {
-                    //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);
-                    rb.velocity = Vector3.zero;
-                    if (Time.time >= nextTimeFire)
+                    if (hit.transform.gameObject.tag.Equals("Player") || hit.transform.gameObject.GetComponent<ReactiveObject>() != null)
                     {
-                        Shoot();
-                        nextTimeFire = Time.time + fireCooldown;
+                        Scan(transform.forward);
+                        Scan(-transform.forward);
+                        Scan(transform.up);
+                        Scan(-transform.up);
+                        Scan(transform.right);
+                        Scan(-transform.right);
+
+                        if (playerDistance >= attackDistance)
+                        {
+                            direzione = transform.position - lastPosition;
+                            rb.AddForce(-direzione.normalized * triggeredSpeed);
+                            rb.velocity.Set(rb.velocity.x, rb.velocity.y, triggeredSpeed);
+                        }
+                        else if (playerDistance < attackDistance)
+                        {
+                            //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);
+                            rb.velocity = Vector3.zero;
+                            if (Time.time >= nextTimeFire)
+                            {
+                                Shoot();
+                                nextTimeFire = Time.time + fireCooldown;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        searching = true;
+                        FindPlayer();
                     }
                 }
             }
@@ -170,14 +210,33 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     private void Shoot()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+    }
+
+    private void FindPlayer()
+    {
+        
+        Collider[] hits = Physics.OverlapSphere(transform.position, 10);
+        foreach(Collider col in hits)
         {
-            if (hit.transform.gameObject.tag.Equals("Player"))
+            if (col.gameObject.name.Equals("Floor"))
             {
-                Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+                transform.position = col.ClosestPoint(transform.position);
+                break;
             }
         }
+        
+        rb.isKinematic = true;
+        _agent.enabled = true;
+        _agent.destination = playerTransform.position;
+
+        /*
+        NavMeshPath path = new NavMeshPath();
+        if(_agent.CalculatePath(playerTransform.position, path))
+        {
+            Vector3[] corners = path.corners;
+        }
+        */
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -188,7 +247,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
             if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
-                isPlayerAffected = true;
+                throwed = true;
                 rb.useGravity = true;
                 triggered = true;
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
@@ -332,5 +391,8 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
         target = GameObject.Find("ObjectGrabber").transform;
 
         enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
+
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.enabled = false;
     }
 }
