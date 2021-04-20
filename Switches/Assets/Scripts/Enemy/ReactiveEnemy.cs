@@ -8,4 +8,6 @@ public interface ReactiveEnemy
     void reactToExplosion(float damage);
 
     void reactToFire(float damage);
+
+    void reactToFan(float damage);
 }

@@ -8,13 +8,16 @@ public interface ReactiveObject
 {
     void ReactToAttraction(float attractionSpeed);
 
-    void ReactToRepulsing();
+   
 
     void ReactToReleasing();
 
     void ReactToLaunching(float launchingSpeed);
 
-    void ReactToIncreasing();
+ 
+    bool IsDestroyed();
 
-    void ReactToDecreasing();
+    void reactToExplosion(float damage);
+
+    void reactToFan(Vector3 direction, float angularVelocity, float damage, bool isInBox);
 }

@@ -11,6 +11,8 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     private GameObject player;
     private Transform target;
 
+    public float _health;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -18,30 +20,9 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         target = GameObject.Find("ObjectGrabber").transform;
     }
 
-    public void ReactToRepulsing(Vector3 direction, float repulsingSpeed)
-    {
-        rb.AddForce(direction * repulsingSpeed, ForceMode.Impulse);
-    }
+    
 
-   
-
-    public void ReactToLaunching(Vector3 direction, float launchingSpeed)
-    {
-        rb.AddForce(direction * launchingSpeed, ForceMode.Impulse);
-        rb.freezeRotation = false;
-        rb.velocity = Vector3.zero;
-        rb.useGravity = true;
-    }
-
-    public void ReactToIncreasing()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ReactToDecreasing()
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public void ReactToAttraction(float attractionSpeed)
     {
@@ -56,10 +37,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb.freezeRotation = false;
     }
 
-    public void ReactToRepulsing()
-    {
-        throw new NotImplementedException();
-    }
+  
 
     public void ReactToLaunching(float launchingSpeed)
     {
@@ -69,5 +47,21 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         //Add a torque to add randomness to movements
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+    }
+
+    public bool IsDestroyed()
+    {
+        return _health == 0;
+    }
+
+    public void reactToExplosion(float damage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void reactToFan(Vector3 direction, float angularVelocity, float damage, bool isInBox)
+    {
+        if(isInBox)
+            rb.AddForce(direction * angularVelocity , ForceMode.Impulse);
     }
 }

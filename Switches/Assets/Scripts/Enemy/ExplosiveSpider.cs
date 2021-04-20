@@ -172,6 +172,11 @@ public class ExplosiveSpider : MonoBehaviour, ReactiveEnemy
         throw new System.NotImplementedException();
     }
 
+    public void reactToFan(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void Hurt(float damage)
     {
         _health -= damage;
