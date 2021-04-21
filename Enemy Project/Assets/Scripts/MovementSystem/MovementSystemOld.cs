@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementSystem : MonoBehaviour
+public class MovementSystemOld : MonoBehaviour
 {
     /*This script handles the movement system
      * The player could be in the idle, walking, running, falling status
@@ -72,6 +72,7 @@ public class MovementSystem : MonoBehaviour
 
     private CharacterController _charController;
     private PlayerStatus _status;
+    private StaminaRecover _staminaRecover;
 
     //Aux methods for external questioning on player movment status
     public bool IsIdle(){return idle;}
@@ -95,6 +96,7 @@ public class MovementSystem : MonoBehaviour
     {
         _charController = GetComponent<CharacterController>();
         _status = GetComponent<PlayerStatus>();
+        _staminaRecover = GetComponent<StaminaRecover>();
     }
 
     // Update is called once per frame
@@ -118,6 +120,7 @@ public class MovementSystem : MonoBehaviour
             }
 
             //Stamina Recover, if the player is at full stamina is no more considered tired
+            //if(!running) _staminaRecover.enabled = true;
             StaminaRecover();
 
             //Fuel Recover
@@ -315,6 +318,7 @@ public class MovementSystem : MonoBehaviour
         speed = Mathf.Lerp(speed, runningSpeed, runningBuildUp * Time.deltaTime);
 
         //Stamina consuming
+        _staminaRecover.enabled = false;
         _status.ConsumeStamina(sConsumingRate * Time.deltaTime);
         if (!_status.HasEnoughEnergy())
         {

@@ -57,6 +57,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private Vector3 targetPos;
     private readonly float posBuildUp = 1f;
     private float pos;
+    private float nextTimeSearchLook = 2;
 
     //Player Interaction
     private Transform target;
@@ -118,6 +119,8 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
                     searching = true;
                     startSearch = false;
                     _agent.destination = playerTransform.position;
+
+                    nextTimeSearchLook = Time.time + 2f;
                 }
                 else
                 {
@@ -140,23 +143,34 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             }
             else if (searching)
             {
-                RaycastHit hit;
-                if (Physics.SphereCast(transform.position, 5f, transform.forward, out hit))
+                if(Time.time < nextTimeSearchLook)
                 {
-                    if (hit.transform.gameObject.tag.Equals("Player"))
+                    RaycastHit hit;
+                    if (Physics.SphereCast(transform.position, 5f, transform.forward, out hit))
                     {
-                        searching = false;
-                        _agent.enabled = false;
-                        rb.isKinematic = false;
-                    }
-                    else
-                    {
-                        _agent.destination = playerTransform.position;
-                        if(_agent.path == null)
+                        if (hit.transform.gameObject.tag.Equals("Player"))
                         {
                             searching = false;
+                            _agent.enabled = false;
+                            rb.isKinematic = false;
+                        }
+                        else
+                        {
+                            _agent.destination = playerTransform.position;
+                            if (_agent.path == null)
+                            {
+                                searching = false;
+                                _agent.enabled = false;
+                                rb.isKinematic = false;
+                            }
                         }
                     }
+                }
+                else
+                {
+                    searching = false;
+                    _agent.enabled = false;
+                    rb.isKinematic = false;
                 }
             }
             else //Not playerAffected
@@ -256,7 +270,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
         {
             if (col.gameObject.name.Equals("Floor") && col.transform.position.y <= transform.position.y)
             {
-                targetPos = col.ClosestPoint(transform.position) + transform.up;
+                targetPos = col.ClosestPoint(transform.position) + transform.up * 2;
                 Debug.Log(targetPos);
                 break;
             }
@@ -426,5 +440,10 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
         _agent = GetComponent<NavMeshAgent>();
         _agent.enabled = false;
+    }
+
+    public bool IsDestroyed()
+    {
+        return false;
     }
 }

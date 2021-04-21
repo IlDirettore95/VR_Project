@@ -17,4 +17,5 @@ public interface ReactiveObject
     void ReactToIncreasing();
 
     void ReactToDecreasing();
+    bool IsDestroyed();
 }

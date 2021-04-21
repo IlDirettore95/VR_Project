@@ -218,4 +218,9 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     {
         throw new System.NotImplementedException();
     }
+
+    public bool IsDestroyed()
+    {
+        return false;
+    }
 }

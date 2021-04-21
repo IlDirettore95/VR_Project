@@ -11,6 +11,8 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     private GameObject player;
     private Transform target;
 
+    public float _health;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,5 +61,10 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         //Add a torque to add randomness to movements
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+    }
+
+    public bool IsDestroyed()
+    {
+        return _health == 0;
     }
 }

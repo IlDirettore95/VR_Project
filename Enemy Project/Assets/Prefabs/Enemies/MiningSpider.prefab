@@ -326,7 +326,7 @@ MonoBehaviour:
   MaxHealth: 5
   damageThreashold: 0
   walkingSpeed: 3
-  triggeredSpeed: 6
+  triggeredSpeed: 3
   walkingSpeedBuildUp: 0
   triggeredSpeedBuildUp: 0
   triggerPlayerDistance: 10
