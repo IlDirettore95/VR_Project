@@ -58,10 +58,23 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     private readonly float posBuildUp = 1f;
     private float pos;
     private float nextTimeSearchLook = 2;
+    private DroneState _currentState;
 
     //Player Interaction
     private Transform target;
     private float speed;  //Used to calculate damage when the enemy is launched by the player against static objects
+
+    public enum DroneState
+    {
+        Guard,
+        Chase,
+        Throwed,
+        Attracted,
+        StartingSearch,
+        Search,
+        Patrol,
+        Dead
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -88,6 +101,169 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     {
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
+        if(_health <= 0)
+        {
+            Die();
+        }
+
+        switch (_currentState)
+        {
+            case DroneState.Dead:
+                {
+                    Die();
+
+                    break;
+                }
+            case DroneState.Guard:
+                {
+                    Scan(transform.forward);
+                    Scan(-transform.forward);
+                    Scan(transform.up);
+                    Scan(-transform.up);
+                    Scan(transform.right);
+                    Scan(-transform.right);
+
+                    if (playerDistance <= triggerPlayerDistance)
+                    {
+                        _currentState = DroneState.Chase;
+                        //enemyManager.TriggerArea(areaID);
+                        nextTimeFire = Time.time + fireCooldown;
+                    }
+
+                    break;
+                }
+            case DroneState.Patrol:
+                {
+                    break;
+                }
+            case DroneState.Chase:
+                {
+                    Vector3 direzione;
+
+                    transform.LookAt(playerTransform.position);
+                    lastPosition = playerTransform.position;
+
+                    Scan(transform.forward);
+                    Scan(-transform.forward);
+                    Scan(transform.up);
+                    Scan(-transform.up);
+                    Scan(transform.right);
+                    Scan(-transform.right);
+
+                    RaycastHit hit;
+                    if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out hit))
+                    {
+                        if (hit.transform.gameObject.tag.Equals("Player") || hit.transform.gameObject.GetComponent<ReactiveObject>() != null)
+                        {
+
+                            if (playerDistance >= attackDistance)
+                            {
+                                direzione = transform.position - lastPosition;
+                                rb.AddForce(-direzione.normalized * triggeredSpeed);
+                                rb.velocity.Set(rb.velocity.x, rb.velocity.y, triggeredSpeed);
+                            }
+                            else if (playerDistance < attackDistance)
+                            {
+                                //rb.velocity.Set(rb.velocity.x, rb.velocity.y, 0);
+                                rb.velocity = Vector3.zero;
+                                if (Time.time >= nextTimeFire)
+                                {
+                                    Shoot();
+                                    nextTimeFire = Time.time + fireCooldown;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            FindPlayer();
+                        }
+                    }
+
+                    break;
+                }
+            case DroneState.StartingSearch:
+                {
+                    if (transform.position.Equals(targetPos))
+                    {
+                        _agent.enabled = true;
+                        _currentState = DroneState.Search;
+                    }
+                    else
+                    {
+                        transform.LookAt(playerTransform.position);
+
+                        RaycastHit hit;
+                        if (Physics.SphereCast(transform.position, 5f, transform.forward, out hit))
+                        {
+                            if (hit.transform.gameObject.tag.Equals("Player"))
+                            {
+                                rb.isKinematic = false;
+                                _currentState = DroneState.Chase;
+                            }
+                            else
+                            {
+                                pos += posBuildUp * Time.deltaTime;
+                                transform.position = Vector3.Lerp(lastPos, targetPos, pos);
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            case DroneState.Search:
+                {
+                    Vector3 direzione = -(transform.position - playerTransform.position).normalized;
+
+                    if (_agent.isOnOffMeshLink)
+                    {
+                        _agent.velocity = _agent.velocity.normalized;
+                    }
+
+                    RaycastHit hit;
+                    if (Physics.SphereCast(transform.position, 0.5f, direzione, out hit, 50f))
+                    {
+                        if (hit.transform.gameObject.tag.Equals("Player"))
+                        {
+                            _agent.enabled = false;
+                            rb.isKinematic = false;
+                            _currentState = DroneState.Chase;
+                        }
+                        else
+                        {
+                            _agent.destination = playerTransform.position;
+
+                            /*if (!_agent.hasPath)
+                            {
+                                _agent.enabled = false;
+                                rb.isKinematic = false;
+                                _currentState = DroneState.Guard;
+                            }*/
+                        }
+                    }
+
+                    break;
+                }
+            case DroneState.Attracted:
+                {
+                    break;
+                }
+            case DroneState.Throwed:
+                {
+                    if (rb.velocity.magnitude < 2)
+                    {
+                        rb.useGravity = false;
+                        _currentState = DroneState.Chase;
+                    }
+                    else
+                    {
+                        speed = rb.velocity.magnitude;
+                    }
+
+                    break;
+                }
+        }
+        
+        /*
         //Triggered
         if (triggered)
         {
@@ -233,6 +409,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             Scan(transform.right);
             Scan(-transform.right);
         }
+        */
     }
 
     private void Scan(Vector3 direction)
@@ -275,8 +452,8 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
         }
 
         rb.isKinematic = true;
-        startSearch = true;
         pos = 0;
+        _currentState = DroneState.StartingSearch;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -287,9 +464,6 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
             Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
             if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
             {
-                throwed = true;
-                searching = false;
-                startSearch = false;
                 _agent.enabled = false;
                 rb.isKinematic = false;
                 rb.useGravity = true;
@@ -297,6 +471,8 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
                 float damage = colliderRb.mass * colliderRb.velocity.magnitude;
                 //Debug.Log("Damage = " + damage);
                 Hurt(damage);
+
+                _currentState = DroneState.Throwed;
             }
         }
         else
@@ -311,7 +487,6 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
     {
         if (!dead && damage >= 1)
         {
-            triggered = true;
             _health -= damage;
             if (_health <= 0) dead = true;
         }
@@ -325,20 +500,16 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void Revive()
     {
-        idle = true;
-        walking = false;
-        triggered = false;
-        isPlayerAffected = false;
-        dead = false;
-
         _health = MaxHealth;
         rb.velocity = Vector3.zero;
         rb.useGravity = false;
+
+        _currentState = DroneState.Guard;
     }
 
     public void BeTriggered()
     {
-        triggered = true;
+        throw new System.NotImplementedException();
     }
 
     public void MoveTo(Vector3 point)
@@ -353,11 +524,11 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void ReactToAttraction(float attractionSpeed)
     {
-        attracted = true;
-        throwed = false;
         rb.useGravity = false;
         rb.freezeRotation = true;
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
+
+        _currentState = DroneState.Attracted;
     }
 
     public void ReactToRepulsing()
@@ -367,22 +538,21 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
     public void ReactToReleasing()
     {
-        attracted = false;
-        throwed = true;
         rb.useGravity = true;
         rb.freezeRotation = false;
+
+        _currentState = DroneState.Throwed;
     }
 
     public void ReactToLaunching(float launchingSpeed)
     {
-        attracted = false;
-        throwed = true;
         rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
-        //rb.velocity = Vector3.zero;
         rb.velocity += target.forward * 10;
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+
+        _currentState = DroneState.Throwed;
     }
 
     public void ReactToIncreasing()
@@ -438,6 +608,8 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
         _agent = GetComponent<NavMeshAgent>();
         _agent.enabled = false;
+
+        _currentState = DroneState.Guard;
     }
 
     public bool IsDestroyed()
