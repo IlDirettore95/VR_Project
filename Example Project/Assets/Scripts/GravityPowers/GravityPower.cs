@@ -6,10 +6,6 @@ using UnityEngine;
  * Attraction:
  * Releasing: 
  * Launching: launching an entity while attracted
- * Repulsing: 
- * Increase entity mass:
- * Decrease entity mass:
- * Nailgun:
  */
 public class GravityPower : MonoBehaviour
 {
@@ -81,7 +77,8 @@ public class GravityPower : MonoBehaviour
         //Energy consuming
         if(attracting)
         {
-            if(!target.IsDestroyed())
+            //The object may be destroyed
+            if(target != null)
             {
                 _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
                 if (!_playerStatus.HasEnoughEnergy())

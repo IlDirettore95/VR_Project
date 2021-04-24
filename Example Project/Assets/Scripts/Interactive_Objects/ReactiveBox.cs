@@ -67,4 +67,9 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     {
         return _health == 0;
     }
+
+    public void ReactToExplosion(float damage)
+    {
+        throw new NotImplementedException();
+    }
 }

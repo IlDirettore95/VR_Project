@@ -4,18 +4,13 @@ using UnityEngine;
 
 /* A reactive object is an object which reacts to player's gravity powers
  */
-public interface ReactiveObject 
+public interface ReactiveObject : ReactiveEntity
 {
-    void ReactToAttraction(float attractionSpeed);
+    void ReactToAttraction(float attractionSpeed); //Gravity power
 
-    void ReactToRepulsing();
+    void ReactToReleasing(); //Gravity power
 
-    void ReactToReleasing();
+    void ReactToLaunching(float launchingSpeed); //Gravity power
 
-    void ReactToLaunching(float launchingSpeed);
-
-    void ReactToIncreasing();
-
-    void ReactToDecreasing();
     bool IsDestroyed();
 }
