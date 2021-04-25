@@ -70,107 +70,107 @@ public class MiningSpider : Enemy
     // Update is called once per frame
     void Update()
     {
-        if(isAlive)
+        float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
+
+        switch (_currentState)
         {
-            float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
-
-            switch (_currentState)
-            {
-                case SpiderState.Patrolling:
+            case SpiderState.Patrolling:
+                {
+                    if (playerDistance <= triggerPlayerDistance)
                     {
-                        if (playerDistance <= triggerPlayerDistance)
-                        {
-                            currentStateBuildUp = 0f;
-                            _currentState = SpiderState.Chasing;
-                        }
-                        break;
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
                     }
-                case SpiderState.Chasing:
+                    break;
+                }
+            case SpiderState.Chasing:
+                {
+                    //Following the player
+
+                    //Lerping speed to triggered speed
+                    currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
+                    speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
+                    _agent.speed = speed;
+
+                    //Finding the player
+                    _agent.destination = playerTransform.position;
+
+                    //Passing to Exploding State
+                    if (playerDistance <= attackDistance)
                     {
-                        //Following the player
+                        nextTimeExplosion = Time.time + explosionCooldown;
+                        _agent.isStopped = true;
+                        _currentState = SpiderState.Exploding;
 
-                        //Lerping speed to triggered speed
-                        currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
-                        speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
-                        _agent.speed = speed;
+                        //Enabling animation
+                        fLight1.enabled = true;
+                        fLight2.enabled = true;
 
-                        //Finding the player
-                        _agent.destination = playerTransform.position;
-
-                        //Passing to Exploding State
-                        if (playerDistance <= attackDistance)
-                        {
-                            nextTimeExplosion = Time.time + explosionCooldown;
-                            _agent.isStopped = true;
-                            _currentState = SpiderState.Exploding;
-
-                            //Enabling animation
-                            fLight1.enabled = true;
-                            fLight2.enabled = true;
-
-                            //Audio
-                            timer.Play();
-                        }
-
-                        break;
+                        //Audio
+                        timer.Play();
                     }
-                case SpiderState.Attracted:
+
+                    break;
+                }
+            case SpiderState.Attracted:
+                {
+                    speed = rb.velocity.magnitude;
+                    //Control if it is time to explode
+                    if (Time.time >= nextTimeExplosion)
                     {
-                        speed = rb.velocity.magnitude;
-                        //Control if it is time to explode
-                        if (Time.time >= nextTimeExplosion)
-                        {
 
-                            Explode();
-                        }
-
-                        break;
+                        Explode();
                     }
-                case SpiderState.Throwed:
+
+                    break;
+                }
+            case SpiderState.Throwed:
+                {
+                    speed = rb.velocity.magnitude;
+
+                    if (speed == 0f && Time.time >= nextTimeStunning)
                     {
-                        speed = rb.velocity.magnitude;
+                        rb.useGravity = false;
+                        rb.isKinematic = true;
+                        _agent.enabled = true;
 
-                        if (speed == 0f && Time.time >= nextTimeStunning)
-                        {
-                            rb.useGravity = false;
-                            rb.isKinematic = true;
-                            _agent.enabled = true;
-
-                            currentStateBuildUp = 0f;
-                            _currentState = SpiderState.Chasing;
-                        }
-                        break;
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
                     }
-                case SpiderState.Exploding:
+                    break;
+                }
+            case SpiderState.Exploding:
+                {
+                    //Exploding procedure start
+
+                    //Control if it is time to explode
+                    if (Time.time >= nextTimeExplosion)
                     {
-                        //Exploding procedure start
-
-                        //Control if it is time to explode
-                        if (Time.time >= nextTimeExplosion)
-                        {
-                            Explode();
-                        }
-                        //Passing to Triggered State
-                        else if (playerDistance > attackDistance)
-                        {
-                            //Disenabling animation
-                            fLight1.enabled = false;
-                            fLight2.enabled = false;
-
-                            //Audio
-                            timer.Stop();
-
-                            _agent.isStopped = false;
-                            _currentState = SpiderState.Chasing;
-                        }
-                        break;
+                        Explode();
                     }
-            }
+                    //Passing to Triggered State
+                    else if (playerDistance > attackDistance)
+                    {
+                        //Disenabling animation
+                        fLight1.enabled = false;
+                        fLight2.enabled = false;
+
+                        //Audio
+                        timer.Stop();
+
+                        _agent.isStopped = false;
+                        _currentState = SpiderState.Chasing;
+                    }
+                    break;
+                }
         }
     }
 
     private void Explode()
     {
+        //Kill the spider
+        isAlive = false;
+
         Collider[] collisions = Physics.OverlapSphere(transform.position, explosionRadius);
         for (int i = 0; i < collisions.Length; i++)
         {
@@ -182,18 +182,16 @@ public class MiningSpider : Enemy
         }
 
         //Simulating the explosion
-        rb.isKinematic = false;
+        /*rb.isKinematic = false;
         rb.useGravity = true;
-        rb.AddForce(Vector3.up, ForceMode.Impulse);
 
-        //Kill the spider
-        isAlive = false;
+        
 
         //Disabling animation
         fLight1.enabled = false;
         fLight2.enabled = false;
         light1.enabled = false;
-        light2.enabled = false;
+        light2.enabled = false;*/
 
         //Audio
         timer.Stop();
@@ -257,6 +255,11 @@ public class MiningSpider : Enemy
         _currentState = SpiderState.Throwed;        
     }
 
+    public override void ReactToExplosion(float damage, float power, Vector3 center, float radius)
+    {
+        if (isAlive) Explode();    
+    }
+
     public override void Hurt(float damage)
     {
         if(isAlive)
@@ -270,7 +273,6 @@ public class MiningSpider : Enemy
     //Handles collision damage
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("hi");
         Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
         if (colliderRb != null)
         {

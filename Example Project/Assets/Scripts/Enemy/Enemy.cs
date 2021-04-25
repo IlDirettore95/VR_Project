@@ -130,7 +130,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
     public virtual void ReactToExplosion(float damage, float power, Vector3 center, float radius)
     {
         Hurt(damage);
-        rb.AddExplosionForce(power, center, radius);
+        rb.AddExplosionForce(power, center, radius, 0.2f, ForceMode.Impulse);
     }
 
     public virtual void Initialize()
