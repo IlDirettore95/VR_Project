@@ -7,8 +7,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Enemy : MonoBehaviour, ReactiveObject
 {
-    //Attracted
+
+    //general 
     protected bool attracted = false;
+    protected bool isAlive = true;
 
     //Enemy manager
     protected EnemiesManager enemyManager;
@@ -60,32 +62,15 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     public int GetID() => enemyID;
 
-    //Handles collision damage
-    private void OnCollisionEnter(Collision collision)
-    {
-        Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
-        if(colliderRb != null)
-        {
-            if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
-            {
-                _agent.enabled = false;
-                rb.isKinematic = false;
-                rb.useGravity = true;
-                Hurt(colliderRb.mass * collision.relativeVelocity.magnitude);
-                //L'enemy si muoverà?
-            }
-        }
-        //The collided object is assumed to be static
-        else if (speed > impactVelocityThreashold) Hurt(rb.mass * speed);
-            
-    }
+    
 
     public virtual void Hurt(float damage) //Take damage and decrease enemy healt
     {
-        if (damage >= 1)
+        if (damage >= 1 && isAlive)
         {
             _health -= damage;
             if (_health <= 0) _health = 0;
+            if (_health == 0) isAlive = false;
         }  
     }
 
@@ -142,9 +127,10 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 
-    public virtual void ReactToExplosion(float damage)
+    public virtual void ReactToExplosion(float damage, float power, Vector3 center, float radius)
     {
         Hurt(damage);
+        rb.AddExplosionForce(power, center, radius);
     }
 
     public virtual void Initialize()
@@ -152,9 +138,6 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         throw new System.NotImplementedException();
     }
 
-    public virtual bool IsDestroyed()
-    {
-        return false;
-    }
+    public virtual bool IsDestroyed() => !isAlive;
 
 }

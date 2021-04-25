@@ -13,6 +13,8 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
 
     public float _health;
 
+    private bool isDestroyed = false;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -25,15 +27,6 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb.AddForce(direction * repulsingSpeed, ForceMode.Impulse);
     }
 
-    public void ReactToIncreasing()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ReactToDecreasing()
-    {
-        throw new NotImplementedException();
-    }
 
     public void ReactToAttraction(float attractionSpeed)
     {
@@ -48,10 +41,6 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb.freezeRotation = false;
     }
 
-    public void ReactToRepulsing()
-    {
-        throw new NotImplementedException();
-    }
 
     public void ReactToLaunching(float launchingSpeed)
     {
@@ -63,13 +52,12 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 
-    public bool IsDestroyed()
+    public void ReactToExplosion(float damage, float power, Vector3 center, float radius)
     {
-        return _health == 0;
+        rb.AddExplosionForce(power, center, radius, 0.2f, ForceMode.Impulse);
     }
 
-    public void ReactToExplosion(float damage)
-    {
-        throw new NotImplementedException();
-    }
+    public bool IsDestroyed() => isDestroyed;
+
+    
 }

@@ -7,13 +7,17 @@ public class MiningSpider : Enemy
 {
     //MiningSpider current state
     private SpiderState _currentState;
-    private bool exploding = false;
 
     //Explosion
     public float explosionDamage;
     public float explosionCooldown;
     private float nextTimeExplosion;
     public float explosionRadius;
+    public float explosionImpact;
+
+    //Throwed stunning
+    public float stunningDuration;
+    private float nextTimeStunning;
 
     //Exploding procedure animation
     private LightFlickering fLight1;
@@ -66,22 +70,22 @@ public class MiningSpider : Enemy
     // Update is called once per frame
     void Update()
     {
-        if(_currentState != SpiderState.Dead)
+        if(isAlive)
         {
             float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
             switch (_currentState)
             {
-                case SpiderState.NotTriggered:
+                case SpiderState.Patrolling:
                     {
                         if (playerDistance <= triggerPlayerDistance)
                         {
                             currentStateBuildUp = 0f;
-                            _currentState = SpiderState.Triggered;
+                            _currentState = SpiderState.Chasing;
                         }
                         break;
                     }
-                case SpiderState.Triggered:
+                case SpiderState.Chasing:
                     {
                         //Following the player
 
@@ -126,14 +130,14 @@ public class MiningSpider : Enemy
                     {
                         speed = rb.velocity.magnitude;
 
-                        if (speed == 0f)
+                        if (speed == 0f && Time.time >= nextTimeStunning)
                         {
                             rb.useGravity = false;
                             rb.isKinematic = true;
                             _agent.enabled = true;
 
                             currentStateBuildUp = 0f;
-                            _currentState = SpiderState.Triggered;
+                            _currentState = SpiderState.Chasing;
                         }
                         break;
                     }
@@ -157,15 +161,12 @@ public class MiningSpider : Enemy
                             timer.Stop();
 
                             _agent.isStopped = false;
-                            _currentState = SpiderState.Triggered;
+                            _currentState = SpiderState.Chasing;
                         }
                         break;
                     }
             }
-
         }
-
-       
     }
 
     private void Explode()
@@ -173,15 +174,10 @@ public class MiningSpider : Enemy
         Collider[] collisions = Physics.OverlapSphere(transform.position, explosionRadius);
         for (int i = 0; i < collisions.Length; i++)
         {
-            PlayerStatus ps = collisions[i].gameObject.GetComponent<PlayerStatus>();
-            if (ps != null && ps.IsAlive())
+            ReactiveEntity target = collisions[i].gameObject.GetComponent<ReactiveEntity>();
+            if (target != null && collisions[i].gameObject != this.gameObject)
             {
-                //The explosion has hit the player
-                _playerStatus.Hurt(explosionDamage);
-            }
-            else if (collisions[i].gameObject.GetComponent<ReactiveEntity>() != null)
-            {
-                collisions[i].gameObject.GetComponent<ReactiveEntity>().ReactToExplosion(explosionDamage);
+                target.ReactToExplosion(explosionDamage, explosionImpact, transform.position, explosionRadius);
             }
         }
 
@@ -191,6 +187,7 @@ public class MiningSpider : Enemy
         rb.AddForce(Vector3.up, ForceMode.Impulse);
 
         //Kill the spider
+        isAlive = false;
 
         //Disabling animation
         fLight1.enabled = false;
@@ -204,13 +201,13 @@ public class MiningSpider : Enemy
         //ParticleSystem
         ParticleSystem ex = Instantiate(explosion, transform.position, transform.rotation);
 
-        _currentState = SpiderState.Dead;
+        Destroy(this.gameObject);
     }
 
     public override void ReactToAttraction(float attractionSpeed)
     {
         //Just the first time the spider become attracted
-        if(!_currentState.Equals(SpiderState.Dead) && !attracted)
+        if(!attracted)
         {
             //If the spider wasn't in exploding state, this will set up the exploding procedure
             if (!_currentState.Equals(SpiderState.Exploding))
@@ -234,51 +231,80 @@ public class MiningSpider : Enemy
     {
         base.ReactToReleasing();
 
-        if (!_currentState.Equals(SpiderState.Dead))
-        {
-            //Disabling animation
-            fLight1.enabled = false;
-            fLight2.enabled = false;
+        //Disabling animation
+        fLight1.enabled = false;
+        fLight2.enabled = false;
 
-            //Audio
-            timer.Stop();
+        //Audio
+        timer.Stop();
 
-            _currentState = SpiderState.Throwed;
-        }
+        nextTimeStunning = Time.time + stunningDuration;
+        _currentState = SpiderState.Throwed;
     }
 
     public override void ReactToLaunching(float launchingSpeed)
     {
         base.ReactToLaunching(launchingSpeed);
 
-        if (!_currentState.Equals(SpiderState.Dead))
-        {
-            //Disabling animation
-            fLight1.enabled = false;
-            fLight2.enabled = false;
+        //Disabling animation
+        fLight1.enabled = false;
+        fLight2.enabled = false;
 
-            //Audio
-            timer.Stop();
+        //Audio
+        timer.Stop();
 
-            _currentState = SpiderState.Throwed;
-        }        
+        nextTimeStunning = Time.time + stunningDuration;
+        _currentState = SpiderState.Throwed;        
     }
 
     public override void Hurt(float damage)
     {
-        base.Hurt(damage);
+        if(isAlive)
+        {
+            base.Hurt(damage);
 
-        if (_health == 0) Explode();
+            if (_health == 0) Explode();
+        }        
+    }
+
+    //Handles collision damage
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("hi");
+        Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
+        if (colliderRb != null)
+        {
+            if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
+            {
+                if(_currentState != SpiderState.Throwed)
+                {
+                    _agent.enabled = false;
+                    rb.isKinematic = false;
+                    rb.useGravity = true;
+                    rb.AddForce(collision.relativeVelocity, ForceMode.Impulse);
+                    nextTimeStunning = Time.time + stunningDuration;
+                    _currentState = SpiderState.Throwed;
+
+                }
+                
+                Hurt(colliderRb.mass * (collision.relativeVelocity.magnitude - impactVelocityThreashold));
+            }
+        }
+        //The collided object is assumed to be static
+        else if (speed > impactVelocityThreashold)
+        {
+            Hurt((speed - impactVelocityThreashold));
+        }
+
     }
 
     //This enum are mining spider possible states
     public enum SpiderState
     {
-        NotTriggered,
-        Triggered,
+        Patrolling,
+        Chasing,
         Attracted,
         Throwed,
-        Exploding,
-        Dead
+        Exploding
     }
 }

@@ -201,7 +201,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364211020630461279}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recoverCooldown: 3
-  recoverRate: 6
+  recoverRate: 10
 --- !u!114 &364211020630461269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,8 +641,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attractionKey: 323
   launchingKey: 324
-  attractionSpeed: 6
-  launchingSpeed: 35
+  attractionSpeed: 5
+  launchingSpeed: 30
   attractionRange: 5
   attractionCost: 3
   launchingCost: 8

@@ -78,7 +78,7 @@ public class GravityPower : MonoBehaviour
         if(attracting)
         {
             //The object may be destroyed
-            if(target != null)
+            if(!target.IsDestroyed())
             {
                 _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
                 if (!_playerStatus.HasEnoughEnergy())

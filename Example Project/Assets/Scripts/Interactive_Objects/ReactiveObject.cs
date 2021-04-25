@@ -12,5 +12,5 @@ public interface ReactiveObject : ReactiveEntity
 
     void ReactToLaunching(float launchingSpeed); //Gravity power
 
-    bool IsDestroyed();
+    bool IsDestroyed(); //The object may be destroyed
 }

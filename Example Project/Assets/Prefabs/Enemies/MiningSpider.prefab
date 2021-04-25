@@ -822,7 +822,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7968893209798194856}
   serializedVersion: 2
-  m_Mass: 0.8
+  m_Mass: 1.8
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
@@ -841,8 +841,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.65906817, y: 0.83054423, z: 0.6602155}
-  m_Center: {x: 0.00016739964, y: -0.0415798, z: 0.00000166893}
+  m_Size: {x: 0.6049441, y: 0.83054423, z: 0.5489604}
+  m_Center: {x: 0.00317429, y: -0.041579813, z: 0.0015051067}
 --- !u!82 &7727088460007095455
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1004,21 +1004,19 @@ MonoBehaviour:
   areaID: 0
   enemyID: 0
   MaxHealth: 5
-  damageThreashold: 0
-  walkingSpeed: 2
-  triggeredSpeed: 3.5
+  walkingSpeed: 1
+  triggeredSpeed: 3
   walkingSpeedBuildUp: 2
   triggeredSpeedBuildUp: 2
+  impactVelocityThreashold: 15
   triggerPlayerDistance: 10
   triggerEnemyDistance: 0
   attackDistance: 4
-  attackDamage: 0
-  fireCooldown: 0
-  firePoint: {fileID: 0}
-  projectilePrefab: {fileID: 0}
-  explosionDamage: 1
-  explosionCooldown: 2
-  explosionRadius: 4
+  explosionDamage: 10
+  explosionCooldown: 20
+  explosionRadius: 5
+  explosionImpact: 35
+  stunningDuration: 1.5
   light1: {fileID: 3704153373795099537}
   light2: {fileID: 3704153373311837874}
   explosion: {fileID: 5602069587569534765, guid: 99d276773c2211041b0346f420eef19b,

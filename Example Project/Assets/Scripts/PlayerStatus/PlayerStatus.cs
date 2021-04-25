@@ -158,7 +158,7 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
 
     public bool IsDestroyed() { return false; }
 
-    public void ReactToExplosion(float damage)
+    public void ReactToExplosion(float damage, float power, Vector3 center, float radius)
     {
         Hurt(damage);
     }
