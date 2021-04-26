@@ -3,115 +3,72 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NavMeshAgent))]
-public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
+public abstract class Enemy : MonoBehaviour, ReactiveObject
 {
+
+    //general 
+    protected bool attracted = false;
+    protected bool isAlive = true;
+
     //Enemy manager
     protected EnemiesManager enemyManager;
     public int areaID;
     public int enemyID;
 
-    //Enemy state
-    protected bool idle = true;
-    protected bool walking = false;
-    protected bool triggered = false;
-    protected bool dead = false;
-    protected bool attracted = false;
-    protected bool throwed = false;
-
     //Enemy status
     public float MaxHealth;
     protected float _health;
-    public float damageThreashold;
-
+    
     //Speed
     public float walkingSpeed;
     public float triggeredSpeed;
     public float walkingSpeedBuildUp;
     public float triggeredSpeedBuildUp;
+    protected float currentStateBuildUp;
+
+    //Movement
+    protected float speed;  //Used to calculate damage when the enemy is launched by the player against static objects _agent.speed = speed;
+
+    //Collision damage
+    public float impactVelocityThreashold;
 
     //Trigger
     public float triggerPlayerDistance;
-    public float triggerEnemyDistance;
+    public float triggerEnemyDistance; //Max distance in which the enemy will trigger other enemies of the same area
 
     //Attack
     public float attackDistance;
-    public float attackDamage;
-    public float fireCooldown;
-    protected float nextTimeFire;
-    public Transform firePoint;
-    public GameObject projectilePrefab;
 
     //AI
     protected NavMeshAgent _agent;
     protected Transform playerTransform;
-    protected GameObject player;
     protected Rigidbody rb;
-    protected Vector3 lastPosition;
     protected PlayerStatus _playerStatus;
 
     //Player Interaction
     protected Transform target;
-    protected float speed;  //Used to calculate damage when the enemy is launched by the player against static objects
 
-    public void SetAreaID(int ID)
-    {
-        areaID = ID;
-    }
+    //Is attracted now?
+    public bool IsAttracted() => attracted;
 
-    public int GetAreaID()
-    {
-        return areaID;
-    }
+    //Getters and setter for the area ID;
+    public void SetAreaID(int ID) => areaID = ID;
 
-    public void SetID(int id)
-    {
-        enemyID = id;
-    }
+    public int GetAreaID() => areaID;
 
-    public int GetID()
-    {
-        return enemyID;
-    }
+    public void SetID(int id) => enemyID = id;
 
-    private void OnCollisionEnter(Collision collision)
+    public int GetID() => enemyID;
+
+    
+
+    public virtual void Hurt(float damage) //Take damage and decrease enemy healt
     {
-       ReactiveObject collider = collision.gameObject.GetComponent<ReactiveObject>();
-        if (collider != null)
+        if (damage >= 1 && isAlive)
         {
-            Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
-            if (colliderRb.velocity != rb.velocity && colliderRb.velocity.magnitude > 10)
-            {
-                throwed = true;
-                _agent.enabled = false;
-                rb.isKinematic = false;
-                rb.useGravity = true;
-                triggered = true;
-                float damage = colliderRb.mass * colliderRb.velocity.magnitude;
-                Debug.Log("Damage = " + damage);
-                Hurt(damage);
-            }
-        }
-        else
-        {
-            if(rb.velocity.magnitude > damageThreashold)
-            {
-                float damage = rb.mass * speed;
-                //damage = Mathf.Clamp(damage, 1, )
-                Debug.Log("Damage = " + damage);
-                Hurt(damage);
-            }
-        }
-    }
-
-    public void Hurt(float damage)
-    {
-        if (!dead && damage >= 1)
-        {
-            triggered = true;
             _health -= damage;
-            if (_health <= 0) dead = true;
+            if (_health <= 0) _health = 0;
+            if (_health == 0) isAlive = false;
         }  
     }
 
@@ -123,12 +80,7 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
    
     public virtual void Revive()
     {
-        idle = true;
-        walking = false;
-        triggered = false;
-        throwed = false;
         attracted = false;
-        dead = false;
 
         _health = MaxHealth;
         rb.useGravity = false;
@@ -136,54 +88,29 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         _agent.enabled = true;
     }
 
-    public void BeTriggered()
-    {
-        triggered = true;
-    }
-
-    public virtual void MoveTo(Vector3 point)
+    public virtual void MoveTo(Vector3 point)//Move the enemy from the current position to point position in input
     {
         throw new System.NotImplementedException();
     }
 
-    public virtual void Patrol(Vector3[] path)
+    public virtual void Patrol(Vector3[] path)//Patrol the path described by the array of position in input
     {
         throw new System.NotImplementedException();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public virtual void ReactToAttraction(float attractionSpeed)
     {
-        triggered = true;
         _agent.enabled = false;
         rb.isKinematic = false;
         attracted = true;
-        throwed = false;
         rb.useGravity = false;
         rb.freezeRotation = true;
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);
     }
 
-    public virtual void ReactToRepulsing()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public virtual void ReactToReleasing()
     {
         attracted = false;
-        throwed = true;
         rb.useGravity = true;
         rb.freezeRotation = false;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
@@ -192,26 +119,16 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
     public virtual void ReactToLaunching(float launchingSpeed)
     {
         attracted = false;
-        throwed = true;
         rb.freezeRotation = false;
         rb.useGravity = true;
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
     }
 
-    public virtual void ReactToIncreasing()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public virtual void ReactToDecreasing()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public virtual void ReactToExplosion(float damage)
+    public virtual void ReactToExplosion(float damage, float power, Vector3 center, float radius)
     {
         Hurt(damage);
+        rb.AddExplosionForce(power, center, radius, 0.2f, ForceMode.Impulse);
     }
 
     public virtual void Initialize()
@@ -219,8 +136,6 @@ public class Enemy : MonoBehaviour, IEnemy, ReactiveEnemy
         throw new System.NotImplementedException();
     }
 
-    public bool IsDestroyed()
-    {
-        return false;
-    }
+    public virtual bool IsDestroyed() => !isAlive;
+
 }

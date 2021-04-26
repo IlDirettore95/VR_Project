@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour
+public class PlayerStatus : MonoBehaviour, ReactiveObject
 {
-
     /*
      * This class handle Player status and statistics like
      * health, stamina and jetpack's fuel, provides also aux methods for editing, monitoring and questioning
@@ -149,5 +148,23 @@ public class PlayerStatus : MonoBehaviour
         _fuel = MaxFuel;
         _energy = MaxEnergy;
         isAlive = true;
+    }
+
+    public void ReactToAttraction(float attractionSpeed) { }
+
+    public void ReactToReleasing() { }
+
+    public void ReactToLaunching(float launchingSpeed) { }
+
+    public bool IsDestroyed() { return false; }
+
+    public void ReactToExplosion(float damage, float power, Vector3 center, float radius)
+    {
+        Hurt(damage);
+    }
+
+    public bool IsAttracted()
+    {
+        throw new NotImplementedException();
     }
 }

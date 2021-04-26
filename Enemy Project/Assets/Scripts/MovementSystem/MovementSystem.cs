@@ -374,6 +374,13 @@ public class MovementSystem : MonoBehaviour
         //Lerping from speed to falling speed
         SetSpeed(fallingSpeed, fallingBuildUp);
 
+        //Earesing positive velocity on the vertical axis, in case of ceiling collision
+        if ((_charController.collisionFlags & CollisionFlags.Above) != 0)
+        {
+            //The player has collided on a ceiling
+            if (deltaY >= 0) deltaY = 0;
+        }
+
         //Acceleration due to gravity and locking to limit speed
         ySpeed += gravity * Time.deltaTime;
         deltaY -= ySpeed * Time.deltaTime;
@@ -383,6 +390,7 @@ public class MovementSystem : MonoBehaviour
 
         //Updating strat falling position for handleing fall damage
         if (transform.position.y > startFallingY) startFallingY = transform.position.y;
+  
     }
 
 

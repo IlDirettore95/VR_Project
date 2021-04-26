@@ -207,11 +207,6 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
 
                     Vector3 direzione = -(transform.position - playerTransform.position).normalized;
 
-                    if (_agent.isOnOffMeshLink)
-                    {
-                        _agent.velocity = _agent.velocity.normalized;
-                    }
-                    
                     RaycastHit hit;
                     if (Physics.SphereCast(transform.position, 0.3f, direzione, out hit, 50f))
                     {
@@ -235,7 +230,7 @@ public class DroneV5 : MonoBehaviour, IEnemy, ReactiveEnemy
                             }
                         }
                     }
-                    
+                   
                     break;
                 }
             case DroneState.Attracted:
