@@ -10,7 +10,8 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     private Rigidbody rb;
     private GameObject player;
     private Transform target;
-
+    
+   
     public float _health;
 
     private void Start()
@@ -26,6 +27,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
 
     public void ReactToAttraction(float attractionSpeed)
     {
+        
         rb.useGravity = false;
         rb.freezeRotation = true;
         rb.velocity = (target.position - rb.position).normalized * attractionSpeed * Vector3.Distance(target.position, rb.position);

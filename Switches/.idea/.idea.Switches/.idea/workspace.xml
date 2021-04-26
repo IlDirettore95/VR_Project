@@ -11,7 +11,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlatformBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/movementSystem/MovementSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/Rotate.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveFan.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -22,7 +24,12 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/fanSpin.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveObject.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/rotate.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveFan.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Switch.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/PlatformBehaviour.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/Rotate.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Furnace.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1rLLOK50KyDaz9MEeoEufft7hH5" />
@@ -68,7 +75,15 @@
       <updated>1618750394082</updated>
       <workItem from="1618750399290" duration="10513000" />
       <workItem from="1618841898801" duration="5382000" />
-      <workItem from="1618915833853" duration="627000" />
+      <workItem from="1618915833853" duration="1510000" />
+      <workItem from="1618933158141" duration="7469000" />
+      <workItem from="1618993803910" duration="160000" />
+      <workItem from="1618993985226" duration="22000" />
+      <workItem from="1618994107342" duration="1761000" />
+      <workItem from="1619169035280" duration="12883000" />
+      <workItem from="1619188235755" duration="1631000" />
+      <workItem from="1619190744773" duration="210000" />
+      <workItem from="1619193993463" duration="1820000" />
     </task>
     <servers />
   </component>

@@ -10,6 +10,8 @@ public class Switch : MonoBehaviour
     private SwitchController sc;
     public Light offLight;
     public Light onLight;
+
+    private bool switchEnabled = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,26 +29,29 @@ public class Switch : MonoBehaviour
 
     public void commutation()
     {
-        //comunicate to SwitchController that there's a commutation -> enable checking.
-        sc.transition = true;
-        //commutation on->off
-        if (onoff)
+        if (switchEnabled)
         {
-            onoff = false;
-            objToInteract.setFalse();
-            offLight.enabled = true;
-            onLight.enabled = false;
-            Debug.Log("ho disattivato l'interruttore");
-            
-        }
-        else
-            //commutation off->on
-        {
-            onoff = true;
-            objToInteract.setTrue();
-            offLight.enabled = false;
-            onLight.enabled = true;
-            Debug.Log("ho attivato l'interruttore");
+            //comunicate to SwitchController that there's a commutation -> enable checking.
+            sc.transition = true;
+            //commutation on->off
+            if (onoff)
+            {
+                onoff = false;
+                objToInteract.setFalse();
+                offLight.enabled = true;
+                onLight.enabled = false;
+                Debug.Log("ho disattivato l'interruttore");
+
+            }
+            else
+                //commutation off->on
+            {
+                onoff = true;
+                objToInteract.setTrue();
+                offLight.enabled = false;
+                onLight.enabled = true;
+                Debug.Log("ho attivato l'interruttore");
+            }
         }
     }
     
@@ -55,5 +60,15 @@ public class Switch : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void enableSwitch()
+    {
+        switchEnabled = true;
+    }
+
+    public void disableSwitch()
+    {
+        switchEnabled = false;
     }
 }

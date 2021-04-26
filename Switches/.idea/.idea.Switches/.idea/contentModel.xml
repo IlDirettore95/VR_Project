@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="DoorBehaviour.cs" t="Include" />
+          <e p="DoorBehaviourSmall.cs" t="Include" />
           <e p="Enemy" t="Include">
             <e p="EnemyController.cs" t="Include" />
             <e p="ExplosiveSpider.cs" t="Include" />
@@ -29,16 +30,16 @@
             <e p="HUD.cs" t="Include" />
           </e>
           <e p="Interactive_Objects" t="Include">
-            <e p="fanSpin.cs" t="Include" />
-            <e p="PlatformBehaviour.cs" t="Include" />
             <e p="ReactiveBox.cs" t="Include" />
             <e p="ReactiveFan.cs" t="Include" />
             <e p="ReactiveObject.cs" t="Include" />
+            <e p="Rotate.cs" t="Include" />
           </e>
           <e p="movementSystem" t="Include">
             <e p="Jetpack.cs" t="Include" />
             <e p="MovementSystem.cs" t="Include" />
           </e>
+          <e p="PlatformBehaviour.cs" t="Include" />
           <e p="PlayerStatus" t="Include">
             <e p="EnergyRecover.cs" t="Include" />
             <e p="FuelRecover.cs" t="Include" />
