@@ -15,6 +15,7 @@ public class Drone : Enemy
         Attack,
         Throwed,
         Attracted,
+        Stunned,
         Dead
     }
 
@@ -161,14 +162,53 @@ public class Drone : Enemy
                 {
                     speed = rb.velocity.magnitude;
 
-                    if (speed < 2)
+                    if (speed < 3)
                     {
                         rb.useGravity = false;
-                        rb.isKinematic = true;
-                        _agent.enabled = true;
 
                         currentStateBuildUp = 0f;
+                        _currentState = DroneState.Stunned;
+                    }
+
+                    break;
+                }
+            case DroneState.Stunned:
+                {
+                    //_droneBody.transform.LookAt(playerTransform);
+                    transform.LookAt(playerTransform);
+
+                    if (targetPos == Vector3.zero)
+                    {
+                        Scan(transform.forward);
+                        Scan(-transform.forward);
+                        Scan(transform.up);
+                        Scan(-transform.up);
+                        Scan(transform.right);
+                        Scan(-transform.right);
+
+                        RaycastHit hit;
+                        if (Physics.Raycast(transform.position, -transform.up, out hit))
+                        {
+                            if (hit.transform.gameObject.GetComponent<NavMeshSurface>() != null)
+                            {
+                                startPos = transform.position;
+                                targetPos = hit.point + Vector3.up * _agent.baseOffset;
+                                pos = 0;
+                                rb.isKinematic = true;
+                            }
+                        }
+                    }
+                    else if (transform.position.Equals(targetPos))
+                    {
+                        _agent.enabled = true;
+                        targetPos = Vector3.zero;
                         _currentState = DroneState.Chasing;
+                    }
+                    else
+                    {
+                        pos += posBuildUp * Time.deltaTime;
+                        transform.position = Vector3.Lerp(startPos, targetPos, pos);
+                        _agent.transform.position = Vector3.Lerp(startPos, targetPos, pos);
                     }
 
                     break;
@@ -228,5 +268,25 @@ public class Drone : Enemy
         base.ReactToLaunching(launchingSpeed);
 
         _currentState = DroneState.Throwed;
+    }
+
+    private void Scan(Vector3 direction)
+    {
+        RaycastHit hit;
+        Vector3 direzione;
+
+        if (Physics.Raycast(transform.position, direction, out hit))
+        {
+            direzione = hit.point - transform.position;
+
+            if (hit.distance < 4f)
+            {
+                rb.AddForce(-direzione.normalized * walkingSpeed);
+            }
+            else if (hit.distance < 2f)
+            {
+                rb.AddForce(-direzione.normalized * walkingSpeed * 2);
+            }
+        }
     }
 }
