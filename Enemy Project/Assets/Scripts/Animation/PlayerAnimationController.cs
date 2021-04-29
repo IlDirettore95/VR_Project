@@ -51,6 +51,10 @@ public class PlayerAnimationController : MonoBehaviour
         if (moveSys.hasJumped)
         {
             animator.SetBool("IsRunning", false);
+
+            animator.SetBool("IsJumping", true);
         }
+        else animator.SetBool("IsJumping", false);
+
     }
 }

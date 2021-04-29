@@ -4,11 +4,23 @@ ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
   - first:
+      74: 8440248360967096626
+    second: Camera|CameraAction
+  - first:
+      74: -1070788387228417968
+    second: Armatura|CameraAction
+  - first:
       74: 5540836340037835118
     second: Armatura|Grab
   - first:
+      74: 2719308335796654927
+    second: Armatura|Grab_Idle
+  - first:
       74: -3973583399002448433
     second: Armatura|Idle
+  - first:
+      74: 1165626468835040900
+    second: Armatura|Idle2
   - first:
       74: -4127951203046056098
     second: Armatura|IdleLeftArm
@@ -16,17 +28,8 @@ ModelImporter:
       74: -1068487222987508204
     second: Armatura|IdleRightArm
   - first:
-      74: 8440248360967096626
-    second: Camera|CameraAction
-  - first:
-      74: -1070788387228417968
-    second: Armatura|CameraAction
-  - first:
-      74: 2719308335796654927
-    second: Armatura|Grab_Idle
-  - first:
-      74: 1165626468835040900
-    second: Armatura|Idle2
+      74: 4578422899037589584
+    second: Armatura|Jump
   - first:
       74: -7938954992320143510
     second: Armatura|Release
@@ -88,8 +91,8 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
+      loopTime: 0
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -168,7 +171,7 @@ ModelImporter:
       takeName: Armatura|Grab_Idle
       internalID: 0
       firstFrame: 0
-      lastFrame: 120
+      lastFrame: 240
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -204,8 +207,8 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
+      loopTime: 0
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -285,6 +288,35 @@ ModelImporter:
       internalID: 0
       firstFrame: 0
       lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armatura|Jump
+      takeName: Armatura|Jump
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 80
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
