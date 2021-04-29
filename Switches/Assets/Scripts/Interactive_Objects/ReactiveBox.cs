@@ -27,6 +27,11 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
 
     public void ReactToAttraction(float attractionSpeed)
     {
+        if (GetComponentInParent<PlatformBehaviour>() != null)
+        {
+            
+            transform.SetParent(null);
+        }
         
         rb.useGravity = false;
         rb.freezeRotation = true;

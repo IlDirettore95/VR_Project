@@ -15,6 +15,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/movementSystem/MovementSystem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/Rotate.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveFan.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ElevatorTrigger.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -23,13 +24,14 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/ExplosiveSpider.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/fanSpin.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveObject.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/rotate.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveFan.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Switch.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/PlatformBehaviour.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/Rotate.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Furnace.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/PlatformBehaviour.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/ElevatorTrigger.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1rLLOK50KyDaz9MEeoEufft7hH5" />
@@ -84,6 +86,7 @@
       <workItem from="1619188235755" duration="1631000" />
       <workItem from="1619190744773" duration="210000" />
       <workItem from="1619193993463" duration="1820000" />
+      <workItem from="1619616593708" duration="3687000" />
     </task>
     <servers />
   </component>

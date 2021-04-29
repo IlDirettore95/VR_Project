@@ -37,6 +37,7 @@ public class PlatformBehaviour : MonoBehaviour, InteractableObject
     
     private Vector3 currentPosition2;
     private Vector3 targetPosition2;
+    
 
     public float buildUp = 0.1f;
     private float buildUpState = 0;
@@ -168,27 +169,7 @@ public class PlatformBehaviour : MonoBehaviour, InteractableObject
 
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("collision");
-        GameObject player = other.gameObject;
-        if (player != null && player.tag.Equals("Player"))
-        {
-            Debug.Log("ciao");
-            player.transform.SetParent(transform);
-            
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        GameObject player = other.gameObject;
-        if (player != null && player.tag.Equals("Player"))
-        {
-            player.transform.SetParent(null);
-            
-        }
-    }
+   
 
     public void setFalse()
     {

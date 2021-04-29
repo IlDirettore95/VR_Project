@@ -9,6 +9,7 @@
         <e p="Scripts" t="Include">
           <e p="DoorBehaviour.cs" t="Include" />
           <e p="DoorBehaviourSmall.cs" t="Include" />
+          <e p="ElevatorTrigger.cs" t="Include" />
           <e p="Enemy" t="Include">
             <e p="EnemyController.cs" t="Include" />
             <e p="ExplosiveSpider.cs" t="Include" />
