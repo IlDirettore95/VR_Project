@@ -352,6 +352,8 @@ public class MovementSystem : MonoBehaviour
 
         //Lerping from speed to falling speed
         SetSpeed(fallingSpeed, fallingBuildUp);
+
+        _animController.NextState();
     }
 
     /* Handles the idle state. In this state the speed will lerp to walk speed.
@@ -396,7 +398,8 @@ public class MovementSystem : MonoBehaviour
 
         //Updating strat falling position for handleing fall damage
         if (transform.position.y > startFallingY) startFallingY = transform.position.y;
-  
+
+        _animController.NextState();
     }
 
 
