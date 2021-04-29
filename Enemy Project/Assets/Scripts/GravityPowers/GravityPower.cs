@@ -42,6 +42,9 @@ public class GravityPower : MonoBehaviour
     public bool IsReleasing() => releasing;
     public bool IsLaunching() => launching;
 
+    //Animation
+    PlayerAnimationController _animController;
+
     private Camera _camera;
 
     private GUIStyle style = new GUIStyle();
@@ -52,6 +55,7 @@ public class GravityPower : MonoBehaviour
         _camera = GetComponent<Camera>();
         _energyRecover = GetComponentInParent<EnergyRecover>();
         _playerStatus = GetComponentInParent<PlayerStatus>();
+        _animController = GetComponentInParent<PlayerAnimationController>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
@@ -128,6 +132,8 @@ public class GravityPower : MonoBehaviour
             attracting = true;
             //energy recovery
             _energyRecover.enabled = false;
+
+            _animController.NextState();
         }
     }
 
@@ -137,6 +143,8 @@ public class GravityPower : MonoBehaviour
 
         //energy recovery
         _energyRecover.enabled = true;
+
+        _animController.NextState();
     }
 
     private void Launching()
@@ -147,6 +155,8 @@ public class GravityPower : MonoBehaviour
         //energy cost
         _playerStatus.ConsumeEnergy(launchingCost * rb.mass);
         _energyRecover.enabled = true;
+
+        _animController.NextState();
     }
 
     //Acquiring the target gameobject or null

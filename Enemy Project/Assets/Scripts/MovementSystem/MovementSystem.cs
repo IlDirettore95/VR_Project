@@ -82,12 +82,13 @@ public class MovementSystem : MonoBehaviour
     //Sliding on edges
     public float slidingFactor;
 
-    
-
     private CharacterController _charController;
     private PlayerStatus _playerStatus;
     private StaminaRecover _staminaRecover;
-   
+
+    //Animation
+    PlayerAnimationController _animController;
+
 
     // Start is called before the first frame update
     void Start()
@@ -95,6 +96,7 @@ public class MovementSystem : MonoBehaviour
         _charController = GetComponent<CharacterController>();
         _playerStatus = GetComponent<PlayerStatus>();
         _staminaRecover = GetComponent<StaminaRecover>();
+        _animController = GetComponent<PlayerAnimationController>();
     }
 
     // Update is called once per frame
@@ -307,6 +309,8 @@ public class MovementSystem : MonoBehaviour
         //Stamina consuming
         _staminaRecover.enabled = false;
         _playerStatus.ConsumeStamina(staminaConsumingRate * Time.deltaTime);
+
+        _animController.NextState();
     }
 
     /* Handling walking status and lerping speed tp walk speed 
@@ -330,7 +334,7 @@ public class MovementSystem : MonoBehaviour
             SetSpeed(walkingSpeed, walkingBuildUp);
         }
 
-        
+        _animController.NextState();
     }
 
     /* Handles jumping
@@ -362,6 +366,8 @@ public class MovementSystem : MonoBehaviour
         //even when idle the speed will lerp to walking speed
         //Lerping from speed to walking speed
         SetSpeed(0f, 0f);
+
+        _animController.NextState();
     }
 
     /*Handles the falling state. During the falling state the starting falling y will be updated to ensure a correct calculation of the fall damage
