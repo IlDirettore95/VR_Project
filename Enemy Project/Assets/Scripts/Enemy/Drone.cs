@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class Drone : Enemy
 {
     //Enemy state
-    private bool dead = false;
     public enum DroneState
     {
         Guard,
@@ -34,6 +33,7 @@ public class Drone : Enemy
     private float pos;
     private DroneState _currentState;
     public GameObject _droneBody;
+    private bool navmeshFinded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -71,16 +71,27 @@ public class Drone : Enemy
                     if (playerDistance <= triggerPlayerDistance)
                     {
                         _droneBody.transform.LookAt(playerTransform);
-
-                        _currentState = DroneState.Chasing;
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
+                        TriggerArea(areaID);
+
+                        _currentState = DroneState.Chasing;
                     }
 
                     break;
                 }
             case DroneState.Patrol:
                 {
+                    if (playerDistance <= triggerPlayerDistance)
+                    {
+                        _droneBody.transform.LookAt(playerTransform);
+                        nextTimeFire = Time.time + fireCooldown;
+                        lastPlayerPosition = playerTransform.position;
+                        TriggerArea(areaID);
+
+                        _currentState = DroneState.Chasing;
+                    }
+
                     break;
                 }
             case DroneState.Chasing:
@@ -105,7 +116,7 @@ public class Drone : Enemy
                             _agent.SetDestination(lastPlayerPosition);
                         }
                     }
-                    else
+                    else if(!_agent.isOnOffMeshLink)
                     {
                         Vector3 direzione = -(transform.position - playerTransform.position).normalized;
 
@@ -165,8 +176,10 @@ public class Drone : Enemy
                     if (speed < 3)
                     {
                         rb.useGravity = false;
+                        rb.velocity = Vector3.zero;
 
                         currentStateBuildUp = 0f;
+                        navmeshFinded = false;
                         _currentState = DroneState.Stunned;
                     }
 
@@ -177,7 +190,7 @@ public class Drone : Enemy
                     //_droneBody.transform.LookAt(playerTransform);
                     transform.LookAt(playerTransform);
 
-                    if (targetPos == Vector3.zero)
+                    if (!navmeshFinded)
                     {
                         Scan(transform.forward);
                         Scan(-transform.forward);
@@ -186,22 +199,13 @@ public class Drone : Enemy
                         Scan(transform.right);
                         Scan(-transform.right);
 
-                        RaycastHit hit;
-                        if (Physics.Raycast(transform.position, -transform.up, out hit))
-                        {
-                            if (hit.transform.gameObject.GetComponent<NavMeshSurface>() != null)
-                            {
-                                startPos = transform.position;
-                                targetPos = hit.point + Vector3.up * _agent.baseOffset;
-                                pos = 0;
-                                rb.isKinematic = true;
-                            }
-                        }
+                        FindNavMesh();
                     }
-                    else if (transform.position.Equals(targetPos))
+                    else if (_droneBody.transform.position.Equals(targetPos))
                     {
                         _agent.enabled = true;
-                        targetPos = Vector3.zero;
+                        navmeshFinded = false;
+                        Debug.Log("TargetPos: " + targetPos);
                         _currentState = DroneState.Chasing;
                     }
                     else
@@ -209,6 +213,7 @@ public class Drone : Enemy
                         pos += posBuildUp * Time.deltaTime;
                         transform.position = Vector3.Lerp(startPos, targetPos, pos);
                         _agent.transform.position = Vector3.Lerp(startPos, targetPos, pos);
+                        //_droneBody.transform.position = Vector3.Lerp(startPos, targetPos, pos);
                     }
 
                     break;
@@ -229,13 +234,18 @@ public class Drone : Enemy
         {
             if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
             {
+                if (_currentState == DroneState.Patrol || _currentState == DroneState.Guard)
+                {
+                    TriggerArea(areaID);
+                }
+
                 if (_currentState != DroneState.Throwed)
                 {
                     _agent.enabled = false;
                     rb.isKinematic = false;
                     rb.useGravity = true;
                     rb.AddForce(collision.relativeVelocity, ForceMode.Impulse);
-
+                    Debug.Log("Hit position" + transform.position);
                     _currentState = DroneState.Throwed;
                 }
 
@@ -287,6 +297,32 @@ public class Drone : Enemy
             {
                 rb.AddForce(-direzione.normalized * walkingSpeed * 2);
             }
+        }
+    }
+
+    private void FindNavMesh()
+    {
+        transform.rotation = new Quaternion(0, 0, 0, 0);
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -transform.up, out hit))
+        {
+            if (hit.transform.gameObject.GetComponent<NavMeshSurface>() != null)
+            {
+                startPos = _droneBody.transform.position; Debug.Log("StartPos: " + startPos);
+                targetPos = hit.point + Vector3.up * _agent.baseOffset;
+                pos = 0;
+                rb.isKinematic = true;
+                if(startPos != targetPos) navmeshFinded = true;
+            }
+        }
+    }
+
+    public override void Triggered()
+    {
+        if(_currentState == DroneState.Patrol || _currentState == DroneState.Guard)
+        {
+            _currentState = DroneState.Chasing;
         }
     }
 }

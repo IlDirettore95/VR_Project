@@ -136,6 +136,23 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         throw new System.NotImplementedException();
     }
 
+    public virtual void Triggered()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected void TriggerArea(int areaID)
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 50);
+        foreach (Collider col in hits)
+        {
+            if(col.gameObject.GetComponent<Enemy>() != null && col.gameObject.GetComponent<Enemy>().GetAreaID() == areaID)
+            {
+                col.gameObject.GetComponent<Enemy>().Triggered();
+            }
+        }
+    }
+
     public virtual bool IsDestroyed() => !isAlive;
 
 }
