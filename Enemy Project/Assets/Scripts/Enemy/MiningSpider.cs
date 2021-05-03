@@ -32,6 +32,11 @@ public class MiningSpider : Enemy
 
     //Audio
     private AudioSource timer;
+
+    //Animation
+    SpiderAnimationController _animController;
+
+    public SpiderState GetState() => _currentState;
     
     // Start is called before the first frame update
     void Start()
@@ -52,6 +57,8 @@ public class MiningSpider : Enemy
 
         timer = GetComponent<AudioSource>();
 
+        _currentState = SpiderState.Guarding;
+        _animController = GetComponent<SpiderAnimationController>();
     }
 
     public override void Initialize()
@@ -65,6 +72,7 @@ public class MiningSpider : Enemy
         _health = MaxHealth;
         target = GameObject.Find("ObjectGrabber").transform;
         enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
+        _currentState = SpiderState.Guarding;
     }
 
     // Update is called once per frame
@@ -74,13 +82,26 @@ public class MiningSpider : Enemy
 
         switch (_currentState)
         {
+            case SpiderState.Guarding:
+                {
+                    if (playerDistance <= triggerPlayerDistance)
+                    {
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
+                    }
+
+                    break;
+                }
             case SpiderState.Patrolling:
                 {
                     if (playerDistance <= triggerPlayerDistance)
                     {
                         currentStateBuildUp = 0f;
                         _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
                     }
+
                     break;
                 }
             case SpiderState.Chasing:
@@ -108,6 +129,8 @@ public class MiningSpider : Enemy
 
                         //Audio
                         timer.Play();
+
+                        _animController.UpdateAnimation();
                     }
 
                     break;
@@ -136,6 +159,7 @@ public class MiningSpider : Enemy
 
                         currentStateBuildUp = 0f;
                         _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
                     }
                     break;
                 }
@@ -160,6 +184,7 @@ public class MiningSpider : Enemy
 
                         _agent.isStopped = false;
                         _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
                     }
                     break;
                 }
@@ -220,6 +245,7 @@ public class MiningSpider : Enemy
                 timer.Play();
             }
             _currentState = SpiderState.Attracted;
+            _animController.UpdateAnimation();
         }
 
         base.ReactToAttraction(attractionSpeed);
@@ -238,6 +264,7 @@ public class MiningSpider : Enemy
 
         nextTimeStunning = Time.time + stunningDuration;
         _currentState = SpiderState.Throwed;
+        _animController.UpdateAnimation();
     }
 
     public override void ReactToLaunching(float launchingSpeed)
@@ -252,7 +279,8 @@ public class MiningSpider : Enemy
         timer.Stop();
 
         nextTimeStunning = Time.time + stunningDuration;
-        _currentState = SpiderState.Throwed;        
+        _currentState = SpiderState.Throwed;
+        _animController.UpdateAnimation();
     }
 
     public override void ReactToExplosion(float damage, float power, Vector3 center, float radius)
@@ -286,7 +314,7 @@ public class MiningSpider : Enemy
                     rb.AddForce(collision.relativeVelocity, ForceMode.Impulse);
                     nextTimeStunning = Time.time + stunningDuration;
                     _currentState = SpiderState.Throwed;
-
+                    _animController.UpdateAnimation();
                 }
                 
                 Hurt(colliderRb.mass * (collision.relativeVelocity.magnitude - impactVelocityThreashold));
@@ -303,6 +331,7 @@ public class MiningSpider : Enemy
     //This enum are mining spider possible states
     public enum SpiderState
     {
+        Guarding,
         Patrolling,
         Chasing,
         Attracted,
