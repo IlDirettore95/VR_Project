@@ -14,6 +14,9 @@ public interface ReactiveObject
 
     void ReactToLaunching(float launchingSpeed);
 
+
+
+    void reactToFire(float damage);
  
     bool IsDestroyed();
 

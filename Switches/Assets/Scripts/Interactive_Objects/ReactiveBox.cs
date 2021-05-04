@@ -10,7 +10,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     private Rigidbody rb;
     private GameObject player;
     private Transform target;
-    
+    private FireStatus fs;
    
     public float _health;
 
@@ -19,6 +19,8 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         rb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
         target = GameObject.Find("ObjectGrabber").transform;
+
+        fs = GetComponent<FireStatus>();
     }
 
     
@@ -54,6 +56,12 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         //Add a torque to add randomness to movements
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
+    }
+
+    public void reactToFire(float damage)
+    {
+        fs.onFire();
+        
     }
 
     public bool IsDestroyed()

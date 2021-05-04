@@ -20,7 +20,7 @@ public class ReactiveFan : MonoBehaviour, ReactiveObject
     private Quaternion initialRotation;
     private Quaternion finalRotation;
     private bool isAttracted = false;
-    
+    //private FireStatus fs;
     
     public Vector3 targetAngle = new Vector3(90f, 0f, 0f);
  
@@ -38,7 +38,7 @@ public class ReactiveFan : MonoBehaviour, ReactiveObject
         rb.maxAngularVelocity = 20f;
 
         finalRotation = new Quaternion(0.5f, -0.5f, 0.5f, 0.5f);
-        
+        //fs = GetComponent<FireStatus>();
         
         currentAngle = transform.eulerAngles;
     }
@@ -138,6 +138,11 @@ public class ReactiveFan : MonoBehaviour, ReactiveObject
         rb.AddTorque(0.05f, 0.05f, 0.05f, ForceMode.Impulse);
         rb.AddForce(target.forward * launchingSpeed, ForceMode.Impulse);
         isOnGround = true;
+    }
+
+    public void reactToFire(float damage)
+    {
+        //fs.onFire();
     }
 
     public bool IsDestroyed()

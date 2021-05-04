@@ -40,11 +40,13 @@ public class Furnace : MonoBehaviour, InteractableObject
                 Debug.Log("faccio danno");
 
             }
-            else if (gameObject.GetComponent<ReactiveEnemy>()!=null && isEnabled)
+            else if (gameObject.GetComponent<ReactiveObject>()!=null && isEnabled)
             {
-                ReactiveEnemy en = gameObject.GetComponent<ReactiveEnemy>();
+                ReactiveObject en = gameObject.GetComponent<ReactiveObject>();
                 en.reactToFire(fireDamage);
             }
+            
+            
         
         
     }
