@@ -338,4 +338,13 @@ public class MiningSpider : Enemy
         Throwed,
         Exploding
     }
+
+    public override void Triggered()
+    {
+        if (_currentState == SpiderState.Patrolling || _currentState == SpiderState.Guarding)
+        {
+            _currentState = SpiderState.Chasing;
+            _animController.UpdateAnimation();
+        }
+    }
 }

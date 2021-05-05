@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 0
   enemyID: 0
-  MaxHealth: 2000
+  MaxHealth: 50
   walkingSpeed: 3
   triggeredSpeed: 6
   walkingSpeedBuildUp: 1
