@@ -32,7 +32,11 @@ public class MiningSpider : Enemy
 
     //Audio
     private AudioSource timer;
-    
+
+    //Rotation of sight before moving
+    public float sightRotationThreashold;
+    public float rotationSpeed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,8 +78,15 @@ public class MiningSpider : Enemy
 
         switch (_currentState)
         {
-            case SpiderState.Patrolling:
-                {
+            case SpiderState.Guarding:
+                { 
+                    if (patrollingPoints.Length >= 2 && Time.time >= nextTimePatrol)
+                    {
+                        ChangeDestination();
+                        Patrol();
+                        
+                        _currentState = SpiderState.Patrolling;
+                    }
                     if (playerDistance <= triggerPlayerDistance)
                     {
                         currentStateBuildUp = 0f;
@@ -83,18 +94,23 @@ public class MiningSpider : Enemy
                     }
                     break;
                 }
+            case SpiderState.Patrolling:
+                {
+                    if(isAtDestination())
+                    {
+                        nextTimePatrol = Time.time + guardingCooldown;
+                        _currentState = SpiderState.Guarding;
+                    }
+                    if (playerDistance <= triggerPlayerDistance)
+                    {
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
+                    }
+                    break;
+                }
+            
             case SpiderState.Chasing:
                 {
-                    //Following the player
-
-                    //Lerping speed to triggered speed
-                    currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
-                    speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
-                    _agent.speed = speed;
-
-                    //Finding the player
-                    _agent.destination = playerTransform.position;
-
                     //Passing to Exploding State
                     if (playerDistance <= attackDistance)
                     {
@@ -109,7 +125,29 @@ public class MiningSpider : Enemy
                         //Audio
                         timer.Play();
                     }
+                    else
+                    {
+                        //Following the player
+                        //Calculate the angle beetween the enemy's transform.forward and the player
+                        float angle = Vector3.SignedAngle((playerTransform.position - transform.position), transform.forward, Vector3.up);
+                        if (angle < -sightRotationThreashold || angle > sightRotationThreashold)
+                        {
+                            //turn left or turn right
+                            _agent.isStopped = true;
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation((playerTransform.position - transform.position).normalized), rotationSpeed * Time.deltaTime);
+                        }
+                        else
+                        {
+                            //Lerping speed to triggered speed
+                            currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
+                            speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
+                            _agent.speed = speed;
 
+                            //Finding the player
+                            _agent.destination = playerTransform.position;
+                            _agent.isStopped = false;
+                        }
+                    }    
                     break;
                 }
             case SpiderState.Attracted:
@@ -180,18 +218,6 @@ public class MiningSpider : Enemy
                 target.ReactToExplosion(explosionDamage, explosionImpact, transform.position, explosionRadius);
             }
         }
-
-        //Simulating the explosion
-        /*rb.isKinematic = false;
-        rb.useGravity = true;
-
-        
-
-        //Disabling animation
-        fLight1.enabled = false;
-        fLight2.enabled = false;
-        light1.enabled = false;
-        light2.enabled = false;*/
 
         //Audio
         timer.Stop();
@@ -303,7 +329,8 @@ public class MiningSpider : Enemy
     //This enum are mining spider possible states
     public enum SpiderState
     {
-        Patrolling,
+        Guarding,
+        Patrolling,      
         Chasing,
         Attracted,
         Throwed,
