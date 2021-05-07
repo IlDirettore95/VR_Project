@@ -47,6 +47,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     //Player Interaction
     protected Transform target;
+    protected FireStatus fs;
 
     //Is attracted now?
     public bool IsAttracted() => attracted;
@@ -155,4 +156,23 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     public virtual bool IsDestroyed() => !isAlive;
 
+    public virtual void reactToFire(float damage)
+    {
+        if (!fs.enabled)
+            fs.enabled = true;
+        else
+        {
+            fs.restartCooldown();
+        }
+    }
+
+    public void reactToExplosion(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void reactToFan(Vector3 direction, float angularVelocity, float damage, bool isInBox)
+    {
+        throw new System.NotImplementedException();
+    }
 }

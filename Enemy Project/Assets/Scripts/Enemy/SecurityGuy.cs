@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Drone : Enemy
+public class SecurityGuy : Enemy
 {
     //Enemy state
-    public enum DroneState
+    public enum SecurityGuyState
     {
         Guarding,
         Patrolling,
@@ -31,9 +31,7 @@ public class Drone : Enemy
     private Vector3 targetPos;
     private readonly float posBuildUp = 1f;
     private float pos;
-    private DroneState _currentState;
-    public GameObject _droneBody;
-    private bool navmeshFinded = false;
+    private SecurityGuyState _currentState;
 
     // Start is called before the first frame update
     void Start()
@@ -42,14 +40,13 @@ public class Drone : Enemy
         rb = GetComponent<Rigidbody>();
         playerTransform = GameObject.Find("Player").transform;
         _playerStatus = playerTransform.GetComponent<PlayerStatus>();
-        fs = GetComponent<FireStatus>();
 
         rb.useGravity = false;
         rb.isKinematic = true;
         _health = MaxHealth;
         target = GameObject.Find("ObjectGrabber").transform;
 
-        _currentState = DroneState.Guarding;
+        _currentState = SecurityGuyState.Guarding;
     }
 
     // Update is called once per frame
@@ -57,48 +54,44 @@ public class Drone : Enemy
     {
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (!isAlive) _currentState = DroneState.Dead;
+        if (!isAlive) _currentState = SecurityGuyState.Dead;
 
         switch (_currentState)  //Finite State Machine
         {
-            case DroneState.Dead:
+            case SecurityGuyState.Dead:
                 {
                     Destroy(gameObject);
 
                     break;
                 }
-            case DroneState.Guarding:
+            case SecurityGuyState.Guarding:
                 {
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        _droneBody.transform.LookAt(playerTransform);
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
 
-                        _currentState = DroneState.Chasing;
+                        _currentState = SecurityGuyState.Chasing;
                     }
 
                     break;
                 }
-            case DroneState.Patrolling:
+            case SecurityGuyState.Patrolling:
                 {
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        _droneBody.transform.LookAt(playerTransform);
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
 
-                        _currentState = DroneState.Chasing;
+                        _currentState = SecurityGuyState.Chasing;
                     }
 
                     break;
                 }
-            case DroneState.Chasing:
+            case SecurityGuyState.Chasing:
                 {
-                    _droneBody.transform.LookAt(playerTransform);
-
                     //Lerping speed to triggered speed
                     currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
                     speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
@@ -117,7 +110,7 @@ public class Drone : Enemy
                             _agent.SetDestination(lastPlayerPosition);
                         }
                     }
-                    else if(!_agent.isOnOffMeshLink)
+                    else if (!_agent.isOnOffMeshLink)
                     {
                         Vector3 direzione = -(transform.position - playerTransform.position).normalized;
 
@@ -128,18 +121,15 @@ public class Drone : Enemy
                             if (hitObject.tag.Equals("Player") || (hitObject.GetComponent<ReactiveObject>() != null && hitObject.GetComponent<ReactiveObject>().IsAttracted()))
                             {
                                 _agent.isStopped = true;
-                                _droneBody.transform.LookAt(playerTransform);
-                                _currentState = DroneState.Attack;
+                                _currentState = SecurityGuyState.Attack;
                             }
                         }
                     }
-                    
+
                     break;
                 }
-            case DroneState.Attack:
+            case SecurityGuyState.Attack:
                 {
-                    _droneBody.transform.LookAt(playerTransform);
-
                     if (playerDistance <= attackDistance)
                     {
                         if (Time.time >= nextTimeFire)
@@ -151,26 +141,16 @@ public class Drone : Enemy
                     else
                     {
                         _agent.isStopped = false;
-                        _currentState = DroneState.Chasing;
-                    }
-                        
-                    break;
-                }
-            case DroneState.Attracted:
-                {
-                    RaycastHit hit;
-                    if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out hit))
-                    {
-                        if (hit.transform.gameObject.tag.Equals("Player") && Time.time >= nextTimeFire)
-                        {
-                            Shoot();
-                            nextTimeFire = Time.time + fireCooldown;
-                        }
+                        _currentState = SecurityGuyState.Chasing;
                     }
 
                     break;
                 }
-            case DroneState.Throwed:
+            case SecurityGuyState.Attracted:
+                {
+                    break;
+                }
+            case SecurityGuyState.Throwed:
                 {
                     speed = rb.velocity.magnitude;
 
@@ -180,41 +160,15 @@ public class Drone : Enemy
                         rb.velocity = Vector3.zero;
 
                         currentStateBuildUp = 0f;
-                        navmeshFinded = false;
-                        _currentState = DroneState.Stunned;
+                        _currentState = SecurityGuyState.Stunned;
                     }
 
                     break;
                 }
-            case DroneState.Stunned:
+            case SecurityGuyState.Stunned:
                 {
-                    //_droneBody.transform.LookAt(playerTransform);
-                    transform.LookAt(playerTransform);
-
-                    if (!navmeshFinded)
-                    {
-                        Scan(transform.forward);
-                        Scan(-transform.forward);
-                        Scan(transform.up);
-                        Scan(-transform.up);
-                        Scan(transform.right);
-                        Scan(-transform.right);
-
-                        FindNavMesh();
-                    }
-                    else if (_droneBody.transform.position.Equals(targetPos))
-                    {
-                        _agent.enabled = true;
-                        navmeshFinded = false;
-                        _currentState = DroneState.Chasing;
-                    }
-                    else
-                    {
-                        pos += posBuildUp * Time.deltaTime;
-                        transform.position = Vector3.Lerp(startPos, targetPos, pos);
-                        _agent.transform.position = Vector3.Lerp(startPos, targetPos, pos);
-                        //_droneBody.transform.position = Vector3.Lerp(startPos, targetPos, pos);
-                    }
+                    _agent.enabled = true;
+                    _currentState = SecurityGuyState.Chasing;
 
                     break;
                 }
@@ -234,18 +188,18 @@ public class Drone : Enemy
         {
             if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
             {
-                if (_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
+                if (_currentState == SecurityGuyState.Patrolling || _currentState == SecurityGuyState.Guarding)
                 {
                     TriggerArea(areaID);
                 }
 
-                if (_currentState != DroneState.Throwed)
+                if (_currentState != SecurityGuyState.Throwed)
                 {
                     _agent.enabled = false;
                     rb.isKinematic = false;
                     rb.useGravity = true;
                     rb.AddForce(collision.relativeVelocity, ForceMode.Impulse);
-                    _currentState = DroneState.Throwed;
+                    _currentState = SecurityGuyState.Throwed;
                 }
 
                 Hurt(colliderRb.mass * (collision.relativeVelocity.magnitude - impactVelocityThreashold));
@@ -262,66 +216,28 @@ public class Drone : Enemy
     {
         base.ReactToAttraction(attractionSpeed);
 
-        _currentState = DroneState.Attracted;
+        _currentState = SecurityGuyState.Attracted;
     }
 
     public override void ReactToReleasing()
     {
         base.ReactToReleasing();
 
-        _currentState = DroneState.Throwed;
+        _currentState = SecurityGuyState.Throwed;
     }
 
     public override void ReactToLaunching(float launchingSpeed)
     {
         base.ReactToLaunching(launchingSpeed);
 
-        _currentState = DroneState.Throwed;
-    }
-
-    private void Scan(Vector3 direction)
-    {
-        RaycastHit hit;
-        Vector3 direzione;
-
-        if (Physics.Raycast(transform.position, direction, out hit))
-        {
-            direzione = hit.point - transform.position;
-
-            if (hit.distance < 4f)
-            {
-                rb.AddForce(-direzione.normalized * walkingSpeed);
-            }
-            else if (hit.distance < 2f)
-            {
-                rb.AddForce(-direzione.normalized * walkingSpeed * 2);
-            }
-        }
-    }
-
-    private void FindNavMesh()
-    {
-        transform.rotation = new Quaternion(0, 0, 0, 0);
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, -transform.up, out hit))
-        {
-            if (hit.transform.gameObject.GetComponent<NavMeshSurface>() != null)
-            {
-                startPos = _droneBody.transform.position; Debug.Log("StartPos: " + startPos);
-                targetPos = hit.point + Vector3.up * _agent.baseOffset;
-                pos = 0;
-                rb.isKinematic = true;
-                if(startPos != targetPos) navmeshFinded = true;
-            }
-        }
+        _currentState = SecurityGuyState.Throwed;
     }
 
     public override void Triggered()
     {
-        if(_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
+        if (_currentState == SecurityGuyState.Patrolling || _currentState == SecurityGuyState.Guarding)
         {
-            _currentState = DroneState.Chasing;
+            _currentState = SecurityGuyState.Chasing;
         }
     }
 }
