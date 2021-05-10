@@ -226,7 +226,6 @@ public class MovementSystem : MonoBehaviour
             if(!crouched || !crouching) crouchingStateBuildUp = 1 - crouchingStateBuildUp;
             crouched = true;
             crouching = true;
-            
         }  
     }
 
@@ -426,7 +425,7 @@ public class MovementSystem : MonoBehaviour
     {
         RaycastHit hit;
         Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroudedRadius, out hit);
-        isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold);
+        isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold + _charController.stepOffset);
     }
 
     /* This method will set the new targeted speed and the new build up for lerping
