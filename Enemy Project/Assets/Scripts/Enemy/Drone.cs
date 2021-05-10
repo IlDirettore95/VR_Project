@@ -125,7 +125,7 @@ public class Drone : Enemy
                         if (Physics.SphereCast(transform.position, 0.3f, direzione, out hit, 50f))
                         {
                             GameObject hitObject = hit.transform.gameObject;
-                            if (hitObject.tag.Equals("Player") || (hitObject.GetComponent<ReactiveObject>() != null && hitObject.GetComponent<ReactiveObject>().IsAttracted()))
+                            if (hitObject.tag.Equals("Player")) // || (hitObject.GetComponent<ReactiveObject>() != null && hitObject.GetComponent<ReactiveObject>().IsAttracted())
                             {
                                 _agent.isStopped = true;
                                 _droneBody.transform.LookAt(playerTransform);

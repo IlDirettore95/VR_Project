@@ -8,6 +8,10 @@ public class PlayerAnimationController : MonoBehaviour
     GravityPower powers;
     MovementSystem moveSys;
 
+    public bool GetIsGrabbing() => animator.GetBool("IsGrabbing");
+    public bool GetIsThrowing() => animator.GetBool("IsThrowing");
+    public bool GetIsReleasing() => animator.GetBool("IsReleasing");
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,26 +26,40 @@ public class PlayerAnimationController : MonoBehaviour
         
     }
 
+    public void Attract()
+    {
+        animator.SetBool("IsGrabbing", true);
+    }
+
+    public void StopAttracting()
+    {
+        animator.SetBool("IsGrabbing", false);
+    }
+
+    public void Throw()
+    {
+        animator.SetBool("IsThrowing", true);
+        animator.SetBool("IsGrabbing", false);
+    }
+
+    public void StopThrowing()
+    {
+        animator.SetBool("IsThrowing", false);
+    }
+
+    public void Release()
+    {
+        animator.SetBool("IsReleasing", true);
+        animator.SetBool("IsGrabbing", false);
+    }
+
+    public void StopReleasing()
+    {
+        animator.SetBool("IsReleasing", false);
+    }
+
     public void NextState()
     {
-        if (powers.IsAttracting())
-        {
-            animator.SetBool("IsGrabbing", true);
-        }
-        else animator.SetBool("IsGrabbing", false);
-
-        if (powers.IsLaunching())
-        {
-            animator.SetBool("IsThrowing", true);
-        }
-        else animator.SetBool("IsThrowing", false);
-
-        if (powers.IsReleasing())
-        {
-            animator.SetBool("IsReleasing", true);
-        }
-        else animator.SetBool("IsReleasing", false);
-
         if (moveSys.running && !powers.IsAttracting())
         {
             animator.SetBool("IsRunning", true);
@@ -55,6 +73,5 @@ public class PlayerAnimationController : MonoBehaviour
             animator.SetBool("IsJumping", true);
         }
         else animator.SetBool("IsJumping", false);
-
-    }
+    }  
 }
