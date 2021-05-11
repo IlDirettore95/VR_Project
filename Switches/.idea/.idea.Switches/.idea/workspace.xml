@@ -12,6 +12,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlatformBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/RotateChild.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/movementSystem/MovementSystem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/Rotate.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Environment/Conveyor.cs" root0="FORCE_HIGHLIGHTING" />
@@ -32,11 +33,14 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/objSpawner.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Conveyor.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/ReactiveEnemy.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Furnace.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveObject.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/Drone.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Environment/Furnace.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/FireStatus.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/ReactiveFan.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/Enemy.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/FireStatus.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/rotateChild.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1rLLOK50KyDaz9MEeoEufft7hH5" />
@@ -94,7 +98,10 @@
       <workItem from="1619616593708" duration="3687000" />
       <workItem from="1619773270826" duration="334000" />
       <workItem from="1619773636986" duration="3697000" />
-      <workItem from="1620119414033" duration="6657000" />
+      <workItem from="1620119414033" duration="7257000" />
+      <workItem from="1620201062266" duration="7472000" />
+      <workItem from="1620287007710" duration="3135000" />
+      <workItem from="1620315822326" duration="2499000" />
     </task>
     <servers />
   </component>
