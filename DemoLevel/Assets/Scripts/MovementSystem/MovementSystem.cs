@@ -132,10 +132,10 @@ public class MovementSystem : MonoBehaviour
                 //The player is surely walking
                 else Walk();
 
-                if (Input.GetButtonDown("Jump")) Jump();
+                if (CanJump() && Input.GetButtonDown("Jump")) Jump();
             }
             //Jumping
-            else if (Input.GetButtonDown("Jump")) Jump();
+            else if (CanJump() && Input.GetButtonDown("Jump")) Jump();
 
             else
             {
@@ -226,6 +226,7 @@ public class MovementSystem : MonoBehaviour
             if(!crouched || !crouching) crouchingStateBuildUp = 1 - crouchingStateBuildUp;
             crouched = true;
             crouching = true;
+            
         }  
     }
 
@@ -262,8 +263,10 @@ public class MovementSystem : MonoBehaviour
             if (!hasJumped)
             {
                 RaycastHit hit;
-                Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit);
-                if (hit.distance <= (lastHeight / 2 + _charController.skinWidth + _charController.stepOffset)) _charController.Move(Vector3.down * hit.distance);
+                if(Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
+                {
+                    if (hit.distance <= (lastHeight / 2 + _charController.skinWidth + _charController.stepOffset)) _charController.Move(Vector3.down * hit.distance);
+                }   
             }
             if (_charController.height == crouchingHeight)
             {
@@ -278,8 +281,10 @@ public class MovementSystem : MonoBehaviour
             if (!hasJumped)
             {
                 RaycastHit hit;
-                Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit);
-                if (hit.distance <= lastHeight / 2 + _charController.skinWidth + _charController.stepOffset) _charController.Move(Vector3.up * (_charController.height / 2 + _charController.skinWidth - hit.distance));
+                if(Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
+                {
+                    if (hit.distance <= lastHeight / 2 + _charController.skinWidth + _charController.stepOffset) _charController.Move(Vector3.up * (_charController.height / 2 + _charController.skinWidth - hit.distance));
+                }
             }
             if (_charController.height == normalHeight)
             {
@@ -424,8 +429,14 @@ public class MovementSystem : MonoBehaviour
     public void SetIsGrounded()
     {
         RaycastHit hit;
-        Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroudedRadius, out hit);
-        isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold + _charController.stepOffset);
+        if (Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroudedRadius, out hit))
+        {
+            isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + _charController.stepOffset + isGroundedThreashold);
+        }
+        else
+        {
+            isGrounded = false;
+        }
     }
 
     /* This method will set the new targeted speed and the new build up for lerping
@@ -470,14 +481,28 @@ public class MovementSystem : MonoBehaviour
         RaycastHit hit;
         Vector3 charPosition = _charController.transform.position;
         Vector3 origin = new Vector3(charPosition.x, charPosition.y - (_charController.height / 2 - _charController.radius), charPosition.z);
-        Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit);
-        if(hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold))
+        if(Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit))
         {
-            Vector3 slidingMovement = transform.position - hit.point;
-            slidingMovement.y = 0f;
-            slidingMovement *= slidingFactor;
-            _charController.Move(slidingMovement * Time.deltaTime);
-        } 
+            if (hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold))
+            {
+                Vector3 slidingMovement = transform.position - hit.point;
+                slidingMovement.y = 0f;
+                slidingMovement *= slidingFactor;
+                _charController.Move(slidingMovement * Time.deltaTime);
+            }
+        }    
+    }
+
+    /* If the character is crouched, he can only jump if there is enough space for he to stand
+     */
+    private bool CanJump()
+    {
+        if(crouched)
+        {
+            return !Physics.SphereCast(new Ray(transform.position, Vector3.up), _charController.radius, (normalHeight - crouchingHeight) / 2);
+        }
+
+        return true;
     }
 
     /* This power up will increase walking and running speed by a certain amount
