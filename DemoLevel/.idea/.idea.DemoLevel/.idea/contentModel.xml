@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Simone\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Simone\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_DemoLevel.490683541.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Simone\Documents\GitHub\VR_Project\DemoLevel" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="DoorBehaviour.cs" t="Include" />
+          <e p="GravityPowers" t="Include">
+            <e p="GravityPower.cs" t="Include" />
+          </e>
+          <e p="HUD" t="Include">
+            <e p="HUD.cs" t="Include" />
+            <e p="Overlay.cs" t="Include" />
+          </e>
+          <e p="Interactive_Objects" t="Include">
+            <e p="ReactiveEntity.cs" t="Include" />
+            <e p="ReactiveObject.cs" t="Include" />
+          </e>
+          <e p="MovementSystem" t="Include">
+            <e p="FPSInput_Jump_Jetpack1.cs" t="Include" />
+            <e p="Jetpack.cs" t="Include" />
+            <e p="MouseLook.cs" t="Include" />
+            <e p="MovementSystem.cs" t="Include" />
+          </e>
+          <e p="PlayerStatus" t="Include">
+            <e p="EnergyRecover.cs" t="Include" />
+            <e p="FuelRecover.cs" t="Include" />
+            <e p="HealthRegeneration.cs" t="Include" />
+            <e p="PlayerStatus.cs" t="Include" />
+            <e p="StaminaRecover.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="DemoLevel.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
