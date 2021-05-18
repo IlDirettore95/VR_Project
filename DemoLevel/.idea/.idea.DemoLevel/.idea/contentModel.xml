@@ -6,6 +6,11 @@
     <e p="C:\Users\Simone\Documents\GitHub\VR_Project\DemoLevel" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Models" t="Include">
+          <e p="porte" t="Include">
+            <e p="DoorAnimation.cs" t="Include" />
+          </e>
+        </e>
         <e p="Scripts" t="Include">
           <e p="DoorBehaviour.cs" t="Include" />
           <e p="GravityPowers" t="Include">

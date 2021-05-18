@@ -10,6 +10,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="IdeDocumentHistory">
+    <changedPaths>
+      <option value="$PROJECT_DIR$/Assets/Models/porte/DoorAnimation.cs" />
+    </changedPaths>
+  </component>
   <component name="ProjectId" id="1sfIN44PE4lSPq5Rsy65VgYkmwN" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -51,7 +56,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1621257177589</updated>
-      <workItem from="1621257202148" duration="595000" />
+      <workItem from="1621257202148" duration="1390000" />
+      <workItem from="1621356644643" duration="1372000" />
     </task>
     <servers />
   </component>
@@ -70,6 +76,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
