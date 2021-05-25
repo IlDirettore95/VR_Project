@@ -22,7 +22,7 @@ public class Drone : Enemy
     public float attackDamage;
     public float fireCooldown;
     private float nextTimeFire;
-    public Transform firePoint;
+    public Transform[] firePoints;
     public GameObject projectilePrefab;
 
     //AI
@@ -35,6 +35,9 @@ public class Drone : Enemy
     public GameObject _droneBody;
     private bool navmeshFinded = false;
 
+    //Animation
+    Animator _animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +46,7 @@ public class Drone : Enemy
         playerTransform = GameObject.Find("Player").transform;
         _playerStatus = playerTransform.GetComponent<PlayerStatus>();
         fs = GetComponent<FireStatus>();
+        _animator = GetComponentInChildren<Animator>();
 
         rb.useGravity = false;
         rb.isKinematic = true;
@@ -75,6 +79,7 @@ public class Drone : Enemy
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
+                        _animator.SetBool("Triggered", true);
 
                         _currentState = DroneState.Chasing;
                     }
@@ -89,6 +94,7 @@ public class Drone : Enemy
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
+                        _animator.SetBool("Triggered", true);
 
                         _currentState = DroneState.Chasing;
                     }
@@ -223,7 +229,10 @@ public class Drone : Enemy
 
     private void Shoot()
     {
-        Instantiate(projectilePrefab, firePoint.transform.position, firePoint.transform.rotation);
+        System.Random rnd = new System.Random();
+        int rand = rnd.Next(2);
+        GameObject projectile = Instantiate(projectilePrefab, firePoints[rand].transform.position, firePoints[rand].transform.rotation);
+        projectile.transform.LookAt(playerTransform);
     }
 
     //Handles collision damage
@@ -321,6 +330,8 @@ public class Drone : Enemy
     {
         if(_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
         {
+            _animator.SetBool("Triggered", true);
+
             _currentState = DroneState.Chasing;
         }
     }

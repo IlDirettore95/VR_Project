@@ -24,9 +24,6 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     }
 
     
-
-    
-
     public void ReactToAttraction(float attractionSpeed)
     {
         if (GetComponentInParent<PlatformBehaviour>() != null)
