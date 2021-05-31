@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7587416186117333130}
   - component: {fileID: 9118240531194104421}
   m_Layer: 0
-  m_Name: GrigliaAreazione1
+  m_Name: GrigliaAreazioneMuro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7110408288811867372, guid: 5c5076cdb44a53a4cb1c5b5e0a87a7a8, type: 3}
+  - {fileID: 2100000, guid: acc90f41a5b67a44b9eba2b8b7427254, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
