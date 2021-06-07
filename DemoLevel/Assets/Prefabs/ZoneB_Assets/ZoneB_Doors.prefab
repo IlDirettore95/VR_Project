@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7770784374667204592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 407565004008326201}
+  m_Layer: 0
+  m_Name: ZoneB_Doors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &407565004008326201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770784374667204592}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2959271105140870986}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1637152841607063616
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 407565004008326201}
+    m_Modifications:
+    - target: {fileID: 3810876641749319088, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_Name
+      value: PortaPiccola
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 44.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -14.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 57.505
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2f14d3cc8e680cc40a761d93f740dd0e, type: 3}
+--- !u!4 &2959271105140870986 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4587238042258728714, guid: 2f14d3cc8e680cc40a761d93f740dd0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1637152841607063616}
+  m_PrefabAsset: {fileID: 0}
