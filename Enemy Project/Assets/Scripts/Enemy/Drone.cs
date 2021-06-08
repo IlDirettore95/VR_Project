@@ -73,6 +73,13 @@ public class Drone : Enemy
                 }
             case DroneState.Guarding:
                 {
+                    if (patrollingPoints.Length >= 2 && Time.time >= nextTimePatrol)
+                    {
+                        ChangeDestination();
+                        Patrol();
+
+                        _currentState = DroneState.Patrolling;
+                    }
                     if (playerDistance <= triggerPlayerDistance)
                     {
                         _droneBody.transform.LookAt(playerTransform);
@@ -88,6 +95,11 @@ public class Drone : Enemy
                 }
             case DroneState.Patrolling:
                 {
+                    if (isAtDestination())
+                    {
+                        nextTimePatrol = Time.time + guardingCooldown;
+                        _currentState = DroneState.Guarding;
+                    }
                     if (playerDistance <= triggerPlayerDistance)
                     {
                         _droneBody.transform.LookAt(playerTransform);

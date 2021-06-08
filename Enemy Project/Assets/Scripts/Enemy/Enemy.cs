@@ -39,6 +39,14 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
     //Attack
     public float attackDistance;
 
+    //List of destination for patrolling
+    //After a cooldown once the enemy has reached hos destination it will change it;
+    public Transform[] patrollingPoints;
+    private int pointIndex = -1; //every time an enemy wants patrolling this index is incremented, so the first time it will be set to 0
+    public float patrollingDistanceThreashold;
+    public float guardingCooldown;
+    protected float nextTimePatrol;
+
     //AI
     protected NavMeshAgent _agent;
     protected Transform playerTransform;
@@ -89,9 +97,20 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         _agent.enabled = true;
     }
 
-    public virtual void MoveTo(Vector3 point)//Move the enemy from the current position to point position in input
+    //This method handles enemy's patrolling between patrolling points
+    protected virtual void Patrol()
     {
-        throw new System.NotImplementedException();
+        _agent.destination = patrollingPoints[pointIndex].position;
+    }
+
+    protected void ChangeDestination()
+    {
+        pointIndex = (pointIndex + 1) % patrollingPoints.Length;
+    }
+
+    protected bool isAtDestination()
+    {
+        return (Vector3.Distance(transform.position, patrollingPoints[pointIndex].position) <= patrollingDistanceThreashold);
     }
 
     public virtual void Patrol(Vector3[] path)//Patrol the path described by the array of position in input
