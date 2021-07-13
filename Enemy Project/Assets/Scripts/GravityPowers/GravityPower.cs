@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /* This class handles the player gravity powers
  * Attraction:
@@ -58,7 +59,7 @@ public class GravityPower : MonoBehaviour
         _animController = GetComponentInParent<PlayerAnimationController>();
 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
 
         style.fontSize = 24;
         style.normal.textColor = Color.white;
@@ -69,11 +70,11 @@ public class GravityPower : MonoBehaviour
     {
         if(!attracting)
         {
-            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsGrabbing()) Attraction();       
+            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsGrabbing() && !EventSystem.current.IsPointerOverGameObject()) Attraction();       
         }
         else
         {
-            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsThrowing() && !_animController.GetIsReleasing()) Launching();
+            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsThrowing() && !_animController.GetIsReleasing() && !EventSystem.current.IsPointerOverGameObject()) Launching();
 
             else if (Input.GetKeyDown(attractionKey) && !_animController.GetIsReleasing()) Releasing();
         }
@@ -174,7 +175,7 @@ public class GravityPower : MonoBehaviour
         float posX = _camera.pixelWidth / 2 - size / 4;
         float posY = _camera.pixelHeight / 2 - size / 2;
 
-        GUI.Label(new Rect(posX, posY, size, size), "[ o ]", style);
+       // GUI.Label(new Rect(posX, posY, size, size), "[ o ]", style);
 
         //For testing purposes
         GUIStyle style2 = new GUIStyle();

@@ -179,7 +179,7 @@ public class MovementSystem : MonoBehaviour
         HandlingSpeed();
         Move();
     }
-
+/*
     void OnGUI()
     {
         //For testing purposes
