@@ -14,7 +14,7 @@ public class Drone : Enemy
         Attack,
         Throwed,
         Attracted,
-        Stunned,
+        Recovery,
         Dead
     }
 
@@ -34,6 +34,7 @@ public class Drone : Enemy
     private DroneState _currentState;
     public GameObject _droneBody;
     private bool navmeshFinded = false;
+    private bool stunned = false;
 
     //Animation
     Animator _animator;
@@ -62,6 +63,8 @@ public class Drone : Enemy
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
         if (!isAlive) _currentState = DroneState.Dead;
+
+        Debug.Log(_currentState);
 
         switch (_currentState)  //Finite State Machine
         {
@@ -192,19 +195,15 @@ public class Drone : Enemy
                 {
                     speed = rb.velocity.magnitude;
 
-                    if (speed < 3)
+                    if (speed < 3 && stunned)
                     {
-                        rb.useGravity = false;
-                        rb.velocity = Vector3.zero;
-
-                        currentStateBuildUp = 0f;
-                        navmeshFinded = false;
-                        _currentState = DroneState.Stunned;
+                        stunned = false;
+                        StartCoroutine(StartRecovery());
                     }
 
                     break;
                 }
-            case DroneState.Stunned:
+            case DroneState.Recovery:
                 {
                     //_droneBody.transform.LookAt(playerTransform);
                     transform.LookAt(playerTransform);
@@ -265,7 +264,8 @@ public class Drone : Enemy
                     _agent.enabled = false;
                     rb.isKinematic = false;
                     rb.useGravity = true;
-                    rb.AddForce(collision.relativeVelocity, ForceMode.Impulse);
+                    rb.AddForce(collision.relativeVelocity, ForceMode.Force);
+                    stunned = true;
                     _currentState = DroneState.Throwed;
                 }
 
@@ -273,9 +273,12 @@ public class Drone : Enemy
             }
         }
         //The collided object is assumed to be static
-        else if (speed > impactVelocityThreashold)
+        else if (_currentState == DroneState.Throwed)
         {
-            Hurt((speed - impactVelocityThreashold));
+            stunned = true;
+
+            if(speed > impactVelocityThreashold)
+                Hurt((speed - impactVelocityThreashold));
         }
     }
 
@@ -329,11 +332,13 @@ public class Drone : Enemy
         {
             if (hit.transform.gameObject.GetComponent<NavMeshSurface>() != null)
             {
-                startPos = _droneBody.transform.position; Debug.Log("StartPos: " + startPos);
+                startPos = _droneBody.transform.position;
                 targetPos = hit.point + Vector3.up * _agent.baseOffset;
                 pos = 0;
                 rb.isKinematic = true;
-                if(startPos != targetPos) navmeshFinded = true;
+                //if(startPos != targetPos) navmeshFinded = true;
+                navmeshFinded = true;
+                //if (navmeshFinded) Debug.Log("NavMesh finded!");
             }
         }
     }
@@ -345,6 +350,21 @@ public class Drone : Enemy
             _animator.SetBool("Triggered", true);
 
             _currentState = DroneState.Chasing;
+        }
+    }
+
+    private IEnumerator StartRecovery()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if(_currentState == DroneState.Throwed)
+        {
+            rb.useGravity = false;
+            rb.velocity = Vector3.zero;
+
+            currentStateBuildUp = 0f;
+            navmeshFinded = false;
+            _currentState = DroneState.Recovery;
         }
     }
 }

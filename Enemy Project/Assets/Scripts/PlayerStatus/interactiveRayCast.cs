@@ -22,7 +22,7 @@ public class interactiveRayCast : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             GameObject go = hit.collider.gameObject;
-            Debug.Log("sparo raggio");
+            //Debug.Log("sparo raggio");
             if (go.GetComponent<Switch>())
             {
                 Debug.Log("ho colliso con un interruttore");
