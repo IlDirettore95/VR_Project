@@ -10,6 +10,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text textArea;
     [SerializeField] private Image dialogueBox;
     [SerializeField] private Text nameTextArea;
+    [SerializeField] private Image Enter;
+    [SerializeField] private Text continueDialog;
     private Boolean onDialog = false;
     private Boolean onWriting = false;
     // Start is called before the first frame update
@@ -35,6 +37,9 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        Enter.enabled = false;
+        continueDialog.enabled = false;
+        
         if( sentences.Count == 0)
         {
             EndDialogue();
@@ -60,6 +65,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         onWriting = false;
+        Enter.enabled = true;
+        continueDialog.enabled = true;
     }
     
     IEnumerator TypeName (string sentence)

@@ -20,10 +20,10 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/UIController.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/MouseLook.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/GravityPowers/GravityPower.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/Plot.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/interactiveRayCast.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1uMBgIRE7FBTGvTPW9QDDqJ3zGX" />
@@ -75,6 +75,7 @@
       <workItem from="1624955242283" duration="6217000" />
       <workItem from="1624998186912" duration="1644000" />
       <workItem from="1626190961910" duration="4795000" />
+      <workItem from="1626277909463" duration="4048000" />
     </task>
     <servers />
   </component>
