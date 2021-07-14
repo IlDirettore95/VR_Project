@@ -21,7 +21,10 @@ public class Drone : Enemy
     //Attack
     public float attackDamage;
     public float fireCooldown;
+    public float fireRate;
     private float nextTimeFire;
+    private float nextTimeCooldown;
+    //private bool coolDown = false;
     public Transform[] firePoints;
     public GameObject projectilePrefab;
 
@@ -63,8 +66,6 @@ public class Drone : Enemy
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
         if (!isAlive) _currentState = DroneState.Dead;
-
-        Debug.Log(_currentState);
 
         switch (_currentState)  //Finite State Machine
         {
@@ -165,12 +166,18 @@ public class Drone : Enemy
                     {
                         if (Time.time >= nextTimeFire)
                         {
-                            Shoot();
-                            nextTimeFire = Time.time + fireCooldown;
+                            InvokeRepeating("Shoot", 0f, 1f / fireRate);
+                            nextTimeCooldown = Time.time + fireCooldown;
+                            nextTimeFire = Time.time + 2 * fireCooldown;
+                        }
+                        else if (Time.time >= nextTimeCooldown)
+                        {
+                            CancelInvoke("Shoot");
                         }
                     }
                     else
                     {
+                        CancelInvoke("Shoot");
                         _agent.isStopped = false;
                         _currentState = DroneState.Chasing;
                     }
@@ -205,7 +212,7 @@ public class Drone : Enemy
                 }
             case DroneState.Recovery:
                 {
-                    //_droneBody.transform.LookAt(playerTransform);
+                    _droneBody.transform.LookAt(playerTransform);
                     transform.LookAt(playerTransform);
 
                     if (!navmeshFinded)
@@ -266,6 +273,9 @@ public class Drone : Enemy
                     rb.useGravity = true;
                     rb.AddForce(collision.relativeVelocity, ForceMode.Force);
                     stunned = true;
+
+                    if(_currentState == DroneState.Attack) CancelInvoke("Shoot");
+
                     _currentState = DroneState.Throwed;
                 }
 
@@ -285,6 +295,8 @@ public class Drone : Enemy
     public override void ReactToAttraction(float attractionSpeed)
     {
         base.ReactToAttraction(attractionSpeed);
+
+        if(_currentState == DroneState.Attack) CancelInvoke("Shoot");
 
         _currentState = DroneState.Attracted;
     }

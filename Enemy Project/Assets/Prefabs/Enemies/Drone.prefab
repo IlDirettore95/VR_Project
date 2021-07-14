@@ -135,6 +135,32 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &7815593012418754415
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894427284995595854}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.00075188576, y: 0.0042278366, z: 0.0009259035}
+  m_Center: {x: 0.000018610655, y: 0.0016004553, z: -0.000005912782}
+--- !u!65 &6883973012848947349
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6279105542228287558}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0007331276, y: 0.004176956, z: 0.0008893207}
+  m_Center: {x: -0.000027694701, y: 0.0015254453, z: -0.000007648544}
 --- !u!95 &7109688485196690741
 Animator:
   serializedVersion: 3
@@ -282,8 +308,12 @@ MonoBehaviour:
   triggerPlayerDistance: 10
   triggerEnemyDistance: 30
   attackDistance: 10
+  patrollingPoints: []
+  patrollingDistanceThreashold: 0
+  guardingCooldown: 0
   attackDamage: 10
   fireCooldown: 2
+  fireRate: 3
   firePoints:
   - {fileID: 8540202893300402839}
   - {fileID: 1371005048334528696}
@@ -586,6 +616,18 @@ GameObject:
 --- !u!4 &6296054000216639456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 20ebcf7397440254cbf745d47f288d80,
+    type: 3}
+  m_PrefabInstance: {fileID: 5830660392672190475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5894427284995595854 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 83207598037417541, guid: 20ebcf7397440254cbf745d47f288d80,
+    type: 3}
+  m_PrefabInstance: {fileID: 5830660392672190475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6279105542228287558 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 561111040903757901, guid: 20ebcf7397440254cbf745d47f288d80,
     type: 3}
   m_PrefabInstance: {fileID: 5830660392672190475}
   m_PrefabAsset: {fileID: 0}

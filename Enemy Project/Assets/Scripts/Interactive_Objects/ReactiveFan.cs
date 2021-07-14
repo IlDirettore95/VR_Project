@@ -28,10 +28,6 @@ public class ReactiveFan : MonoBehaviour, ReactiveObject
 
     private void Start()
     {
-        Debug.Log("x: "+ transform.rotation.x);
-        Debug.Log("y: " +transform.rotation.y);
-        Debug.Log("z: " + transform.rotation.z);
-        Debug.Log("w: "+ transform.rotation.w);
         rb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
         target = GameObject.Find("ObjectGrabber").transform;
