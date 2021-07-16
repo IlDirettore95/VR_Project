@@ -73,5 +73,11 @@ public class PlayerAnimationController : MonoBehaviour
             animator.SetBool("IsJumping", true);
         }
         else animator.SetBool("IsJumping", false);
+
+        if (moveSys.jetpack)
+        {
+            animator.SetBool("usingJetpack", true);
+        }
+        else animator.SetBool("usingJetpack", false);
     }  
 }

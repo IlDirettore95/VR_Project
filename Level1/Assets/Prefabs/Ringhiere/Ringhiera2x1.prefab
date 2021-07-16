@@ -248,7 +248,6 @@ GameObject:
   - component: {fileID: 3348413888544851140}
   - component: {fileID: 1216814209506623186}
   - component: {fileID: 8205031475767173991}
-  - component: {fileID: 5662178443785364583}
   m_Layer: 0
   m_Name: BarraVert
   m_TagString: Untagged
@@ -317,20 +316,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &5662178443785364583
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4145871211129110034}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3348115583524011842, guid: dda5737496fa0724d9b0b2bf3f13c780, type: 3}
 --- !u!1 &4273190347237710974
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +365,6 @@ GameObject:
   - component: {fileID: 8080386305966230833}
   - component: {fileID: 1170870966339329370}
   - component: {fileID: 3824898339368437167}
-  - component: {fileID: 515093946795067626}
   m_Layer: 0
   m_Name: BarraOriz3
   m_TagString: Untagged
@@ -449,20 +433,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &515093946795067626
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6444216177080287595}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3113067406016244561, guid: dda5737496fa0724d9b0b2bf3f13c780, type: 3}
 --- !u!1 &6483770604156456171
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +444,7 @@ GameObject:
   - component: {fileID: 595262506359273825}
   - component: {fileID: 6605158983408342532}
   - component: {fileID: 8165409745080931537}
-  - component: {fileID: 8911394185152111696}
+  - component: {fileID: 2025221538559098785}
   m_Layer: 0
   m_Name: MainStruct
   m_TagString: Untagged
@@ -543,8 +513,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8911394185152111696
-MeshCollider:
+--- !u!65 &2025221538559098785
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -553,10 +523,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8074600409679537765, guid: dda5737496fa0724d9b0b2bf3f13c780, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.012700002, y: 0.020599999, z: 0.0015868759}
+  m_Center: {x: -0.001049999, y: 0.010000014, z: -0.00034540772}
 --- !u!1 &6500648240401444830
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +537,6 @@ GameObject:
   - component: {fileID: 2430927182957400056}
   - component: {fileID: 4193473288808288296}
   - component: {fileID: 5348572330579473541}
-  - component: {fileID: 6035665083082078220}
   m_Layer: 0
   m_Name: BarraOriz2
   m_TagString: Untagged
@@ -637,20 +605,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6035665083082078220
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6500648240401444830}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8869424111772364507, guid: dda5737496fa0724d9b0b2bf3f13c780, type: 3}
 --- !u!1 &7216487830727802873
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,7 +616,6 @@ GameObject:
   - component: {fileID: 1243090752508238318}
   - component: {fileID: 1865064142093013075}
   - component: {fileID: 8180723397970670940}
-  - component: {fileID: 3328368400059171192}
   m_Layer: 0
   m_Name: BarraOriz1
   m_TagString: Untagged
@@ -731,17 +684,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &3328368400059171192
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7216487830727802873}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6681604720727560821, guid: dda5737496fa0724d9b0b2bf3f13c780, type: 3}
