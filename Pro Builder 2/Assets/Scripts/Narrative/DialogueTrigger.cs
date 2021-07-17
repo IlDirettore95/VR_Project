@@ -19,8 +19,13 @@ public class DialogueTrigger : MonoBehaviour
     }
 
     public void TriggerDialogue()
-    {  
+    {
         dm.StartDialogue(dialogue, this);
+    }
+
+    public void Started()
+    {
+        started = true;
     }
 
     public void EndDialogue()

@@ -50,6 +50,8 @@ public class DialogueManager : MonoBehaviour
 
             dialogueBox.gameObject.SetActive(true);
             onDialogue = true;
+            trigger.Started();
+
             sentences.Clear();
 
             foreach (string sentence in dialogue.sentences)

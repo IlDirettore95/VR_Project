@@ -27,6 +27,7 @@ public class LevelPlot1 : MonoBehaviour
     [SerializeField] private MovementSystem _movementSystem;
     [SerializeField] private Jetpack _jetpack;
     [SerializeField] private GravityPower _gravityPower;
+    [SerializeField] private Overlay _statusOverlay;
 
     [SerializeField] private GameObject _lockedDoor_1;
     private DialogueTrigger _lockedDoor1Dialogue;
@@ -81,6 +82,9 @@ public class LevelPlot1 : MonoBehaviour
         _corridorDialogue = _corridor.GetComponent<DialogueTrigger>();
         _lockedDoor2Dialogue = _lockedDoor_2.GetComponent<DialogueTrigger>();
         _jetpackStationDialogue = _jetpackStation.GetComponent<DialogueTrigger>();
+
+        _statusOverlay.ActiveBar(2, false);
+        _statusOverlay.ActiveBar(3, false);
     }
 
     // Update is called once per frame
@@ -142,6 +146,7 @@ public class LevelPlot1 : MonoBehaviour
                     if (dialogues[2].finished)
                     {
                         _gravityPower.enabled = true;
+                        _statusOverlay.ActiveBar(2, true);
                         objectiveDone = false;
                         DisplayObjective(objectives[2]);
                         _currentState = LevelState1.Tutorial3;
@@ -200,7 +205,6 @@ public class LevelPlot1 : MonoBehaviour
                 }
                 else if(_lockedDoor1Dialogue.finished)
                 {
-                    _lockedDoor_1.SetActive(false);
                     DisplayObjective(objectives[4]);
                     _currentState = LevelState1.EscapeFromRoom;
                 }
@@ -209,7 +213,6 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.EscapeFromRoom:
                 if (_corridorDialogue.finished)
                 {
-                    _corridor.SetActive(false);
                     DisplayObjective(objectives[5]);
                     _currentState = LevelState1.Tutorial4;
                 }
@@ -257,6 +260,7 @@ public class LevelPlot1 : MonoBehaviour
                 else if(_jetpackStationDialogue.finished)
                 {
                     _jetpack.enabled = true;
+                    _statusOverlay.ActiveBar(3, true);
                     DisplayObjective(objectives[8]);
                     _currentState = LevelState1.UseJetpack;
                 }
@@ -276,6 +280,7 @@ public class LevelPlot1 : MonoBehaviour
                 else if(_jetpackStationDialogue.finished)
                 {
                     _jetpack.enabled = true;
+                    _statusOverlay.ActiveBar(3, true);
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
                 }

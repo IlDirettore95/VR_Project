@@ -7,8 +7,9 @@ public class Overlay : MonoBehaviour
 {
     [SerializeField] private Slider healthBar;
     [SerializeField] private Slider staminaBar;
-    [SerializeField] private Slider fuelBar;
     [SerializeField] private Slider energyBar;
+    [SerializeField] private Slider fuelBar;
+
 
     private PlayerStatus _playerStatus;
 
@@ -21,9 +22,31 @@ public class Overlay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthBar.value = _playerStatus.GetHealth() * 100 / _playerStatus.GetMaxHealth();
-        staminaBar.value = _playerStatus.GetStamina() * 100 / _playerStatus.GetMaxStamina();
-        fuelBar.value = _playerStatus.GetFuel() * 100 / _playerStatus.GetMaxFuel();
-        energyBar.value = _playerStatus.GetEnergy() * 100 / _playerStatus.GetMaxEnergy();
+        if(healthBar.enabled) healthBar.value = _playerStatus.GetHealth() * 100 / _playerStatus.GetMaxHealth();
+        if(staminaBar.enabled) staminaBar.value = _playerStatus.GetStamina() * 100 / _playerStatus.GetMaxStamina();
+        if(fuelBar.enabled) fuelBar.value = _playerStatus.GetFuel() * 100 / _playerStatus.GetMaxFuel();
+        if(energyBar.enabled) energyBar.value = _playerStatus.GetEnergy() * 100 / _playerStatus.GetMaxEnergy();
+    }
+
+    public void ActiveBar(int index, bool active)
+    {
+        if(index >= 0 && index <= 3)
+        {
+            switch (index)
+            {
+                case 0:
+                    healthBar.gameObject.SetActive(active);
+                    break;
+                case 1:
+                    staminaBar.gameObject.SetActive(active);
+                    break;
+                case 2:
+                    energyBar.gameObject.SetActive(active);
+                    break;
+                case 3:
+                    fuelBar.gameObject.SetActive(active);
+                    break;
+            }
+        }
     }
 }
