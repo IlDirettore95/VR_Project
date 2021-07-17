@@ -36,7 +36,6 @@ public class DialogueManager : MonoBehaviour
         if(!onDialogue && _movementSystem.IsLanded())
         {
             _currentTrigger = trigger;
-
             //A Dialog will prevent the player from moving and using gravity power. If an object is attracted i will be immediatly released
             couldMove = _movementSystem.enabled;
             couldUseGravity = _gravityPower.enabled;
