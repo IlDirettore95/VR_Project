@@ -12,18 +12,21 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Text nameTextArea;
     [SerializeField] private Image Enter;
     [SerializeField] private Text continueDialog;
+    [SerializeField] private Text dialogueLabel;
     private Boolean onDialog = false;
     private Boolean onWriting = false;
     // Start is called before the first frame update
     void Start()
     {
         sentences = new Queue<string>();
+        
     }
 
-    public void StartDialogue (Dialogue dialogue)
+    public void StartDialogue (Dialogue dialogue, DialogueTrigger trigger)
     {
         //Debug.Log("Starting conversation with " + dialogue.name);
         dialogueBox.enabled = true;
+        dialogueLabel.enabled = true;
         onDialog = true;
         sentences.Clear();
 
@@ -43,6 +46,7 @@ public class DialogueManager : MonoBehaviour
         if( sentences.Count == 0)
         {
             EndDialogue();
+            dialogueLabel.enabled = false;
             return;
         }
         string sentence = sentences.Dequeue();

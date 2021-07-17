@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
@@ -88,6 +89,41 @@ public class SettingsPopup : MonoBehaviour
         indietro.gameObject.SetActive(false);
         graphics.enabled = false;
         dp.gameObject.SetActive(false);
+    }
+
+    public void quitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ChangeGraphics()
+    {
+        
+        Debug.Log(dp.value);
+        
+        if (dp.value == 0)
+        {
+            Debug.Log("Medium");
+            int medium = 2;
+            QualitySettings.SetQualityLevel(medium, true);
+        }
+        else if (dp.value == 1)
+        {
+            Debug.Log("High");
+            int high = 3;
+            QualitySettings.SetQualityLevel(high, true);
+        }
+        else
+        {
+            Debug.Log("Ultra");
+            int ultra = 5;
+            QualitySettings.SetQualityLevel(ultra, true);
+        }
+    }
+
+    private void Start()
+    {
+        dp.value = 2;
     }
 }
 

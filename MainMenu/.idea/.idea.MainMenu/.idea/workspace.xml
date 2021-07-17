@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="296e6646-2893-48ae-bce2-1eb8c04d203e" name="Default Changelist" comment="" />
+    <list default="true" id="3a05f237-07f8-46e7-a32d-03f82e3725c9" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,23 +10,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/MovementSystem.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/GameEvent.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/UIController.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/MouseLook.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/GravityPowers/GravityPower.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/Plot.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/interactiveRayCast.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/ManagerUI.cs" />
     </changedPaths>
   </component>
-  <component name="ProjectId" id="1uMBgIRE7FBTGvTPW9QDDqJ3zGX" />
+  <component name="ProjectId" id="1vMSzTc3zerVP6vJvy9bE6dxp5f" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -62,23 +51,12 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="296e6646-2893-48ae-bce2-1eb8c04d203e" name="Default Changelist" comment="" />
-      <created>1624465691964</created>
+      <changelist id="3a05f237-07f8-46e7-a32d-03f82e3725c9" name="Default Changelist" comment="" />
+      <created>1626370730187</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1624465691964</updated>
-      <workItem from="1624465718333" duration="691000" />
-      <workItem from="1624466449643" duration="392000" />
-      <workItem from="1624467593128" duration="24000" />
-      <workItem from="1624468276961" duration="6155000" />
-      <workItem from="1624617972559" duration="550000" />
-      <workItem from="1624955242283" duration="6217000" />
-      <workItem from="1624998186912" duration="1644000" />
-      <workItem from="1626190961910" duration="4795000" />
-      <workItem from="1626277909463" duration="4760000" />
-      <workItem from="1626356629069" duration="1645000" />
-      <workItem from="1626427021574" duration="1827000" />
-      <workItem from="1626448860966" duration="3905000" />
+      <updated>1626370730187</updated>
+      <workItem from="1626370739708" duration="1237000" />
     </task>
     <servers />
   </component>
@@ -97,7 +75,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

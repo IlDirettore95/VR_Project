@@ -12,6 +12,7 @@ public class interactiveRayCast : MonoBehaviour
     public Image InteractionKey;
     public Image InteractionBox_throw;
     public Image InteractionBox_attract;
+    public Image InteractionGeneric;
 
     private GravityPower gravityPower;
     
@@ -27,9 +28,11 @@ public class interactiveRayCast : MonoBehaviour
     {
         if(gravityPower.IsAttracting())//rado al suolo tutto
         {
+            InteractionGeneric.enabled = false;
             InteractionKey.enabled = false;
             InteractionBox_attract.enabled = false;
             InteractionBox_throw.enabled = true;
+            
         }
         else
         {
@@ -47,6 +50,7 @@ public class interactiveRayCast : MonoBehaviour
                     InteractionKey.enabled = true;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;
+                    InteractionGeneric.enabled = false;
                     Switch sw = hit.collider.GetComponent<Switch>();
                 
                     if (Input.GetKeyDown(KeyCode.E))
@@ -56,12 +60,29 @@ public class interactiveRayCast : MonoBehaviour
                     }
                     
                 }
+                
+                else if (go.GetComponent<DialogueTrigger>())
+                {
+                    InteractionGeneric.enabled = true;
+                    InteractionBox_throw.enabled = false;
+                    InteractionBox_attract.enabled = false;
+                    InteractionKey.enabled = false;
+                    
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        go.GetComponent<DialogueTrigger>().TriggerDialogue();
+                        Destroy(go.GetComponent<DialogueTrigger>());
+
+                    }
+                   
+                }
             
                 else if (go.GetComponent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>())//caso inter. cassa
                 {
                    InteractionBox_attract.enabled = true;//gestire immagini
                    InteractionKey.enabled = false;
                    InteractionBox_throw.enabled = false;
+                   InteractionGeneric.enabled = false;
                 }
                 
                 else 
@@ -69,6 +90,7 @@ public class interactiveRayCast : MonoBehaviour
                     InteractionKey.enabled = false;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;
+                    InteractionGeneric.enabled = false;
                 }
             }
             
@@ -78,6 +100,7 @@ public class interactiveRayCast : MonoBehaviour
                 InteractionKey.enabled = false;
                 InteractionBox_throw.enabled = false;
                 InteractionBox_attract.enabled = false;
+                InteractionGeneric.enabled = false;
             } 
         }
         
