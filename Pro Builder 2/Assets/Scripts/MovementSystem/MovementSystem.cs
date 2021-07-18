@@ -432,7 +432,8 @@ public class MovementSystem : MonoBehaviour
         RaycastHit hit;
         if (Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroundedRadius, out hit))
         {
-            isGrounded = hit.distance <= (_charController.height / 2 + _charController.skinWidth + _charController.stepOffset + isGroundedThreashold);
+            isGrounded = hit.distance <= (_charController.height / 2 - (_charController.radius * checkGroundedRadius) + _charController.skinWidth + _charController.stepOffset + isGroundedThreashold);
+            
         }
         else
         {
@@ -447,7 +448,7 @@ public class MovementSystem : MonoBehaviour
         RaycastHit hit;
         if (Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius * checkGroundedRadius, out hit))
         {
-            return isGrounded && hit.distance <= (_charController.height / 2);
+            return isGrounded && hit.distance <= (_charController.height / 2 - (_charController.radius * checkGroundedRadius) + _charController.skinWidth + isGroundedThreashold);
         }
         return false;
     }
@@ -493,10 +494,10 @@ public class MovementSystem : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 charPosition = _charController.transform.position;
-        Vector3 origin = new Vector3(charPosition.x, charPosition.y - (_charController.height / 2 - _charController.radius), charPosition.z);
+        //Vector3 origin = new Vector3(charPosition.x, charPosition.y - (_charController.height / 2 - _charController.radius), charPosition.z);
         if(Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit))
         {
-            if (hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold))
+            if (hit.distance <= (_charController.height / 2 - _charController.radius + _charController.skinWidth + isGroundedThreashold))
             {
                 Vector3 slidingMovement = transform.position - hit.point;
                 slidingMovement.y = 0f;

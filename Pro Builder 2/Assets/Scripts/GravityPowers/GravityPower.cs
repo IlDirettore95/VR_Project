@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /* This class handles the player gravity powers
  * Attraction:
@@ -54,7 +55,7 @@ public class GravityPower : MonoBehaviour
         _playerStatus = GetComponentInParent<PlayerStatus>();
 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
 
         style.fontSize = 24;
         style.normal.textColor = Color.white;
@@ -65,11 +66,11 @@ public class GravityPower : MonoBehaviour
     {
         if(!attracting)
         {
-            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy()) Attraction();           
+            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !EventSystem.current.IsPointerOverGameObject()) Attraction();           
         }
         else
         {
-            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy()) Launching();
+            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !EventSystem.current.IsPointerOverGameObject()) Launching();
 
             else if (Input.GetKeyDown(attractionKey)) Releasing();
         }

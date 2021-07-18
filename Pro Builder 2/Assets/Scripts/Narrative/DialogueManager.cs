@@ -17,6 +17,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Image dialogueBox;
     [SerializeField] private Text textArea;   
     [SerializeField] private Text nameTextArea;
+
+    [SerializeField] private GameObject _continueBox;
+
     private bool onDialogue = false;
     private bool onWritingSentence = false;
     private bool onWritingName = false;
@@ -33,7 +36,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue (Dialogue dialogue, DialogueTrigger trigger)
     {
-        if(!onDialogue && _movementSystem.IsLanded())
+        if (!onDialogue && _movementSystem.IsLanded())
         {
             _currentTrigger = trigger;
 
@@ -66,7 +69,9 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
-        if( sentences.Count == 0)
+        _continueBox.SetActive(false);
+
+        if ( sentences.Count == 0)
         {
             EndDialogue();
             return;
@@ -82,6 +87,8 @@ public class DialogueManager : MonoBehaviour
             StartCoroutine(TypeName(words[0]));
         }
         StartCoroutine(TypeSentence(words[1]));
+
+        
     }
 
     IEnumerator TypeSentence (string sentence)
@@ -92,7 +99,7 @@ public class DialogueManager : MonoBehaviour
             textArea.text += letter;
             yield return new WaitForSeconds(0.01f);
         }
-
+        _continueBox.SetActive(true);
         onWritingSentence = false;
     }
     
@@ -141,6 +148,6 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if(onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Return)) DisplayNextSentence();
+        if(onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused) DisplayNextSentence();
     }
 }

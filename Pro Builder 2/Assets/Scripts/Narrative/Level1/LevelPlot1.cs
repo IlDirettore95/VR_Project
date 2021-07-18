@@ -11,7 +11,6 @@ using UnityEngine;
  *      Tutorial2: the player must jump
  *      Tutorial3: the player must use gravity powers
  *      TryToExit: in this state the player is free to find a way to exit
- *      EscapeFormRoom: the player must find a way to escape from the first room
  *      Tutorial4: The player must run
  *      Explore: The player should explore
  *      Jetpack: the player must recover the jetpack
@@ -41,8 +40,12 @@ public class LevelPlot1 : MonoBehaviour
     [SerializeField] private GameObject _failedJump;
     private DialogueTrigger _failedJumpDialogue;
 
+    [SerializeField] private GameObject _jetpackRoom;
+    private DialogueTrigger _jetpackRoomDialogue;
+
     [SerializeField] private GameObject _jetpackStation;
     private DialogueTrigger _jetpackStationDialogue;
+    private BoxCollider _jetpackStationCollider;
 
     //Objectives
     [SerializeField] private string[] objectives;
@@ -78,10 +81,15 @@ public class LevelPlot1 : MonoBehaviour
         _lockedDoor_1.SetActive(false);
         _lockedDoor_2.SetActive(false);
         _failedJump.SetActive(false);
+        _corridor.SetActive(false);
+        _jetpackRoom.SetActive(false);
         _lockedDoor1Dialogue = _lockedDoor_1.GetComponent<DialogueTrigger>();
         _corridorDialogue = _corridor.GetComponent<DialogueTrigger>();
         _lockedDoor2Dialogue = _lockedDoor_2.GetComponent<DialogueTrigger>();
         _jetpackStationDialogue = _jetpackStation.GetComponent<DialogueTrigger>();
+        _jetpackRoomDialogue = _jetpackRoom.GetComponent<DialogueTrigger>();
+
+        _jetpackStationCollider = _jetpackStation.GetComponent<BoxCollider>();
 
         _statusOverlay.ActiveBar(2, false);
         _statusOverlay.ActiveBar(3, false);
@@ -175,6 +183,8 @@ public class LevelPlot1 : MonoBehaviour
                     {
                         objectiveDone = false;
                         _lockedDoor_1.SetActive(true);
+                        _corridor.SetActive(true);
+                        _jetpackRoom.SetActive(true);
                         DisplayObjective(objectives[3]);
                         _currentState = LevelState1.TryToExit;
                     }
@@ -196,38 +206,46 @@ public class LevelPlot1 : MonoBehaviour
                 break;
 
             case LevelState1.TryToExit:
-                if(_corridorDialogue.finished)
+                if(_jetpackRoomDialogue.finished)
                 {
-                    _corridor.SetActive(false);
+                    DisplayObjective(objectives[7]);
+                    _failedJump.SetActive(true);
+                    _lockedDoor_2.SetActive(true);
+                    _lockedDoor_1.SetActive(false); 
+                    _currentState = LevelState1.Jetpack;
+                }
+                else if(_corridorDialogue.finished)
+                {
                     _lockedDoor_1.SetActive(false);
+                    _failedJump.SetActive(true);
+                    _lockedDoor_2.SetActive(true);
+                    _jetpackRoom.SetActive(false);
+                    _jetpackStationCollider.enabled = false;
                     DisplayObjective(objectives[5]);
                     _currentState = LevelState1.Tutorial4;
                 }
                 else if(_lockedDoor1Dialogue.finished)
                 {
                     DisplayObjective(objectives[4]);
-                    _currentState = LevelState1.EscapeFromRoom;
-                }
-                break;
-
-            case LevelState1.EscapeFromRoom:
-                if (_corridorDialogue.finished)
-                {
-                    DisplayObjective(objectives[5]);
-                    _currentState = LevelState1.Tutorial4;
                 }
                 break;
 
             case LevelState1.Tutorial4:
                 if (objectiveDone)
                 {
-                    if (dialogues[4].finished)
+                    if (dialogues[4].finished && !_jetpack.enabled)
                     {
                         objectiveDone = false;
-                        _lockedDoor_2.SetActive(true);
-                        _failedJump.SetActive(true);
+                        _jetpackStationCollider.enabled = true;
+                        _jetpackRoom.SetActive(true);
                         DisplayObjective(objectives[6]);
                         _currentState = LevelState1.Explore;
+                    }
+                    else if(dialogues[4].finished && _jetpack.enabled)
+                    {
+                        objectiveDone = false;
+                        DisplayObjective(objectives[9]);
+                        _currentState = LevelState1.FindAnExit;
                     }
                     else if (!dialogues[4].started && Time.time > nextTimeObjective)
                     {
@@ -252,17 +270,10 @@ public class LevelPlot1 : MonoBehaviour
                 break;
 
             case LevelState1.Explore:
-                if(_lockedDoor2Dialogue.finished)
+                if(_lockedDoor2Dialogue.finished || _jetpackRoomDialogue.finished)
                 {
                     DisplayObjective(objectives[7]);
                     _currentState = LevelState1.Jetpack;
-                }
-                else if(_jetpackStationDialogue.finished)
-                {
-                    _jetpack.enabled = true;
-                    _statusOverlay.ActiveBar(3, true);
-                    DisplayObjective(objectives[8]);
-                    _currentState = LevelState1.UseJetpack;
                 }
                 break;
 
@@ -304,6 +315,11 @@ public class LevelPlot1 : MonoBehaviour
                 break;
 
             case LevelState1.FindAnExit:
+                if(_corridorDialogue.finished && !dialogues[4].finished)
+                {
+                    DisplayObjective(objectives[5]);
+                    _currentState = LevelState1.Tutorial4;
+                }
                 break;
 
         }
@@ -330,7 +346,6 @@ public class LevelPlot1 : MonoBehaviour
         Tutorial2,
         Tutorial3,
         TryToExit,
-        EscapeFromRoom,
         Tutorial4,
         Explore,
         Jetpack,
