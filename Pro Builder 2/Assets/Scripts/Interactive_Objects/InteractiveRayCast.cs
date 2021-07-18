@@ -23,6 +23,14 @@ public class InteractiveRayCast : MonoBehaviour
         _gravityPower = GetComponent<GravityPower>();
     }
 
+    private void OnDisable()
+    {
+        InteractionKey.enabled = false;
+        InteractionBox_throw.enabled = false;
+        InteractionBox_attract.enabled = false;
+        InteractionGeneric.enabled = false;
+    }
+
     // Update is called once per frame
     void Update()
     {

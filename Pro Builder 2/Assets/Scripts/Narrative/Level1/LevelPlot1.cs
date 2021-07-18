@@ -51,12 +51,12 @@ public class LevelPlot1 : MonoBehaviour
     [SerializeField] private string[] objectives;
 
     //Booleans and vars
-    private float objectiveDelay = 1f; //The goal will be considered reached after a delay
+    private float objectiveDelay = 0.5f; //The goal will be considered reached after a delay
     private float nextTimeObjective;
     private bool objectiveDone = false;
     //--------------------------------------------------------------------------------------------------------------------------------
     private bool isWalking = false; //During Tutorial1, this boolean will track if the player is walking or not
-    private float timeGoalWalking = 1.5f; //Amount of time the player must walk
+    private float timeGoalWalking = 1f; //Amount of time the player must walk
     private float nextTimeWalking; //Istant on which the player can stop walking
     //--------------------------------------------------------------------------------------------------------------------------------
     private bool hasJumped = false;
@@ -64,7 +64,7 @@ public class LevelPlot1 : MonoBehaviour
     private bool usedGravityPower = false;
     //--------------------------------------------------------------------------------------------------------------------------------
     private bool isRunning = false; //During Tutorial4, this boolean will track if the player is running or not
-    private float timeGoalRunning = 2f; //Amount of time the player must run
+    private float timeGoalRunning = 1.5f; //Amount of time the player must run
     private float nextTimeRunning; //Istant on which the player can stop running
     //--------------------------------------------------------------------------------------------------------------------------------
 
@@ -83,6 +83,7 @@ public class LevelPlot1 : MonoBehaviour
         _failedJump.SetActive(false);
         _corridor.SetActive(false);
         _jetpackRoom.SetActive(false);
+
         _lockedDoor1Dialogue = _lockedDoor_1.GetComponent<DialogueTrigger>();
         _corridorDialogue = _corridor.GetComponent<DialogueTrigger>();
         _lockedDoor2Dialogue = _lockedDoor_2.GetComponent<DialogueTrigger>();
@@ -90,6 +91,7 @@ public class LevelPlot1 : MonoBehaviour
         _jetpackRoomDialogue = _jetpackRoom.GetComponent<DialogueTrigger>();
 
         _jetpackStationCollider = _jetpackStation.GetComponent<BoxCollider>();
+        _jetpackStationCollider.enabled = false;
 
         _statusOverlay.ActiveBar(2, false);
         _statusOverlay.ActiveBar(3, false);
@@ -211,7 +213,9 @@ public class LevelPlot1 : MonoBehaviour
                     DisplayObjective(objectives[7]);
                     _failedJump.SetActive(true);
                     _lockedDoor_2.SetActive(true);
-                    _lockedDoor_1.SetActive(false); 
+                    _lockedDoor_1.SetActive(false);
+                    _corridor.SetActive(false);
+                    _jetpackStationCollider.enabled = true;
                     _currentState = LevelState1.Jetpack;
                 }
                 else if(_corridorDialogue.finished)
@@ -272,6 +276,10 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.Explore:
                 if(_lockedDoor2Dialogue.finished || _jetpackRoomDialogue.finished)
                 {
+                    if(_jetpackRoomDialogue.finished)
+                    {
+                        _jetpackStationCollider.enabled = true;
+                    }
                     DisplayObjective(objectives[7]);
                     _currentState = LevelState1.Jetpack;
                 }
@@ -295,6 +303,10 @@ public class LevelPlot1 : MonoBehaviour
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
                 }
+                else if(_jetpackRoomDialogue.finished)
+                {
+                    _jetpackStationCollider.enabled = true;
+                }
                 break;
 
             case LevelState1.UseJetpack:
@@ -303,6 +315,7 @@ public class LevelPlot1 : MonoBehaviour
                     if(Time.time > nextTimeObjective)
                     {
                         objectiveDone = false;
+                        if (!_corridorDialogue.finished) _corridor.SetActive(true);
                         DisplayObjective(objectives[9]);
                         _currentState = LevelState1.FindAnExit;
                     }

@@ -8,17 +8,17 @@ public class SettingsPopup : MonoBehaviour
 {
     public Image crosshair;
 
-    public Button riprendi;
+    public Button resume;
 
-    public Button Esci;
+    public Button exit;
 
-    public Button Opzioni;
+    public Button options;
 
-    public Button indietro;
+    public Button back;
 
-    public Text pausa;
+    public Text pause;
 
-    public Text impostazioni;
+    public Text settings;
 
     public Text graphics;
 
@@ -27,6 +27,8 @@ public class SettingsPopup : MonoBehaviour
     public GameObject dialogueBox;
 
     public GameObject objectiveBox;
+
+    private bool wasOnDialogue = false;
     
     // Start is called before the first frame update
     public void open()
@@ -49,17 +51,21 @@ public class SettingsPopup : MonoBehaviour
         crosshair.gameObject.SetActive(false);
         Time.timeScale = 0f;
 
-        pausa.enabled = true;
-        riprendi.gameObject.SetActive(true);
-        Opzioni.gameObject.SetActive(true);
-        Esci.gameObject.SetActive(true);
+        pause.enabled = true;
+        resume.gameObject.SetActive(true);
+        options.gameObject.SetActive(true);
+        exit.gameObject.SetActive(true);
 
-        indietro.gameObject.SetActive(false);
-        impostazioni.enabled = false;
+        back.gameObject.SetActive(false);
+        settings.enabled = false;
         graphics.enabled = false;
         dp.gameObject.SetActive(false);
 
-        dialogueBox.SetActive(false);
+        if (dialogueBox.activeSelf)
+        {
+            wasOnDialogue = true;
+            dialogueBox.SetActive(false);
+        }
     }
     
     public void UnPauseGame()
@@ -70,33 +76,33 @@ public class SettingsPopup : MonoBehaviour
         crosshair.gameObject.SetActive(true);
         Time.timeScale = 1f;
 
-        dialogueBox.SetActive(true);
+        if(wasOnDialogue) dialogueBox.SetActive(true);
 
     }
 
     public void openSettings()
     {
-        riprendi.gameObject.SetActive(false);
-        Opzioni.gameObject.SetActive(false);
-        Esci.gameObject.SetActive(false);
-        pausa.enabled = false;
+        resume.gameObject.SetActive(false);
+        options.gameObject.SetActive(false);
+        exit.gameObject.SetActive(false);
+        pause.enabled = false;
         
-        impostazioni.enabled = true;
-        indietro.gameObject.SetActive(true);
+        settings.enabled = true;
+        back.gameObject.SetActive(true);
         graphics.enabled = true;
         dp.gameObject.SetActive(true);
     }
 
     public void closeSettings()
     {
-        pausa.enabled = true;
-        riprendi.gameObject.SetActive(true);
-        Opzioni.gameObject.SetActive(true);
-        Esci.gameObject.SetActive(true);
+        pause.enabled = true;
+        resume.gameObject.SetActive(true);
+        options.gameObject.SetActive(true);
+        exit.gameObject.SetActive(true);
 
         
-        impostazioni.enabled = false;
-        indietro.gameObject.SetActive(false);
+        settings.enabled = false;
+        back.gameObject.SetActive(false);
         graphics.enabled = false;
         dp.gameObject.SetActive(false);
     }

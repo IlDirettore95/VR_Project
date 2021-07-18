@@ -6456,7 +6456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1912873355}
   - component: {fileID: 1912873356}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Scifi_Door_Locked_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6652,7 +6652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1955316973}
   - component: {fileID: 1955316974}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Scifi_Door_Locked_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8114,7 +8114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8541210260021088629}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8605,7 +8605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4932386688505204214}
   - component: {fileID: 6616110397408072609}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: colliderObl1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58473,7 +58473,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2383963583119293332}
   - component: {fileID: 5931103878431124234}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Scifi_Door_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59250,7 +59250,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8284281664377479261}
   - component: {fileID: 3618918048176251953}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_lowerDoor.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59357,7 +59357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2539802320606822655}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Rig_SciFi_Door_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59505,7 +59505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4946719850223278755}
   - component: {fileID: 9196139548745497293}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_lowerDoor.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59626,7 +59626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1241487203980698041}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_Door_5_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59846,7 +59846,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1798962770845812716}
   - component: {fileID: 342593506287181120}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60115,7 +60115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6445204029908910944}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_Clamp.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60263,7 +60263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4782921679197597209}
   - component: {fileID: 4932082448060529139}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Scifi_Door_Locked_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61075,7 +61075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1887211924287471467}
   - component: {fileID: 2985295500486286758}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: colliderObl2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61147,7 +61147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7927228995192906270}
   - component: {fileID: 7059050742981870630}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_upperDoor.C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61288,7 +61288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1381518455531757232}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_clampholder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62000,7 +62000,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6066252502238369448}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_Clamp.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101908,7 +101908,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3635501832892507185}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_clampholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101932,7 +101932,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221188669931375337}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_Clamp.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102741,7 +102741,7 @@ GameObject:
   - component: {fileID: 7480779008485876600}
   - component: {fileID: 7480779008485876601}
   m_Layer: 5
-  m_Name: Button-esci
+  m_Name: Button-exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103321,7 +103321,7 @@ GameObject:
   - component: {fileID: 7480779009033926271}
   - component: {fileID: 7480779009033926264}
   m_Layer: 5
-  m_Name: Button-riprendi
+  m_Name: Button-resume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103535,12 +103535,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crosshair: {fileID: 6646294756934518152}
-  riprendi: {fileID: 7480779009033926264}
-  Esci: {fileID: 7480779008485876601}
-  Opzioni: {fileID: 7480779010150197620}
-  indietro: {fileID: 7480779008542436174}
-  pausa: {fileID: 7480779009571470611}
-  impostazioni: {fileID: 7480779009829047081}
+  resume: {fileID: 7480779009033926264}
+  exit: {fileID: 7480779008485876601}
+  options: {fileID: 7480779010150197620}
+  back: {fileID: 7480779008542436174}
+  pause: {fileID: 7480779009571470611}
+  settings: {fileID: 7480779009829047081}
   graphics: {fileID: 7480779010125137269}
   dp: {fileID: 7480779009493360601}
   dialogueBox: {fileID: 3013563499506707858}
@@ -104109,7 +104109,7 @@ GameObject:
   - component: {fileID: 7480779009571470610}
   - component: {fileID: 7480779009571470611}
   m_Layer: 5
-  m_Name: pausa
+  m_Name: pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104724,7 +104724,7 @@ GameObject:
   - component: {fileID: 7480779010150197611}
   - component: {fileID: 7480779010150197620}
   m_Layer: 5
-  m_Name: Button-opzioni
+  m_Name: Button-options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104905,7 +104905,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3649220865367373272}
   - component: {fileID: 6196874642012629035}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105086,7 +105086,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7227228780823569013}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_Clamp.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105103,7 +105103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7421507773154223800}
   - component: {fileID: 6984065734454817106}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Scifi_Door_Locked_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105602,7 +105602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8349634653423274891}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_clampholder.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105959,7 +105959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 60939893079181353}
   - component: {fileID: 8817160122123426191}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106244,7 +106244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3674917351322616804}
   - component: {fileID: 5377580477637131891}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106346,7 +106346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4865166496018617720}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: bn_clampholder.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
