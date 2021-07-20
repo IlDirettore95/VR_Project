@@ -22,11 +22,15 @@ public class Jetpack : MonoBehaviour
     private PlayerStatus _playerStatus;
     private FuelRecover _fuelRecover;
 
+    //Animation
+    PlayerAnimationController _animController;
+
     void Start()
     {
         _movementSystem = GetComponent<MovementSystem>();
         _playerStatus = GetComponent<PlayerStatus>();
         _fuelRecover = GetComponent<FuelRecover>();
+        _animController = GetComponent<PlayerAnimationController>();
     }
     // Update is called once per frame
     void Update()
@@ -87,6 +91,8 @@ public class Jetpack : MonoBehaviour
                 _movementSystem.jetpack = false;
                 _movementSystem.startFallingY = transform.position.y;
             }
+
+            _animController.NextState();
         }
 
         wasGrounded = _movementSystem.isGrounded;

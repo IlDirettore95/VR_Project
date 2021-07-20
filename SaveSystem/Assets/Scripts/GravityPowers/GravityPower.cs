@@ -42,6 +42,9 @@ public class GravityPower : MonoBehaviour
     public bool IsReleasing() => releasing;
     public bool IsLaunching() => launching;
 
+    //Animation
+    PlayerAnimationController _animController;
+
     private Camera _camera;
 
     private GUIStyle style = new GUIStyle();
@@ -52,6 +55,7 @@ public class GravityPower : MonoBehaviour
         _camera = GetComponent<Camera>();
         _energyRecover = GetComponentInParent<EnergyRecover>();
         _playerStatus = GetComponentInParent<PlayerStatus>();
+        _animController = GetComponentInParent<PlayerAnimationController>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
@@ -65,13 +69,13 @@ public class GravityPower : MonoBehaviour
     {
         if(!attracting)
         {
-            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy()) Attraction();           
+            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsGrabbing()) Attraction();       
         }
         else
         {
-            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy()) Launching();
+            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsThrowing() && !_animController.GetIsReleasing()) Launching();
 
-            else if (Input.GetKeyDown(attractionKey)) Releasing();
+            else if (Input.GetKeyDown(attractionKey) && !_animController.GetIsReleasing()) Releasing();
         }
 
         //Energy consuming
@@ -90,6 +94,8 @@ public class GravityPower : MonoBehaviour
             {
                 target = null;
                 attracting = false;
+
+                _animController.StopAttracting();
             }
             
         }
@@ -107,46 +113,43 @@ public class GravityPower : MonoBehaviour
             target = null;
             releasing = false;
             attracting = false;
+
+            _animController.StopReleasing();
         }
         if(launching)
         {
-
             target.ReactToLaunching(launchingSpeed);
             target = null;
             launching = false;
             attracting = false;
-        }
 
-        
+            _animController.StopThrowing();
+        }
     }
 
     private void Attraction()
     { 
         target = AcquireTarget();
         if (target != null)
-        { 
-            attracting = true;
-            //energy recovery
-            _energyRecover.enabled = false;
+        {
+            _animController.Attract();
+
+            StartCoroutine(StartAttracting());
         }
     }
 
     private void Releasing()
     {
-        releasing = true;
+        _animController.Release();
 
-        //energy recovery
-        _energyRecover.enabled = true;
+        StartCoroutine(StartReleasing());
     }
 
     private void Launching()
     {
-        launching = true;
-        attracting = false;
+        _animController.Throw();
 
-        //energy cost
-        _playerStatus.ConsumeEnergy(launchingCost * rb.mass);
-        _energyRecover.enabled = true;
+        StartCoroutine(StartThrowing());
     }
 
     //Acquiring the target gameobject or null
@@ -181,5 +184,35 @@ public class GravityPower : MonoBehaviour
         posX = 100;
         posY = 600;
         GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching, style2);
+    }
+
+    private IEnumerator StartAttracting()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        attracting = true;
+        //energy recovery
+        _energyRecover.enabled = false;
+    }
+
+    private IEnumerator StartThrowing()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        launching = true;
+        attracting = false;
+
+        //energy cost
+        _playerStatus.ConsumeEnergy(launchingCost * rb.mass);
+        _energyRecover.enabled = true;
+    }
+
+    private IEnumerator StartReleasing()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        releasing = true;
+        //energy recovery
+        _energyRecover.enabled = true;
     }
 }

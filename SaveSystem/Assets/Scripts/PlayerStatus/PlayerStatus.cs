@@ -162,4 +162,24 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     {
         Hurt(damage);
     }
+
+    public bool IsAttracted()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void reactToFire(float damage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void reactToExplosion(float damage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void reactToFan(Vector3 direction, float angularVelocity, float damage, bool isInBox)
+    {
+        throw new NotImplementedException();
+    }
 }

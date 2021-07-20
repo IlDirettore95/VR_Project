@@ -82,12 +82,13 @@ public class MovementSystem : MonoBehaviour
     //Sliding on edges
     public float slidingFactor;
 
-    
-
     private CharacterController _charController;
     private PlayerStatus _playerStatus;
     private StaminaRecover _staminaRecover;
-   
+
+    //Animation
+    PlayerAnimationController _animController;
+
 
     // Start is called before the first frame update
     void Start()
@@ -95,6 +96,7 @@ public class MovementSystem : MonoBehaviour
         _charController = GetComponent<CharacterController>();
         _playerStatus = GetComponent<PlayerStatus>();
         _staminaRecover = GetComponent<StaminaRecover>();
+        _animController = GetComponent<PlayerAnimationController>();
     }
 
     // Update is called once per frame
@@ -226,7 +228,6 @@ public class MovementSystem : MonoBehaviour
             if(!crouched || !crouching) crouchingStateBuildUp = 1 - crouchingStateBuildUp;
             crouched = true;
             crouching = true;
-            
         }  
     }
 
@@ -257,16 +258,15 @@ public class MovementSystem : MonoBehaviour
         float lastHeight = _charController.height;
         if (!crouched)
         {
-            
             crouchingStateBuildUp += crouchOnBuildUp * Time.deltaTime;
             _charController.height = Mathf.Lerp(normalHeight, crouchingHeight, crouchingStateBuildUp);
             if (!hasJumped)
             {
                 RaycastHit hit;
-                if(Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
+                if (Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
                 {
                     if (hit.distance <= (lastHeight / 2 + _charController.skinWidth + _charController.stepOffset)) _charController.Move(Vector3.down * hit.distance);
-                }   
+                }
             }
             if (_charController.height == crouchingHeight)
             {
@@ -281,7 +281,7 @@ public class MovementSystem : MonoBehaviour
             if (!hasJumped)
             {
                 RaycastHit hit;
-                if(Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
+                if (Physics.Raycast(new Ray(_charController.transform.position, Vector3.down), out hit))
                 {
                     if (hit.distance <= lastHeight / 2 + _charController.skinWidth + _charController.stepOffset) _charController.Move(Vector3.up * (_charController.height / 2 + _charController.skinWidth - hit.distance));
                 }
@@ -311,6 +311,8 @@ public class MovementSystem : MonoBehaviour
         //Stamina consuming
         _staminaRecover.enabled = false;
         _playerStatus.ConsumeStamina(staminaConsumingRate * Time.deltaTime);
+
+        _animController.NextState();
     }
 
     /* Handling walking status and lerping speed tp walk speed 
@@ -334,7 +336,7 @@ public class MovementSystem : MonoBehaviour
             SetSpeed(walkingSpeed, walkingBuildUp);
         }
 
-        
+        _animController.NextState();
     }
 
     /* Handles jumping
@@ -352,6 +354,8 @@ public class MovementSystem : MonoBehaviour
 
         //Lerping from speed to falling speed
         SetSpeed(fallingSpeed, fallingBuildUp);
+
+        _animController.NextState();
     }
 
     /* Handles the idle state. In this state the speed will lerp to walk speed.
@@ -366,6 +370,8 @@ public class MovementSystem : MonoBehaviour
         //even when idle the speed will lerp to walking speed
         //Lerping from speed to walking speed
         SetSpeed(0f, 0f);
+
+        _animController.NextState();
     }
 
     /*Handles the falling state. During the falling state the starting falling y will be updated to ensure a correct calculation of the fall damage
@@ -394,7 +400,8 @@ public class MovementSystem : MonoBehaviour
 
         //Updating strat falling position for handleing fall damage
         if (transform.position.y > startFallingY) startFallingY = transform.position.y;
-  
+
+        _animController.NextState();
     }
 
 
@@ -481,7 +488,7 @@ public class MovementSystem : MonoBehaviour
         RaycastHit hit;
         Vector3 charPosition = _charController.transform.position;
         Vector3 origin = new Vector3(charPosition.x, charPosition.y - (_charController.height / 2 - _charController.radius), charPosition.z);
-        if(Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit))
+        if (Physics.SphereCast(new Ray(_charController.transform.position, Vector3.down), _charController.radius, out hit))
         {
             if (hit.distance <= (_charController.height / 2 + _charController.skinWidth + isGroundedThreashold))
             {
@@ -490,14 +497,14 @@ public class MovementSystem : MonoBehaviour
                 slidingMovement *= slidingFactor;
                 _charController.Move(slidingMovement * Time.deltaTime);
             }
-        }    
+        }
     }
 
     /* If the character is crouched, he can only jump if there is enough space for he to stand
      */
     private bool CanJump()
     {
-        if(crouched)
+        if (crouched)
         {
             return !Physics.SphereCast(new Ray(transform.position, Vector3.up), _charController.radius, (normalHeight - crouchingHeight) / 2);
         }
