@@ -24,6 +24,7 @@ public class DoorAnimation : MonoBehaviour
         GameObject pl = other.gameObject;
         if (pl != null && pl.tag.Equals("Player"))
         {
+            Debug.Log("entra");
             _animator.SetBool("isOpening", true);
         }
 
