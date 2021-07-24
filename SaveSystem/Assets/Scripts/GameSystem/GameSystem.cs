@@ -32,7 +32,11 @@ public class GameSystem : MonoBehaviour
             case Scene.Level1:
                 {
                     _currentLevel = Scene.Level2;
-                    SaveSystem.Save(_currentLevel.ToString(), "save");
+                    SaveData oldData = SaveSystem.Load("save");
+                    int dp = oldData.dp;
+                    int quality = oldData.quality;
+                    SaveData newData = new SaveData(_currentLevel.ToString(), dp, quality);
+                    SaveSystem.Save(newData, "save");
                     Loader.Load(_currentLevel.ToString());
 
                     break;
@@ -43,13 +47,18 @@ public class GameSystem : MonoBehaviour
     public void NewGame()
     {
         _currentLevel = Scene.Level1;
-        SaveSystem.Save(_currentLevel.ToString(), "save");
+        SaveData oldData = SaveSystem.Load("save");
+        int dp = oldData.dp;
+        int quality = oldData.quality;
+        SaveData newData = new SaveData(_currentLevel.ToString(), dp, quality);
+        SaveSystem.Save(newData, "save");
         Loader.Load(_currentLevel.ToString());
     }
 
     public void Continue()
     {
-        _currentLevel = (Scene)System.Enum.Parse(typeof(Scene),SaveSystem.Load("save"));
+        SaveData data = SaveSystem.Load("save");
+        _currentLevel = (Scene)System.Enum.Parse(typeof(Scene),data._currentScene);
         Loader.Load(_currentLevel.ToString());
     }
 }

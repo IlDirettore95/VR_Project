@@ -20,12 +20,6 @@ public class PlayerAnimationController : MonoBehaviour
         moveSys = GetComponent<MovementSystem>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Attract()
     {
         animator.SetBool("IsGrabbing", true);
@@ -80,4 +74,19 @@ public class PlayerAnimationController : MonoBehaviour
         }
         else animator.SetBool("usingJetpack", false);
     }  
+
+    public void DialogEvent()
+    {
+        animator.SetBool("IsRunning", false);
+    }
+
+    public void Interact()
+    {
+        animator.SetBool("isInteracting", true);
+    }
+
+    public void StopInteraction()
+    {
+        animator.SetBool("isInteracting", false);
+    }
 }

@@ -22,53 +22,40 @@ public class FireStatus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // rb = GetComponentInParent<ReactiveBox>();
-       // ps.Stop();
-        
-
-        
+ 
     }
 
     private void Awake()
     {
         ps.Stop();
         enabled = false;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-       
-        
-        
-            if (Time.time < nextTimeToStop )
-            {
+        if (Time.time < nextTimeToStop )
+        {
+            ps.transform.rotation.SetLookRotation(Vector3.up);
                  
                // en.Hurt( fireDamage*Time.deltaTime);
               //-- fireDamage*Time.deltaTime
-              if (Time.time > nextTimeHurt)
-              {
+            if (Time.time > nextTimeHurt)
+            {
                   en.Hurt(fireDamage);
                   nextTimeHurt = Time.time + hurtCooldown;
-              }
-              
-              
-                
-            }
-                
-
-            else
-            {
-                ps.Stop();
-                enabled = false;
-            }
-        
-        
+            }       
+        }
+        else
+        {
+            ps.Stop();
+            enabled = false;
+        }
     }
 
     private void OnEnable()
     {
-        Debug.Log("ciao");
         ps.Play();
         nextTimeToStop = Time.time + cooldown;
         nextTimeHurt = Time.time + hurtCooldown;

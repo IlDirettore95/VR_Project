@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /* This class handles the player gravity powers
  * Attraction:
@@ -37,13 +38,13 @@ public class GravityPower : MonoBehaviour
     //EnergyRecover
     private EnergyRecover _energyRecover;
 
+    //Animation
+    PlayerAnimationController _animController;
+
     //Aux methods for external questioning
     public bool IsAttracting() => attracting;
     public bool IsReleasing() => releasing;
     public bool IsLaunching() => launching;
-
-    //Animation
-    PlayerAnimationController _animController;
 
     private Camera _camera;
 
@@ -58,7 +59,7 @@ public class GravityPower : MonoBehaviour
         _animController = GetComponentInParent<PlayerAnimationController>();
 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        Cursor.visible = false;
 
         style.fontSize = 24;
         style.normal.textColor = Color.white;
@@ -69,11 +70,11 @@ public class GravityPower : MonoBehaviour
     {
         if(!attracting)
         {
-            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsGrabbing()) Attraction();       
+            if (Input.GetKeyDown(attractionKey) && _playerStatus.HasEnoughEnergy() && !EventSystem.current.IsPointerOverGameObject() && !_animController.GetIsGrabbing()) Attraction();           
         }
         else
         {
-            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !_animController.GetIsThrowing() && !_animController.GetIsReleasing()) Launching();
+            if (Input.GetKeyDown(launchingKey) && _playerStatus.HasEnoughEnergy() && !EventSystem.current.IsPointerOverGameObject() && !_animController.GetIsThrowing() && !_animController.GetIsReleasing()) Launching();
 
             else if (Input.GetKeyDown(attractionKey) && !_animController.GetIsReleasing()) Releasing();
         }
@@ -152,6 +153,25 @@ public class GravityPower : MonoBehaviour
         StartCoroutine(StartThrowing());
     }
 
+    //This method is istantaneus and will release the attracted object
+    public void ForceRealease()
+    {
+        if (attracting)
+        {
+            /*
+            Releasing();
+            target.ReactToReleasing();
+            target = null;
+            releasing = false;
+            attracting = false;
+            */
+
+            _animController.Release();
+            
+            StartCoroutine(ForcingRealease());
+        }
+    }
+
     //Acquiring the target gameobject or null
     private ReactiveObject AcquireTarget()
     {
@@ -165,25 +185,6 @@ public class GravityPower : MonoBehaviour
             return hit.transform.gameObject.GetComponent<ReactiveObject>();
         }
         return null;
-    }
-
-    //Print a gui aim
-    private void OnGUI()
-    {
-        int size = 24;
-        float posX = _camera.pixelWidth / 2 - size / 4;
-        float posY = _camera.pixelHeight / 2 - size / 2;
-
-        GUI.Label(new Rect(posX, posY, size, size), "[ o ]", style);
-
-        //For testing purposes
-        GUIStyle style2 = new GUIStyle();
-        style2.fontSize = 22;
-        style2.normal.textColor = Color.white;
-        size = 380;
-        posX = 100;
-        posY = 600;
-        GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching, style2);
     }
 
     private IEnumerator StartAttracting()
@@ -215,4 +216,35 @@ public class GravityPower : MonoBehaviour
         //energy recovery
         _energyRecover.enabled = true;
     }
+
+    private IEnumerator ForcingRealease()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        target.ReactToReleasing();
+        target = null;
+        releasing = false;
+        attracting = false;
+
+        _animController.StopReleasing();
+    }
+
+    //Print a gui aim
+    /*private void OnGUI()
+    {
+        int size = 24;
+        float posX = _camera.pixelWidth / 2 - size / 4;
+        float posY = _camera.pixelHeight / 2 - size / 2;
+
+        GUI.Label(new Rect(posX, posY, size, size), "[ o ]", style);
+
+        //For testing purposes
+        GUIStyle style2 = new GUIStyle();
+        style2.fontSize = 22;
+        style2.normal.textColor = Color.white;
+        size = 380;
+        posX = 100;
+        posY = 600;
+        GUI.Label(new Rect(posX, posY, size, size), "Attracting= " + attracting + "\nReleasing= " + releasing + "\nLaunching= " + launching, style2);
+    }*/
 }

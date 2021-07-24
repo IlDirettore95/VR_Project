@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 public static class SaveSystem
 {
-    public static bool Save(string saveData, string saveName)
+    public static bool Save(SaveData saveData, string saveName)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
@@ -25,7 +25,7 @@ public static class SaveSystem
         return true;
     }
 
-    public static string Load(string saveName)
+    public static SaveData Load(string saveName)
     {
         string path = Application.persistentDataPath + "/saves/" + saveName + ".save";
 
@@ -34,7 +34,7 @@ public static class SaveSystem
             BinaryFormatter formatter = GetBinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            string data = (string)formatter.Deserialize(stream);
+            SaveData data = (SaveData)formatter.Deserialize(stream);
             stream.Close();
 
             return data;

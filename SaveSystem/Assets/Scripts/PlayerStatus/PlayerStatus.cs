@@ -163,12 +163,12 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
         Hurt(damage);
     }
 
-    public bool IsAttracted()
+    public void reactToFire(float damage)
     {
         throw new NotImplementedException();
     }
 
-    public void reactToFire(float damage)
+    public bool IsAttracted()
     {
         throw new NotImplementedException();
     }
