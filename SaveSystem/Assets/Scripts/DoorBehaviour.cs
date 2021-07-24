@@ -32,23 +32,16 @@ public class DoorBehaviour : MonoBehaviour
     void Update()
     {
         if (hasCollided)
-        {
-            
+        {            
             if (TotalOpening < maxOpening)
             {
                 opening = Time.deltaTime * speed;
                 TotalOpening += opening;
                 leftDoor.transform.Translate(-opening, 0, 0, Space.Self);
                 rightDoor.transform.Translate(-opening, 0, 0, Space.Self);
-            }
-            
-            
-                TotalClosing = maxClosing- TotalOpening;
-            
-
-
-        }
-        
+            }        
+                TotalClosing = maxClosing - TotalOpening;
+        }        
         else if(hasGone)
             {
                 
@@ -58,14 +51,9 @@ public class DoorBehaviour : MonoBehaviour
                     TotalClosing += closing;
                     leftDoor.transform.Translate(closing,0,0,Space.Self);
                     rightDoor.transform.Translate(closing,0,0,Space.Self);
-                }
-                
-                
-                
-                    TotalOpening = maxOpening - TotalClosing;
-                
-
-            }
+                }               
+                    TotalOpening = maxOpening - TotalClosing; 
+           }
     }
 
     private void OnTriggerEnter(Collider other)
