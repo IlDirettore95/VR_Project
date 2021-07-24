@@ -76,8 +76,11 @@ public class SettingsPopup : MonoBehaviour
         crosshair.gameObject.SetActive(true);
         Time.timeScale = 1f;
 
-        if(wasOnDialogue) dialogueBox.SetActive(true);
-
+        if (wasOnDialogue)
+        {
+            dialogueBox.SetActive(true);
+            wasOnDialogue = false;
+        }
     }
 
     public void openSettings()
@@ -116,23 +119,18 @@ public class SettingsPopup : MonoBehaviour
     public void ChangeGraphics()
     {
         
-        Debug.Log(dp.value);
-        
         if (dp.value == 0)
         {
-            Debug.Log("Medium");
             int medium = 2;
             QualitySettings.SetQualityLevel(medium, true);
         }
         else if (dp.value == 1)
         {
-            Debug.Log("High");
             int high = 3;
             QualitySettings.SetQualityLevel(high, true);
         }
         else
         {
-            Debug.Log("Ultra");
             int ultra = 5;
             QualitySettings.SetQualityLevel(ultra, true);
         }
