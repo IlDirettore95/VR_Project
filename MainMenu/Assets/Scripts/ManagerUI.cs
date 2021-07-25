@@ -10,6 +10,8 @@ public class ManagerUI : MonoBehaviour
     [SerializeField] private Button options;
     [SerializeField] private Button exitGame;
     [SerializeField] private Button back;
+    [SerializeField] private Dropdown dp;
+    [SerializeField] private Text graphics;
     
     [SerializeField] private Image backGround;
 
@@ -17,6 +19,8 @@ public class ManagerUI : MonoBehaviour
     {
         backGround.gameObject.SetActive(true);
         back.gameObject.SetActive(true);
+        dp.gameObject.SetActive(true);
+        graphics.enabled = true;
         
         newGame.gameObject.SetActive(false);
         continueGame.gameObject.SetActive(false);
@@ -29,6 +33,8 @@ public class ManagerUI : MonoBehaviour
     {
         backGround.gameObject.SetActive(false);
         back.gameObject.SetActive(false);
+        dp.gameObject.SetActive(false);
+        graphics.enabled = false;
         
         newGame.gameObject.SetActive(true);
         continueGame.gameObject.SetActive(true);
@@ -47,6 +53,11 @@ public class ManagerUI : MonoBehaviour
     }
 
     public void ExitGame()
+    {
+        
+    }
+
+    public void ChangeGraphics()
     {
         
     }
