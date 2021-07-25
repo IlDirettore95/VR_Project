@@ -85,7 +85,7 @@ public class InteractiveRayCast : MonoBehaviour
                    
                 }
             
-                else if (_gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>()))//caso inter. cassa
+                else if (_gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))//caso inter. cassa
                 {
                    InteractionBox_attract.enabled = true;//gestire immagini
                    InteractionKey.enabled = false;
