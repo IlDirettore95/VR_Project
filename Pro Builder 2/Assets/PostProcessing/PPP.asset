@@ -111,10 +111,10 @@ MonoBehaviour:
   settings:
   - {fileID: 8099032318967958577}
   - {fileID: -8305962867474559862}
-  - {fileID: 2670955171412237097}
   - {fileID: -7281049915154655924}
   - {fileID: 9070674213494998522}
---- !u!114 &2670955171412237097
+  - {fileID: 3297380396713584003}
+--- !u!114 &3297380396713584003
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,32 +123,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a34fa72bd4185749832024e9c8010bf, type: 3}
-  m_Name: ScreenSpaceReflections
+  m_Script: {fileID: 11500000, guid: d65e486e4de6e5448a8fbb43dc8756a0, type: 3}
+  m_Name: Grain
   m_EditorClassIdentifier: 
   active: 1
   enabled:
     overrideState: 1
     value: 1
-  preset:
-    overrideState: 1
-    value: 5
-  maximumIterationCount:
-    overrideState: 1
-    value: 256
-  resolution:
+  colored:
     overrideState: 1
     value: 1
-  thickness:
+  intensity:
     overrideState: 1
-    value: 4
-  maximumMarchDistance:
+    value: 0.05
+  size:
     overrideState: 1
-    value: 10
-  distanceFade:
-    overrideState: 1
-    value: 0
-  vignette:
+    value: 3
+  lumContrib:
     overrideState: 1
     value: 1
 --- !u!114 &8099032318967958577

@@ -11,6 +11,12 @@ public class DialogueTrigger : MonoBehaviour
     public bool started { get; private set;}
     public bool finished { get; private set;}
 
+    [SerializeField] private bool skippable;
+    [SerializeField] private bool destroyable;
+
+    public bool IsSkippable() => skippable;
+    public bool IsDestroyable() => destroyable;
+
     private void Start()
     {
         dm = FindObjectOfType<DialogueManager>();
