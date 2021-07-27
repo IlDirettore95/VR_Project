@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 7720611537799134139}
   - component: {fileID: 3212402720347478291}
   - component: {fileID: 5677318997056294037}
-  - component: {fileID: 3563875901732039320}
+  - component: {fileID: 5914709692158759124}
   - component: {fileID: 51914882}
   - component: {fileID: 8060296031100760797}
   m_Layer: 0
@@ -432,7 +432,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3563875901732039320
+--- !u!114 &5914709692158759124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -441,29 +441,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 7968893209798194856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfd8948cb0f46d444b0be783008f97bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 87aaeee8de35e314faec0b70e81e07c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   areaID: 0
   enemyID: 0
   MaxHealth: 5
-  walkingSpeed: 1
-  triggeredSpeed: 3
-  walkingSpeedBuildUp: 2
-  triggeredSpeedBuildUp: 2
-  impactVelocityThreashold: 15
-  triggerPlayerDistance: 10
-  triggerEnemyDistance: 0
-  attackDistance: 4
-  explosionDamage: 10
-  explosionCooldown: 5
+  walkingSpeed: 2
+  triggeredSpeed: 4
+  walkingSpeedBuildUp: 1
+  triggeredSpeedBuildUp: 1
+  impactVelocityThreashold: 2
+  triggerPlayerDistance: 20
+  triggerEnemyDistance: 30
+  attackDistance: 2
+  patrollingPoints: []
+  patrollingDistanceThreashold: 0.2
+  guardingCooldown: 2
+  explosionDamage: 50
+  explosionCooldown: 3
   explosionRadius: 5
-  explosionImpact: 35
-  stunningDuration: 1.5
+  explosionImpact: 10
+  stunningDuration: 2
   light1: {fileID: 3704153373795099537}
   light2: {fileID: 3704153373311837874}
   explosion: {fileID: 5602069587569534765, guid: 99d276773c2211041b0346f420eef19b,
     type: 3}
+  sightRotationThreashold: 100
+  rotationSpeed: 20
 --- !u!114 &51914882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -489,7 +494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ps: {fileID: 6668906072908167818}
-  en: {fileID: 3563875901732039320}
+  en: {fileID: 0}
   fireDamage: 3
   cooldown: 10
   hurtCooldown: 0.5

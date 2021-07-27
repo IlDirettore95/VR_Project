@@ -82,14 +82,14 @@ public class GravityPower : MonoBehaviour
         if(attracting)
         {
             //The object may be destroyed
-            if(!target.IsDestroyed())
-            {
+            //if(!target.IsDestroyed())
+            //{
                 _playerStatus.ConsumeEnergy(attractionCost * rb.mass * Time.deltaTime);
                 if (!_playerStatus.HasEnoughEnergy())
                 {
                     Releasing();
                 }
-            }
+            /*}
             else
             {
                 target = null;
@@ -97,7 +97,7 @@ public class GravityPower : MonoBehaviour
 
                 _animController.StopAttracting();
             }
-            
+            */
         }
     }
 

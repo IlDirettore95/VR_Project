@@ -51,9 +51,6 @@ public class MiningSpider : Enemy
     //Animation
     SpiderAnimationController _animController;
 
-    public SpiderState GetState() => _currentState;
-    
-
     // Start is called before the first frame update
     void Start()
     {
@@ -109,7 +106,9 @@ public class MiningSpider : Enemy
                     }
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        Triggered();
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
                     }
                     break;
                 }
@@ -122,7 +121,9 @@ public class MiningSpider : Enemy
                     }
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        Triggered();
+                        currentStateBuildUp = 0f;
+                        _currentState = SpiderState.Chasing;
+                        _animController.UpdateAnimation();
                     }
                     break;
                 }
@@ -354,9 +355,6 @@ public class MiningSpider : Enemy
     {
         if (_currentState == SpiderState.Patrolling || _currentState == SpiderState.Guarding)
         {
-            StartCoroutine(TriggerArea(areaID));
-            currentStateBuildUp = 0f;
-
             _currentState = SpiderState.Chasing;
             _animController.UpdateAnimation();
         }

@@ -480,6 +480,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 103876210794904603, guid: ebef58b23130a734f9d75f8f16c6d58b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 103876210794904607, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -588,42 +593,42 @@ PrefabInstance:
     - target: {fileID: 103876211709356668, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876211709356668, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876211824666764, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876211824666764, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876212126826438, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876212126826438, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876212440381188, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103876212440381188, guid: ebef58b23130a734f9d75f8f16c6d58b,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebef58b23130a734f9d75f8f16c6d58b, type: 3}
