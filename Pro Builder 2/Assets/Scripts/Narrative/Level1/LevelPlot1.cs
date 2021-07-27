@@ -10,11 +10,10 @@ using UnityEngine;
  *      Tutorial1: the player must walk
  *      Tutorial2: the player must jump
  *      Tutorial3: the player must use gravity powers
- *      TryToExit: in this state the player is free to find a way to exit
- *      Tutorial4: The player must run
+ *      ExitFromRoom: in this state the player is free to find a way to exit
  *      Explore: The player should explore
+ *      RepairJetpack: The player should find to repair his jetack
  *      Jetpack: the player must recover the jetpack
- *      UseJetpack: the player must use the jetpack to reach an upper corridor
  *      FindAnExit: the player must find an exit
  */
 public class LevelPlot1 : MonoBehaviour
@@ -27,9 +26,13 @@ public class LevelPlot1 : MonoBehaviour
     [SerializeField] private Jetpack _jetpack;
     [SerializeField] private GravityPower _gravityPower;
     [SerializeField] private Overlay _statusOverlay;
+    [SerializeField] private GameObject _grid;
 
     [SerializeField] private GameObject _lockedDoor_1;
     private DialogueTrigger _lockedDoor1Dialogue;
+
+    [SerializeField] private GameObject _airCondition;
+    private DialogueTrigger _airConditionDialogue;
 
     [SerializeField] private GameObject _corridor;
     private DialogueTrigger _corridorDialogue;
@@ -40,12 +43,20 @@ public class LevelPlot1 : MonoBehaviour
     [SerializeField] private GameObject _failedJump;
     private DialogueTrigger _failedJumpDialogue;
 
+    [SerializeField] private GameObject _jumpSucceded;
+    private DialogueTrigger _jumpSuccededDialogue;
+
     [SerializeField] private GameObject _jetpackRoom;
     private DialogueTrigger _jetpackRoomDialogue;
 
     [SerializeField] private GameObject _jetpackStation;
     private DialogueTrigger _jetpackStationDialogue;
     private BoxCollider _jetpackStationCollider;
+
+    [SerializeField] private GameObject _jetpackSucceded;
+    private DialogueTrigger _jetpackSuccededDialogue;
+
+    [SerializeField] private GameObject _endOfLevel;
 
     //Objectives
     [SerializeField] private string[] objectives;
@@ -55,18 +66,15 @@ public class LevelPlot1 : MonoBehaviour
     private float nextTimeObjective;
     private bool objectiveDone = false;
     //--------------------------------------------------------------------------------------------------------------------------------
-    private bool isWalking = false; //During Tutorial1, this boolean will track if the player is walking or not
-    private float timeGoalWalking = 1f; //Amount of time the player must walk
+    private bool wasWalking = false; //During Tutorial1, this boolean will track if the player is walking or not
+    private float timeGoalWalking = 1.5f; //Amount of time the player must walk
     private float nextTimeWalking; //Istant on which the player can stop walking
     //--------------------------------------------------------------------------------------------------------------------------------
     private bool hasJumped = false;
     //--------------------------------------------------------------------------------------------------------------------------------
     private bool usedGravityPower = false;
     //--------------------------------------------------------------------------------------------------------------------------------
-    private bool isRunning = false; //During Tutorial4, this boolean will track if the player is running or not
-    private float timeGoalRunning = 1.5f; //Amount of time the player must run
-    private float nextTimeRunning; //Istant on which the player can stop running
-    //--------------------------------------------------------------------------------------------------------------------------------
+    private Vector3 _gridStartPosition;
 
     //Graphics
     [SerializeField] GameObject _popUpObjective;
@@ -78,20 +86,32 @@ public class LevelPlot1 : MonoBehaviour
         dialogues = GetComponents<DialogueTrigger>();
         _jetpack.enabled = false; //The main character starts with no jetpack
         _gravityPower.enabled = false;   
+
         _lockedDoor_1.SetActive(false);
         _lockedDoor_2.SetActive(false);
+        _jumpSucceded.SetActive(false);
+        _airCondition.SetActive(false);
         _failedJump.SetActive(false);
         _corridor.SetActive(false);
         _jetpackRoom.SetActive(false);
+        _jetpackSucceded.SetActive(false);
+
+        _endOfLevel.SetActive(false);
 
         _lockedDoor1Dialogue = _lockedDoor_1.GetComponent<DialogueTrigger>();
+        _airConditionDialogue = _airCondition.GetComponent<DialogueTrigger>();
         _corridorDialogue = _corridor.GetComponent<DialogueTrigger>();
         _lockedDoor2Dialogue = _lockedDoor_2.GetComponent<DialogueTrigger>();
         _jetpackStationDialogue = _jetpackStation.GetComponent<DialogueTrigger>();
         _jetpackRoomDialogue = _jetpackRoom.GetComponent<DialogueTrigger>();
+        _failedJumpDialogue = _failedJump.GetComponent<DialogueTrigger>();
+        _jumpSuccededDialogue = _jumpSucceded.GetComponent<DialogueTrigger>();
+        _jetpackSuccededDialogue = _jetpackSucceded.GetComponent<DialogueTrigger>();
 
         _jetpackStationCollider = _jetpackStation.GetComponent<BoxCollider>();
         _jetpackStationCollider.enabled = false;
+
+        _gridStartPosition = _grid.transform.position;
 
         _statusOverlay.ActiveBar(2, false);
         _statusOverlay.ActiveBar(3, false);
@@ -100,6 +120,7 @@ public class LevelPlot1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         switch(_currentState)
         {
             case LevelState1.Start:          
@@ -134,19 +155,19 @@ public class LevelPlot1 : MonoBehaviour
                         dialogues[1].TriggerDialogue();
                     }
                 }   
-                else if(!isWalking && _movementSystem.walking )
+                else if(!wasWalking && _movementSystem.walking)
                 {
-                    isWalking = true;
+                    wasWalking = true;
                     nextTimeWalking = Time.time + timeGoalWalking;
                 }
-                else if(isWalking && _movementSystem.walking && Time.time > nextTimeWalking)
+                else if(wasWalking && _movementSystem.walking && Time.time > nextTimeWalking)
                 {
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
                 }
                 else if(!_movementSystem.walking)
                 {
-                    isWalking = false;
+                    wasWalking = false;
                 }
                 break;
 
@@ -179,16 +200,18 @@ public class LevelPlot1 : MonoBehaviour
                 break;
 
             case LevelState1.Tutorial3:
-                if(objectiveDone)
+
+                if (_airCondition != null && !_grid.transform.position.Equals(_gridStartPosition) && !_airConditionDialogue.started && !_airConditionDialogue.finished) _airCondition.SetActive(true);
+
+                if (objectiveDone)
                 {
                     if (dialogues[3].finished)
                     {
                         objectiveDone = false;
                         _lockedDoor_1.SetActive(true);
                         _corridor.SetActive(true);
-                        _jetpackRoom.SetActive(true);
                         DisplayObjective(objectives[3]);
-                        _currentState = LevelState1.TryToExit;
+                        _currentState = LevelState1.ExitFromRoom;
                     }
                     else if (!dialogues[3].started && Time.time > nextTimeObjective)
                     {
@@ -207,26 +230,17 @@ public class LevelPlot1 : MonoBehaviour
                 }   
                 break;
 
-            case LevelState1.TryToExit:
-                if(_jetpackRoomDialogue.finished)
-                {
-                    DisplayObjective(objectives[7]);
-                    _failedJump.SetActive(true);
-                    _lockedDoor_2.SetActive(true);
-                    _lockedDoor_1.SetActive(false);
-                    _corridor.SetActive(false);
-                    _jetpackStationCollider.enabled = true;
-                    _currentState = LevelState1.Jetpack;
-                }
-                else if(_corridorDialogue.finished)
+            case LevelState1.ExitFromRoom:
+                if (_airCondition != null && !_grid.transform.position.Equals(_gridStartPosition) && !_airConditionDialogue.started && !_airConditionDialogue.finished) _airCondition.SetActive(true);
+
+                if (_corridorDialogue.finished)
                 {
                     _lockedDoor_1.SetActive(false);
                     _failedJump.SetActive(true);
+                    _jumpSucceded.SetActive(true);
                     _lockedDoor_2.SetActive(true);
-                    _jetpackRoom.SetActive(false);
-                    _jetpackStationCollider.enabled = false;
                     DisplayObjective(objectives[5]);
-                    _currentState = LevelState1.Tutorial4;
+                    _currentState = LevelState1.Explore;
                 }
                 else if(_lockedDoor1Dialogue.finished)
                 {
@@ -234,54 +248,45 @@ public class LevelPlot1 : MonoBehaviour
                 }
                 break;
 
-            case LevelState1.Tutorial4:
-                if (objectiveDone)
+            case LevelState1.Explore:
+                if(_lockedDoor2Dialogue.finished && _jetpack.enabled)
                 {
-                    if (dialogues[4].finished && !_jetpack.enabled)
+                    _jetpackSucceded.SetActive(true);
+                    DisplayObjective(objectives[8]);
+                    _currentState = LevelState1.FindAnExit;
+                }
+                else if(!_jetpack.enabled)
+                {
+                    if (_jetpackRoomDialogue.finished)
                     {
-                        objectiveDone = false;
                         _jetpackStationCollider.enabled = true;
-                        _jetpackRoom.SetActive(true);
+                        DisplayObjective(objectives[7]);
+                        _currentState = LevelState1.Jetpack;
+                    }
+                    else if (_lockedDoor2Dialogue.finished)
+                    {
                         DisplayObjective(objectives[6]);
-                        _currentState = LevelState1.Explore;
+                        _currentState = LevelState1.RepairJetpack;
                     }
-                    else if(dialogues[4].finished && _jetpack.enabled)
+                    else if (_jumpSuccededDialogue.finished)
                     {
-                        objectiveDone = false;
-                        DisplayObjective(objectives[9]);
-                        _currentState = LevelState1.FindAnExit;
+                        _failedJump.SetActive(false);
+                        if(!_jetpackRoomDialogue.started && !_jetpackRoomDialogue.finished)_jetpackRoom.SetActive(true);
                     }
-                    else if (!dialogues[4].started && Time.time > nextTimeObjective)
-                    {
-                        dialogues[4].TriggerDialogue();
-                    }
-
-                }
-                else if (!isRunning && _movementSystem.running)
-                {
-                    isRunning = true;
-                    nextTimeRunning = Time.time + timeGoalRunning;
-                }
-                else if (isRunning && _movementSystem.running && Time.time > nextTimeRunning)
-                {
-                    objectiveDone = true;
-                    nextTimeObjective = Time.time + objectiveDelay;
-                }
-                else if (!_movementSystem.running)
-                {
-                    isRunning = false;
                 }
                 break;
 
-            case LevelState1.Explore:
-                if(_lockedDoor2Dialogue.finished || _jetpackRoomDialogue.finished)
+            case LevelState1.RepairJetpack:
+                if (_jetpackRoomDialogue.finished)
                 {
-                    if(_jetpackRoomDialogue.finished)
-                    {
-                        _jetpackStationCollider.enabled = true;
-                    }
+                    _jetpackStationCollider.enabled = true;
                     DisplayObjective(objectives[7]);
                     _currentState = LevelState1.Jetpack;
+                }
+                else if (_jumpSuccededDialogue.finished)
+                {
+                    _failedJump.SetActive(false);
+                    _jetpackRoom.SetActive(true);
                 }
                 break;
 
@@ -291,17 +296,29 @@ public class LevelPlot1 : MonoBehaviour
                     if (Time.time > nextTimeObjective)
                     {
                         objectiveDone = false;
-                        DisplayObjective(objectives[8]);
-                        _currentState = LevelState1.UseJetpack;
+                        if (_lockedDoor2Dialogue.finished)
+                        {
+                            _jetpackSucceded.SetActive(true);
+                            DisplayObjective(objectives[8]);
+                            _currentState = LevelState1.FindAnExit;
+                        }
+                        else
+                        {
+                            DisplayObjective(objectives[5]);
+                            _currentState = LevelState1.Explore;
+                        }   
                     }
-
                 }
-                else if(_jetpackStationDialogue.finished)
+                else if(dialogues[4].finished)
                 {
                     _jetpack.enabled = true;
                     _statusOverlay.ActiveBar(3, true);
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
+                }
+                else if(_jetpackStationDialogue.finished)
+                {
+                    dialogues[4].TriggerDialogue();
                 }
                 else if(_jetpackRoomDialogue.finished)
                 {
@@ -309,29 +326,10 @@ public class LevelPlot1 : MonoBehaviour
                 }
                 break;
 
-            case LevelState1.UseJetpack:
-                if(objectiveDone)
-                {
-                    if(Time.time > nextTimeObjective)
-                    {
-                        objectiveDone = false;
-                        if (!_corridorDialogue.finished) _corridor.SetActive(true);
-                        DisplayObjective(objectives[9]);
-                        _currentState = LevelState1.FindAnExit;
-                    }
-                }
-                else if(_movementSystem.jetpack)
-                {
-                    objectiveDone = true;
-                    nextTimeObjective = Time.time + objectiveDelay;
-                }
-                break;
-
             case LevelState1.FindAnExit:
-                if(_corridorDialogue.finished && !dialogues[4].finished)
+                if(_jetpackSuccededDialogue.finished)
                 {
-                    DisplayObjective(objectives[5]);
-                    _currentState = LevelState1.Tutorial4;
+                    _endOfLevel.SetActive(true);
                 }
                 break;
 
@@ -358,11 +356,10 @@ public class LevelPlot1 : MonoBehaviour
         Tutorial1,
         Tutorial2,
         Tutorial3,
-        TryToExit,
-        Tutorial4,
+        ExitFromRoom,
         Explore,
+        RepairJetpack,
         Jetpack,
-        UseJetpack,
         FindAnExit
     }
 }

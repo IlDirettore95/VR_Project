@@ -23,15 +23,20 @@ public class DialogueManager : MonoBehaviour
     private bool onDialogue = false;
     private bool onWritingSentence = false;
     private bool onWritingName = false;
+    private bool forcedDisplay = false;
     private bool couldMove = false;
     private bool couldUseGravity = false;
     private bool couldUseJetpack = false;
     private bool couldInteract = false;
 
+    private string _currentDialogue;
+    private string _currentNameDialogue;
+
     // Start is called before the first frame update
     void Start()
     {
         sentences = new Queue<string>();
+
     }
 
     public void StartDialogue (Dialogue dialogue, DialogueTrigger trigger)
@@ -79,7 +84,10 @@ public class DialogueManager : MonoBehaviour
 
         string sentence = sentences.Dequeue();
         string[] words = sentence.Split(':');
-        
+
+        _currentNameDialogue = words[0]; //Load the name if the player wants it to show all in one
+        _currentDialogue = words[1]; //Load the dialog if the player wants it to show all in one
+
         onWritingSentence = true;
         if (!nameTextArea.text.Equals(words[0]))
         {
@@ -97,7 +105,7 @@ public class DialogueManager : MonoBehaviour
         foreach(char letter in sentence.ToCharArray())
         {
             textArea.text += letter;
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.05f);
         }
         _continueBox.SetActive(true);
         onWritingSentence = false;
@@ -109,10 +117,16 @@ public class DialogueManager : MonoBehaviour
         foreach(char letter in sentence.ToCharArray())
         {
             nameTextArea.text += letter;
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.05f);
         }
 
         onWritingName = false;
+    }
+
+    private void DisplayAllSentence()
+    {
+        textArea.text = _currentDialogue;
+        nameTextArea.text = _currentNameDialogue;
     }
 
     void EndDialogue()
@@ -148,6 +162,16 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if(onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused) DisplayNextSentence();
+        if (onDialogue && (onWritingSentence || onWritingName) && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused)
+        {
+            StopAllCoroutines();
+            DisplayAllSentence();
+
+            _continueBox.SetActive(true);
+            onWritingSentence = false;
+            onWritingName = false;
+        }
+                
+        else if(onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused) DisplayNextSentence();
     }
 }

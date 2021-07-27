@@ -8,7 +8,8 @@ using Debug = UnityEngine.Debug;
 public class InteractiveRayCast : MonoBehaviour
 {
     private Camera _camera;
-    public float maxDistance;
+    public float attractionRange;
+    public float interactionRange;
     public Image InteractionKey;
     public Image InteractionBox_throw;
     public Image InteractionBox_attract;
@@ -48,11 +49,11 @@ public class InteractiveRayCast : MonoBehaviour
             Ray ray = _camera.ScreenPointToRay(point);
             RaycastHit hit;
         
-            if (Physics.Raycast(ray, out hit, maxDistance))
+            if (Physics.Raycast(ray, out hit))
             {
                 GameObject go = hit.collider.gameObject;
                 //Debug.Log("sparo raggio");
-                if (go.GetComponent<Switch>())
+                if (go.GetComponent<Switch>() && hit.distance <= interactionRange)
                 {
                     //Debug.Log("ho colliso con un interruttore");
                     InteractionKey.enabled = true;
@@ -63,13 +64,12 @@ public class InteractiveRayCast : MonoBehaviour
                 
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        sw.commutation();
-                   
+                        sw.commutation();     
                     }
                     
                 }
                 
-                else if (go.GetComponent<DialogueTrigger>())
+                else if (go.GetComponent<DialogueTrigger>() && go.GetComponent<DialogueTrigger>().enabled && hit.distance <= interactionRange)
                 {
                     InteractionGeneric.enabled = true;
                     InteractionBox_throw.enabled = false;
@@ -85,7 +85,7 @@ public class InteractiveRayCast : MonoBehaviour
                    
                 }
             
-                else if (_gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))//caso inter. cassa
+                else if (hit.distance <= attractionRange && _gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))//caso inter. cassa
                 {
                    InteractionBox_attract.enabled = true;//gestire immagini
                    InteractionKey.enabled = false;

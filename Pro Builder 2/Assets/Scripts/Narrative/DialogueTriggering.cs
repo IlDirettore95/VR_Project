@@ -4,7 +4,8 @@ using UnityEngine;
 
 /*A dialogue might start after a collision with a trigger
  * If the dialogue trigger is skippable this script will try to start it once.
- * If the dialogue trigger is destroyable this script will destroy his gameobject if it tries to start and doesn't start immediatly
+ * If the dialogue trigger is destroyable this script will destroy (set unactive) his gameobject if it tries to start and doesn't start immediatly
+ * A dialogue if destroyable must be skippable too
  */
 public class DialogueTriggering : MonoBehaviour
 {
@@ -18,21 +19,38 @@ public class DialogueTriggering : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetComponent<PlayerStatus>() && !started)
-        {
-            started = true;
-            if(!dialogueTrigger.IsSkippable()) StartCoroutine(TriggerDialogue());
-            else dialogueTrigger.TriggerDialogue();
-        }
+        TryToStartDialogue(other);
     }
 
     private void OnTriggerStay(Collider other)
     {
+        TryToStartDialogue(other);
+    }
+
+    private void TryToStartDialogue(Collider other)
+    {
         if (other.gameObject.GetComponent<PlayerStatus>() && !started)
         {
             started = true;
-            if (!dialogueTrigger.IsSkippable()) StartCoroutine(TriggerDialogue());
-            else dialogueTrigger.TriggerDialogue();
+
+            //Is it destroyable or skippable
+            if (dialogueTrigger.IsSkippable() || dialogueTrigger.IsDestroyable())
+            {
+                dialogueTrigger.TriggerDialogue();
+                if (!dialogueTrigger.started)
+                {
+                    if (dialogueTrigger.IsSkippable()) started = false;
+                    else gameObject.SetActive(false);
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                StartCoroutine(TriggerDialogue());
+            }
         }
     }
 
@@ -41,9 +59,8 @@ public class DialogueTriggering : MonoBehaviour
         while(!dialogueTrigger.started)
         {     
             dialogueTrigger.TriggerDialogue();
-            if(!!dialogueTrigger.started && dialogueTrigger.IsDestroyable()) Destroy(gameObject);
             yield return new WaitForSeconds(0.5f);
         }
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
