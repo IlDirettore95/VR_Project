@@ -24,6 +24,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/interactiveRayCast.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/Drone.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1uMBgIRE7FBTGvTPW9QDDqJ3zGX" />
@@ -44,6 +45,7 @@
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
+      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
       </option>
@@ -53,6 +55,7 @@
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
+      <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
       </option>
@@ -79,6 +82,7 @@
       <workItem from="1626356629069" duration="1645000" />
       <workItem from="1626427021574" duration="1827000" />
       <workItem from="1626448860966" duration="3905000" />
+      <workItem from="1627486228344" duration="1207000" />
     </task>
     <servers />
   </component>

@@ -18,6 +18,9 @@ public class Drone : Enemy
         Dead
     }
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip laser;
+    
     //Attack
     public float attackDamage;
     public float fireCooldown;
@@ -54,6 +57,8 @@ public class Drone : Enemy
         target = GameObject.Find("ObjectGrabber").transform;
 
         _currentState = DroneState.Guarding;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -245,6 +250,8 @@ public class Drone : Enemy
         int rand = rnd.Next(2);
         GameObject projectile = Instantiate(projectilePrefab, firePoints[rand].transform.position, firePoints[rand].transform.rotation);
         projectile.transform.LookAt(playerTransform);
+        
+        audioSource.PlayOneShot(laser);
     }
 
     //Handles collision damage
