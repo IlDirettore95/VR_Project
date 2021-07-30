@@ -60,6 +60,8 @@ public class LevelPlot1 : MonoBehaviour
     private DialogueTrigger _jetpackSuccededDialogue;
 
     [SerializeField] private GameObject _endOfLevel;
+    [SerializeField] private GameObject _exitDoor;
+    private UnlockableDoorAnimation _exitDoorAnimation;
 
     //Objectives
     [SerializeField] private string[] objectives;
@@ -118,6 +120,9 @@ public class LevelPlot1 : MonoBehaviour
         _jumpSuccededDialogue = _jumpSucceded.GetComponent<DialogueTrigger>();
         _jetpackSuccededDialogue = _jetpackSucceded.GetComponent<DialogueTrigger>();
 
+        _exitDoorAnimation = _exitDoor.GetComponentInChildren<UnlockableDoorAnimation>();
+        _exitDoorAnimation.LockDoor();
+
         _statusOverlay.ActiveBar(2, false);
         _statusOverlay.ActiveBar(3, false);
 
@@ -131,12 +136,17 @@ public class LevelPlot1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         switch(_currentState)
         {
-            case LevelState1.Start:          
-                if(_movementSystem.isGrounded)
+            case LevelState1.Start:
+                if (!_movementSystem.enabled)
                 {
+                    Debug.Log("Ciao");
+                    _movementSystem.enabled = true;
+                }
+                else if(_movementSystem.IsLanded())
+                {
+                    Debug.Log("Ciao2");
                     dialogues[0].TriggerDialogue();
                     _movementSystem.enabled = false;
                     _currentState = LevelState1.Introduction;
@@ -146,6 +156,7 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.Introduction:
                 if(dialogues[0].finished)
                 {
+                    Debug.Log("Ciao3");
                     _movementSystem.enabled = true;
                     _objectiveManager.DisplayObjective(objectives[0]);
                     _currentState = LevelState1.Tutorial1;
@@ -316,6 +327,8 @@ public class LevelPlot1 : MonoBehaviour
                     if (Time.time > nextTimeObjective)
                     {
                         objectiveDone = false;
+                        _endOfLevel.SetActive(true);
+
                         if (_lockedDoor2Dialogue.finished)
                         {
                             _jetpackSucceded.SetActive(true);
@@ -325,7 +338,6 @@ public class LevelPlot1 : MonoBehaviour
                         else
                         {
                             _objectiveManager.DisplayObjective(objectives[5]);
-                            _endOfLevel.SetActive(true);
                             _currentState = LevelState1.Explore;
                         }   
                     }
@@ -334,6 +346,9 @@ public class LevelPlot1 : MonoBehaviour
                 {
                     _jetpack.enabled = true;
                     _statusOverlay.ActiveBar(3, true);
+
+                    _exitDoorAnimation.UnLockDoor();
+
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
                 }
@@ -350,8 +365,6 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.FindAnExit:
                 if(_jetpackSuccededDialogue.finished)
                 {
-                    _endOfLevel.SetActive(true);
-
                     _objectiveManager.DisplayObjective(objectives[9]);
 
                     enabled = false;

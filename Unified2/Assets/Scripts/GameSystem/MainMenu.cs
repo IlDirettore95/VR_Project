@@ -45,28 +45,11 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         levelSys.NewGame();
-
-
-        /*
-        HideMenu();
-         
-        scenesToLoad.Add(SceneManager.LoadSceneAsync("Gameplay"));
-
-        scenesToLoad.Add(SceneManager.LoadSceneAsync("Level1", LoadSceneMode.Additive));
-        StartCoroutine(LoadingScreen());
-        */
     }
 
     public void ContinueGame()
     {
         levelSys.Continue();
-
-        /*
-        HideMenu();
-        ShowLoadingScreen();
-
-        scenesToLoad.Add(SceneManager.LoadSceneAsync("Gameplay"));
-        */
     }
 
     public void ExitGame()
@@ -130,28 +113,4 @@ public class MainMenu : MonoBehaviour
         SaveData newData = new SaveData(data._currentScene, drop.value, quality);
         SaveSystem.Save(newData, "save");
     }
-
-    
-    IEnumerator LoadingScreen()
-    {
-        ShowLoadingScreen();
-
-        float totalProgress = 0;
-
-        loadingProgressBar.fillAmount = totalProgress;
-
-        //Iterate through all the scenes to load
-        for (int i = 0; i < scenesToLoad.Count; i++)
-        {
-            while (!scenesToLoad[i].isDone)
-            {
-                //Adding the scene progress to the total progress
-                totalProgress += scenesToLoad[i].progress;
-                //the fillAmount needs a value between 0 and 1, so we devide the progress by the number of scenes to load
-                loadingProgressBar.fillAmount = totalProgress / scenesToLoad.Count;
-                yield return null;
-            }
-        }
-    }
-    
 }

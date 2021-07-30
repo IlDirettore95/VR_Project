@@ -5,15 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class EndOfLevel : MonoBehaviour
 {
-    [SerializeField] string _nextLevel;
+    private LevelSystem _levelSys;
     private bool _isLoaded = false;
+
+    private void Start()
+    {
+        _levelSys = GameObject.FindObjectOfType<LevelSystem>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !_isLoaded)
         {
+            _levelSys.EndLevel();
+
             _isLoaded = true;
-            SceneManager.LoadSceneAsync(_nextLevel, LoadSceneMode.Additive);
+
+            gameObject.SetActive(false);
         }
     }
 }

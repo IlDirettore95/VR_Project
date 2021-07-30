@@ -7,52 +7,64 @@ public class StartOfLevel : MonoBehaviour
 {
     private LevelSystem _levelSys;
     private GameObject _player;
-    private GameObject _spawnPoint;
-    
-    [SerializeField] private GameObject _enterDoor;
-    [SerializeField] private string _previousLevel;
 
-    private bool _isUnLoaded = false;
+    [SerializeField] private GameObject _spawnPoint;
+    [SerializeField] private string _previousLevel;
 
     private void Start()
     {
         _levelSys = GameObject.FindObjectOfType<LevelSystem>();
         _player = GameObject.FindGameObjectWithTag("Player");
-        _spawnPoint = GameObject.FindGameObjectWithTag("CheckPoint");
-
-        Debug.Log(_levelSys._currentLevel.ToString());
 
         if (_levelSys._currentLevel.ToString() != _previousLevel)
         {
-            //_player.transform.position = _checkPoint.transform.position;
+            _player.transform.position = _spawnPoint.transform.position;
             _player.transform.rotation = _spawnPoint.transform.rotation;
 
-            //_player.transform.GetComponent<MovementSystem>().enabled = true;
+            Initialize();
 
-            Vector3 pos = _spawnPoint.transform.position - _player.transform.position;
+            StartCoroutine(EnableMovSys());
 
-            Debug.Log(pos);
-            Debug.Log(_player.transform.position);
+            //Vector3 pos = _spawnPoint.transform.position - _player.transform.position;
 
-            _player.transform.GetComponent<CharacterController>().Move(pos);
-
-            _enterDoor.GetComponentInChildren<DoorAnimation>().enabled = false;
-
-            gameObject.SetActive(false);
+            //_player.transform.GetComponent<CharacterController>().Move(pos);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        string _currentLevel = _levelSys._currentLevel.ToString();
-
         if (other.CompareTag("Player"))
         {
-            _enterDoor.GetComponentInChildren<DoorAnimation>().enabled = false;
-
             _levelSys.NextLevel();
+
+            Initialize();
 
             gameObject.SetActive(false);
         }
+    }
+
+    private void Initialize()
+    {
+        switch (_levelSys._currentLevel.ToString())
+        {
+            case "Level2":
+
+                //gameObject.GetComponent<InitializeLevel2>().Initialize();
+
+                break;
+        }
+    }
+
+    // Wait 1 frame before enabling the movement system, in order to complete the player warp to the spawnpoint
+    private IEnumerator EnableMovSys()
+    {
+        yield return null;
+
+        if(_levelSys._currentLevel.ToString() != "Level1")
+        {
+            _player.transform.GetComponent<MovementSystem>().enabled = true;
+        }
+
+        gameObject.SetActive(false);
     }
 }
