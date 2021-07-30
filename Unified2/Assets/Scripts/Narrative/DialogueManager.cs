@@ -161,7 +161,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (onDialogue && (onWritingSentence || onWritingName) && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused)
+        if (onDialogue && (onWritingSentence || onWritingName) && Input.GetKeyDown(KeyCode.Space) && !GameEvent.isPaused)
         {
             StopAllCoroutines();
             DisplayAllSentence();
@@ -171,6 +171,6 @@ public class DialogueManager : MonoBehaviour
             onWritingName = false;
         }
 
-        else if (onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Return) && !GameEvent.isPaused) DisplayNextSentence();
+        else if (onDialogue && !onWritingSentence && !onWritingName && Input.GetKeyDown(KeyCode.Space) && !GameEvent.isPaused) DisplayNextSentence();
     }
 }
