@@ -141,12 +141,10 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.Start:
                 if (!_movementSystem.enabled)
                 {
-                    Debug.Log("Ciao");
                     _movementSystem.enabled = true;
                 }
                 else if(_movementSystem.IsLanded())
                 {
-                    Debug.Log("Ciao2");
                     dialogues[0].TriggerDialogue();
                     _movementSystem.enabled = false;
                     _currentState = LevelState1.Introduction;
@@ -156,7 +154,6 @@ public class LevelPlot1 : MonoBehaviour
             case LevelState1.Introduction:
                 if(dialogues[0].finished)
                 {
-                    Debug.Log("Ciao3");
                     _movementSystem.enabled = true;
                     _objectiveManager.DisplayObjective(objectives[0]);
                     _currentState = LevelState1.Tutorial1;
