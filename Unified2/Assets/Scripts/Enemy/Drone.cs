@@ -243,6 +243,7 @@ public class Drone : Enemy
         System.Random rnd = new System.Random();
         int rand = rnd.Next(2);
         GameObject projectile = Instantiate(projectilePrefab, firePoints[rand].transform.position, firePoints[rand].transform.rotation);
+        
         projectile.transform.LookAt(playerTransform);
     }
 

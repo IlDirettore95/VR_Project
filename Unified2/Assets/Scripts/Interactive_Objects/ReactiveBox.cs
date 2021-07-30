@@ -13,6 +13,10 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
    
     public float _health;
 
+    private float theshold = 2f;
+
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip thudSound;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,6 +24,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         target = GameObject.Find("ObjectGrabber").transform;
 
         fs = GetComponent<FireStatus>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     
@@ -83,5 +88,12 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
     {
         if(isInBox)
             rb.AddForce(direction * angularVelocity , ForceMode.Impulse);
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        
+        if(other.relativeVelocity.magnitude > theshold)
+            _audioSource.PlayOneShot(thudSound);
     }
 }

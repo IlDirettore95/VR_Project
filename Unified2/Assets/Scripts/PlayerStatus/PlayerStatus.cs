@@ -28,6 +28,8 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     //player status
     private bool isAlive;
 
+     private PlayFootstepsSound pfs;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +37,7 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
         _stamina = MaxStamina;
         _fuel = MaxFuel;
         _energy = MaxEnergy;
-
+        pfs = GetComponent<PlayFootstepsSound>();
         isAlive = true;
 
         _healRegeneration = GetComponent<HealthRegeneration>();
@@ -89,10 +91,11 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
             _health -= damage;
             if (_health < 0) _health = 0;
             if (_health == 0) isAlive = false;
-       
+            pfs.Hurt();
             _healRegeneration.enabled = false;
             _healRegeneration.enabled = true;
         }
+        
     }
 
     public void Heal(float cure)

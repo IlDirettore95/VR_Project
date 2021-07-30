@@ -11,6 +11,10 @@ public class ReactiveGrid : MonoBehaviour, ReactiveObject
     private FireStatus fs;
 
     public float _health;
+    
+    private float theshold = 4f;
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip thudSound;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +24,8 @@ public class ReactiveGrid : MonoBehaviour, ReactiveObject
         target = GameObject.Find("ObjectGrabber").transform;
 
         fs = GetComponent<FireStatus>();
+        
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public bool IsAttracted()
@@ -83,5 +89,11 @@ public class ReactiveGrid : MonoBehaviour, ReactiveObject
         rb.freezeRotation = false;
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        
+        if(other.relativeVelocity.magnitude > theshold)
+            _audioSource.PlayOneShot(thudSound);
+    }
     
 }

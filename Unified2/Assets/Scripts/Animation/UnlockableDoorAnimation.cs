@@ -27,26 +27,25 @@ public class UnlockableDoorAnimation : MonoBehaviour
 
     [SerializeField] private ReflectionProbe _refProb1;
     [SerializeField] private ReflectionProbe _refProb2;
-
+    
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip doorOpening;
+    
     // Start is called before the first frame update
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
         UnLockDoor();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         GameObject pl = other.gameObject;
         if (pl != null && pl.tag.Equals("Player"))
         {
             _animator.SetBool("isOpening", true);
+            _audioSource.PlayOneShot(doorOpening);
         }
 
     }
@@ -57,9 +56,9 @@ public class UnlockableDoorAnimation : MonoBehaviour
         if (pl != null && pl.tag.Equals("Player"))
         {
             _animator.SetBool("isOpening", false);
+            _audioSource.PlayOneShot(doorOpening);
         }
     }
-
     public void LockDoor()
     {
         gameObject.GetComponent<BoxCollider>().enabled = false;

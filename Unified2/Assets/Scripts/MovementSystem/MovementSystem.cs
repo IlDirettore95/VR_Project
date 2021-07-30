@@ -58,7 +58,7 @@ public class MovementSystem : MonoBehaviour
     private float deltaY = 0f;
     public float minDeltaY; //Limit speed while falling
     private float deltaZ = 0f;
-    private float speed = 0f; //Player's general speed
+    public float speed { get; private set; } //Player's general speed
     private float currentTargetSpeed = 0f;
     private float oldTargetSpeed = 0f; 
 
