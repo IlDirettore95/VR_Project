@@ -10,6 +10,7 @@ public class StartOfLevel : MonoBehaviour
 
     [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private string _previousLevel;
+    [SerializeField] private GameObject plot;
 
     private void Start()
     {
@@ -18,16 +19,7 @@ public class StartOfLevel : MonoBehaviour
 
         if (_levelSys._currentLevel.ToString() != _previousLevel)
         {
-            _player.transform.position = _spawnPoint.transform.position;
-            _player.transform.rotation = _spawnPoint.transform.rotation;
-
-            Initialize();
-
-            StartCoroutine(EnableMovSys());
-
-            //Vector3 pos = _spawnPoint.transform.position - _player.transform.position;
-
-            //_player.transform.GetComponent<CharacterController>().Move(pos);
+            WarpPlayer();
         }
     }
 
@@ -37,12 +29,11 @@ public class StartOfLevel : MonoBehaviour
         {
             _levelSys.NextLevel();
 
-            Initialize();
-
             gameObject.SetActive(false);
         }
     }
 
+    /*
     private void Initialize()
     {
         switch (_levelSys._currentLevel.ToString())
@@ -54,17 +45,43 @@ public class StartOfLevel : MonoBehaviour
                 break;
         }
     }
+    */
+
+    private void WarpPlayer()
+    {
+        _player.transform.position = _spawnPoint.transform.position;
+        _player.transform.rotation = _spawnPoint.transform.rotation;
+
+        StartCoroutine(EnableMovSys());
+    }
+
+    private void EnableCams()
+    {
+        Camera[] cams = _player.GetComponentsInChildren<Camera>();
+
+        foreach (Camera cam in cams)
+        {
+            cam.enabled = true;
+        }
+    }
 
     // Wait 1 frame before enabling the movement system, in order to complete the player warp to the spawnpoint
     private IEnumerator EnableMovSys()
     {
         yield return null;
 
-        if(_levelSys._currentLevel.ToString() != "Level1")
+        if(_player.transform.position == _spawnPoint.transform.position)
         {
-            _player.transform.GetComponent<MovementSystem>().enabled = true;
-        }
+            EnableCams();
 
-        gameObject.SetActive(false);
+            _player.transform.GetComponent<CharacterController>().enabled = true;
+            _player.transform.GetComponent<MovementSystem>().enabled = true;
+
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            WarpPlayer();
+        }
     }
 }

@@ -46,6 +46,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
 
     public void ReactToLaunching(float launchingSpeed)
     {
+        
         rb.freezeRotation = false;
         rb.useGravity = true;
         //Add a torque to add randomness to movements
@@ -62,6 +63,7 @@ public class ReactiveBox  : MonoBehaviour, ReactiveObject
         {
             fs.restartCooldown();
         }
+        
     }
 
     public bool IsDestroyed()

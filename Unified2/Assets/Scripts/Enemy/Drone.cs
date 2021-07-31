@@ -21,7 +21,10 @@ public class Drone : Enemy
     //Attack
     public float attackDamage;
     public float fireCooldown;
+    public float fireRate;
     private float nextTimeFire;
+    private float nextTimeCooldown;
+    //private bool coolDown = false;
     public Transform[] firePoints;
     public GameObject projectilePrefab;
 
@@ -36,6 +39,16 @@ public class Drone : Enemy
     private bool navmeshFinded = false;
     private bool stunned = false;
 
+    //Rotation of sight before moving
+    public float sightRotationThreashold;
+    public float rotationSpeed;
+
+    //VFX
+    [SerializeField] Light _internalLight;
+    [SerializeField] Light _externalLight;
+    private LightFlickering lfInt;
+    private LightFlickering lfExt;
+
     //Animation
     Animator _animator;
 
@@ -48,6 +61,8 @@ public class Drone : Enemy
         _playerStatus = playerTransform.GetComponent<PlayerStatus>();
         fs = GetComponent<FireStatus>();
         _animator = GetComponentInChildren<Animator>();
+        lfInt = GetComponents<LightFlickering>()[0];
+        lfExt = GetComponents<LightFlickering>()[1];
 
         rb.useGravity = false;
         rb.isKinematic = true;
@@ -62,16 +77,19 @@ public class Drone : Enemy
     {
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (!isAlive) _currentState = DroneState.Dead;
-
-        Debug.Log(_currentState);
+        if (!isAlive)
+        {
+            _currentState = DroneState.Dead;
+            _internalLight.enabled = false;
+            _externalLight.enabled = false;
+            lfInt.enabled = false;
+            lfExt.enabled = false;
+        }
 
         switch (_currentState)  //Finite State Machine
         {
             case DroneState.Dead:
                 {
-                    Destroy(gameObject);
-
                     break;
                 }
             case DroneState.Guarding:
@@ -83,16 +101,24 @@ public class Drone : Enemy
 
                         _currentState = DroneState.Patrolling;
                     }
+
+                    findPlayer();
+
+                    /*
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        _droneBody.transform.LookAt(playerTransform);
+                        //_droneBody.transform.LookAt(playerTransform);
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
                         _animator.SetBool("Triggered", true);
 
+                        _internalLight.color = new Color(1, 0, 0, 1);
+                        _externalLight.color = new Color(1, 0, 0, 1);
+
                         _currentState = DroneState.Chasing;
                     }
+                    */
 
                     break;
                 }
@@ -103,30 +129,41 @@ public class Drone : Enemy
                         nextTimePatrol = Time.time + guardingCooldown;
                         _currentState = DroneState.Guarding;
                     }
+
+                    findPlayer();
+
+                    /*
                     if (playerDistance <= triggerPlayerDistance)
                     {
-                        _droneBody.transform.LookAt(playerTransform);
+                        //_droneBody.transform.LookAt(playerTransform);
                         nextTimeFire = Time.time + fireCooldown;
                         lastPlayerPosition = playerTransform.position;
                         TriggerArea(areaID);
                         _animator.SetBool("Triggered", true);
 
+                        _internalLight.color = new Color(1, 0, 0, 1);
+                        _externalLight.color = new Color(1, 0, 0, 1);
+
                         _currentState = DroneState.Chasing;
                     }
+                    */
 
                     break;
                 }
             case DroneState.Chasing:
                 {
-                    _droneBody.transform.LookAt(playerTransform);
+                    _droneBody.transform.rotation = transform.rotation;
 
+                    
                     //Lerping speed to triggered speed
                     currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
                     speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
                     _agent.speed = speed;
+                    
 
                     if (playerDistance > attackDistance)
                     {
+                        
                         _agent.SetDestination(playerTransform.position);
 
                         if (_agent.hasPath)
@@ -137,6 +174,40 @@ public class Drone : Enemy
                         {
                             _agent.SetDestination(lastPlayerPosition);
                         }
+                        
+
+                        /*
+                        //Following the player
+                        //Calculate the angle beetween the enemy's transform.forward and the player
+                        float angle = Vector3.SignedAngle((playerTransform.position - transform.position), transform.forward, Vector3.up);
+                        if (angle < -sightRotationThreashold || angle > sightRotationThreashold)
+                        {
+                            //turn left or turn right
+                            _agent.isStopped = true;
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation((playerTransform.position - transform.position).normalized), rotationSpeed * Time.deltaTime);
+                        }
+                        else
+                        {
+                            _agent.isStopped = false;
+
+                            //Lerping speed to triggered speed
+                            currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
+                            speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
+                            _agent.speed = speed;
+
+                            //Finding the player
+                            _agent.SetDestination(playerTransform.position);
+
+                            if (_agent.hasPath)
+                            {
+                                lastPlayerPosition = _agent.destination;
+                            }
+                            else
+                            {
+                                _agent.SetDestination(lastPlayerPosition);
+                            }
+                        }
+                        */
                     }
                     else if(!_agent.isOnOffMeshLink)
                     {
@@ -146,7 +217,7 @@ public class Drone : Enemy
                         if (Physics.SphereCast(transform.position, 0.3f, direzione, out hit, 50f))
                         {
                             GameObject hitObject = hit.transform.gameObject;
-                            if (hitObject.tag.Equals("Player")) // || (hitObject.GetComponent<ReactiveObject>() != null && hitObject.GetComponent<ReactiveObject>().IsAttracted())
+                            if (hitObject.tag.Equals("Player"))
                             {
                                 _agent.isStopped = true;
                                 _droneBody.transform.LookAt(playerTransform);
@@ -161,16 +232,25 @@ public class Drone : Enemy
                 {
                     _droneBody.transform.LookAt(playerTransform);
 
+                    float angle = Vector3.SignedAngle((playerTransform.position - transform.position), transform.forward, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation((playerTransform.position - transform.position).normalized), 1);
+
                     if (playerDistance <= attackDistance)
                     {
                         if (Time.time >= nextTimeFire)
                         {
-                            Shoot();
-                            nextTimeFire = Time.time + fireCooldown;
+                            InvokeRepeating("Shoot", 0f, 1f / fireRate);
+                            nextTimeCooldown = Time.time + fireCooldown;
+                            nextTimeFire = Time.time + 2 * fireCooldown;
+                        }
+                        else if (Time.time >= nextTimeCooldown)
+                        {
+                            CancelInvoke("Shoot");
                         }
                     }
                     else
                     {
+                        CancelInvoke("Shoot");
                         _agent.isStopped = false;
                         _currentState = DroneState.Chasing;
                     }
@@ -179,6 +259,7 @@ public class Drone : Enemy
                 }
             case DroneState.Attracted:
                 {
+                    /*
                     RaycastHit hit;
                     if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out hit))
                     {
@@ -188,6 +269,7 @@ public class Drone : Enemy
                             nextTimeFire = Time.time + fireCooldown;
                         }
                     }
+                    */
 
                     break;
                 }
@@ -205,7 +287,7 @@ public class Drone : Enemy
                 }
             case DroneState.Recovery:
                 {
-                    //_droneBody.transform.LookAt(playerTransform);
+                    _droneBody.transform.LookAt(playerTransform);
                     transform.LookAt(playerTransform);
 
                     if (!navmeshFinded)
@@ -223,6 +305,9 @@ public class Drone : Enemy
                     {
                         _agent.enabled = true;
                         navmeshFinded = false;
+                        lfInt.enabled = false;
+                        lfExt.enabled = false;
+
                         _currentState = DroneState.Chasing;
                     }
                     else
@@ -249,36 +334,45 @@ public class Drone : Enemy
     //Handles collision damage
     private void OnCollisionEnter(Collision collision)
     {
-        Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
-        if (colliderRb != null)
+        if (isAlive)
         {
-            if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
+            Rigidbody colliderRb = collision.gameObject.GetComponent<Rigidbody>();
+            if (colliderRb != null)
             {
-                if (_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
+                if (collision.relativeVelocity.magnitude > impactVelocityThreashold)
                 {
-                    TriggerArea(areaID);
-                }
+                    if (_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
+                    {
+                        TriggerArea(areaID);
 
-                if (_currentState != DroneState.Throwed)
-                {
-                    _agent.enabled = false;
-                    rb.isKinematic = false;
-                    rb.useGravity = true;
-                    rb.AddForce(collision.relativeVelocity, ForceMode.Force);
-                    stunned = true;
-                    _currentState = DroneState.Throwed;
-                }
+                        _internalLight.color = new Color(1, 0, 0, 1);
+                        _externalLight.color = new Color(1, 0, 0, 1);
+                    }
 
-                Hurt(colliderRb.mass * (collision.relativeVelocity.magnitude - impactVelocityThreashold));
+                    if (_currentState != DroneState.Throwed)
+                    {
+                        _agent.enabled = false;
+                        rb.isKinematic = false;
+                        rb.useGravity = true;
+                        rb.AddForce(collision.relativeVelocity, ForceMode.Force);
+                        stunned = true;
+
+                        if (_currentState == DroneState.Attack) CancelInvoke("Shoot");
+
+                        _currentState = DroneState.Throwed;
+                    }
+
+                    Hurt(colliderRb.mass * (collision.relativeVelocity.magnitude - impactVelocityThreashold));
+                }
             }
-        }
-        //The collided object is assumed to be static
-        else if (_currentState == DroneState.Throwed)
-        {
-            stunned = true;
+            //The collided object is assumed to be static
+            else if (_currentState == DroneState.Throwed)
+            {
+                stunned = true;
 
-            if(speed > impactVelocityThreashold)
-                Hurt((speed - impactVelocityThreashold));
+                if (speed > impactVelocityThreashold)
+                    Hurt((speed - impactVelocityThreashold));
+            }
         }
     }
 
@@ -286,21 +380,32 @@ public class Drone : Enemy
     {
         base.ReactToAttraction(attractionSpeed);
 
-        _currentState = DroneState.Attracted;
+        if (isAlive)
+        {
+            if (_currentState == DroneState.Attack) CancelInvoke("Shoot");
+
+            _currentState = DroneState.Attracted;
+        }
     }
 
     public override void ReactToReleasing()
     {
         base.ReactToReleasing();
 
-        _currentState = DroneState.Throwed;
+        if (isAlive)
+        {
+            _currentState = DroneState.Throwed;
+        }
     }
 
     public override void ReactToLaunching(float launchingSpeed)
     {
         base.ReactToLaunching(launchingSpeed);
 
-        _currentState = DroneState.Throwed;
+        if (isAlive)
+        {
+            _currentState = DroneState.Throwed;
+        }
     }
 
     private void Scan(Vector3 direction)
@@ -343,11 +448,33 @@ public class Drone : Enemy
         }
     }
 
+    private void findPlayer()
+    {
+        Vector3 direzione = -(transform.position - playerTransform.position).normalized;
+
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position, 0.3f, direzione, out hit, triggerPlayerDistance))
+        {
+            GameObject hitObject = hit.transform.gameObject;
+            if (hitObject.tag.Equals("Player"))
+            {
+                Triggered();
+            }
+        }
+    }
+
     public override void Triggered()
     {
         if(_currentState == DroneState.Patrolling || _currentState == DroneState.Guarding)
         {
+            nextTimeFire = Time.time + fireCooldown;
+            lastPlayerPosition = playerTransform.position;
+            StartCoroutine(TriggerArea(areaID));
+
             _animator.SetBool("Triggered", true);
+
+            _internalLight.color = new Color(1, 0, 0, 1);
+            _externalLight.color = new Color(1, 0, 0, 1);
 
             _currentState = DroneState.Chasing;
         }
@@ -364,6 +491,10 @@ public class Drone : Enemy
 
             currentStateBuildUp = 0f;
             navmeshFinded = false;
+
+            lfInt.enabled = true;
+            lfExt.enabled = true;
+
             _currentState = DroneState.Recovery;
         }
     }

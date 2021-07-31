@@ -115,7 +115,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     public virtual void Patrol(Vector3[] path)//Patrol the path described by the array of position in input
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public virtual void ReactToAttraction(float attractionSpeed)
@@ -161,8 +161,10 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         throw new System.NotImplementedException();
     }
 
-    protected void TriggerArea(int areaID)
+    protected IEnumerator TriggerArea(int areaID)
     {
+        yield return new WaitForSeconds(0.1f);
+
         Collider[] hits = Physics.OverlapSphere(transform.position, 50);
         foreach (Collider col in hits)
         {
