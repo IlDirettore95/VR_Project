@@ -12,11 +12,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HUD/DeathPopUp.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/MovementSystem.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/GameEvent.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/UIController.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/MovementSystem/MouseLook.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/GravityPowers/GravityPower.cs" />
@@ -25,6 +25,10 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/interactiveRayCast.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/HUD/SettingsPopup.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/Drone.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/GameEvent.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/UIController.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/PlayerStatus.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/DeathPopUp.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1uMBgIRE7FBTGvTPW9QDDqJ3zGX" />
@@ -83,6 +87,7 @@
       <workItem from="1626427021574" duration="1827000" />
       <workItem from="1626448860966" duration="3905000" />
       <workItem from="1627486228344" duration="1207000" />
+      <workItem from="1627809572321" duration="1838000" />
     </task>
     <servers />
   </component>

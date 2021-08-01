@@ -87,9 +87,14 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     {
         if (isAlive)
         {
+            
             _health -= damage;
             if (_health < 0) _health = 0;
-            if (_health == 0) isAlive = false;
+            if (_health == 0)
+            {
+                isAlive = false;
+                GameEvent.isDead = true;
+            }
        
             _healRegeneration.enabled = false;
             _healRegeneration.enabled = true;
