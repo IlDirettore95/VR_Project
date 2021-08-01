@@ -15,6 +15,8 @@ public class UnlockableDoorAnimation : MonoBehaviour
 
     [SerializeField] private Type _type;
 
+    private bool _isOpen = false;
+
     [SerializeField] private Material _enabledMat;
     [SerializeField] private Material _disabledMat;
 
@@ -41,6 +43,20 @@ public class UnlockableDoorAnimation : MonoBehaviour
         
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        GameObject pl = other.gameObject;
+        if (pl != null)
+        {
+            if (!_isOpen)
+            {
+                _animator.SetBool("isOpening", true);
+                _isOpen = true;
+            }
+        }
+    }
+
+    /*
     private void OnTriggerEnter(Collider other)
     {
         GameObject pl = other.gameObject;
@@ -50,13 +66,15 @@ public class UnlockableDoorAnimation : MonoBehaviour
         }
 
     }
+    */
 
     private void OnTriggerExit(Collider other)
     {
         GameObject pl = other.gameObject;
-        if (pl != null && pl.tag.Equals("Player"))
+        if (pl != null)
         {
             _animator.SetBool("isOpening", false);
+            _isOpen = false;
         }
     }
 
