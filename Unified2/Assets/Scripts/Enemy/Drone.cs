@@ -48,6 +48,7 @@ public class Drone : Enemy
     [SerializeField] Light _externalLight;
     private LightFlickering lfInt;
     private LightFlickering lfExt;
+    private AudioSource _audio;
 
     //Animation
     Animator _animator;
@@ -63,6 +64,7 @@ public class Drone : Enemy
         _animator = GetComponentInChildren<Animator>();
         lfInt = GetComponents<LightFlickering>()[0];
         lfExt = GetComponents<LightFlickering>()[1];
+        _audio = gameObject.GetComponent<AudioSource>();
 
         rb.useGravity = false;
         rb.isKinematic = true;
@@ -331,6 +333,7 @@ public class Drone : Enemy
         int rand = rnd.Next(2);
         GameObject projectile = Instantiate(projectilePrefab, firePoints[rand].transform.position, firePoints[rand].transform.rotation);
         projectile.transform.LookAt(playerTransform);
+        _audio.Play();
     }
 
     //Handles collision damage
