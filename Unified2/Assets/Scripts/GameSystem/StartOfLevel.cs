@@ -10,6 +10,7 @@ public class StartOfLevel : MonoBehaviour
 
     [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private string _previousLevel;
+    [SerializeField] private GameObject _plot;
 
     private void Start()
     {
@@ -18,16 +19,7 @@ public class StartOfLevel : MonoBehaviour
 
         if (_levelSys._currentLevel.ToString() != _previousLevel)
         {
-            _player.transform.position = _spawnPoint.transform.position;
-            _player.transform.rotation = _spawnPoint.transform.rotation;
-
-            Initialize();
-
-            StartCoroutine(EnableMovSys());
-
-            //Vector3 pos = _spawnPoint.transform.position - _player.transform.position;
-
-            //_player.transform.GetComponent<CharacterController>().Move(pos);
+            WarpPlayer();
         }
     }
 
@@ -37,21 +29,51 @@ public class StartOfLevel : MonoBehaviour
         {
             _levelSys.NextLevel();
 
-            Initialize();
-
             gameObject.SetActive(false);
         }
     }
 
-    private void Initialize()
+    
+    private void InitializePlot()
     {
         switch (_levelSys._currentLevel.ToString())
         {
-            case "Level2":
+            case "Level1":
 
-                //gameObject.GetComponent<InitializeLevel2>().Initialize();
+                _plot.GetComponent<LevelPlot1>().enabled = true;
 
                 break;
+
+            case "Level2":
+
+                _plot.GetComponent<LevelPlot2>().enabled = true;
+
+                break;
+
+            case "Level3":
+
+                //_plot.GetComponent<LevelPlot3>().enabled = true;
+
+                break;
+        }
+    }
+    
+
+    private void WarpPlayer()
+    {
+        _player.transform.position = _spawnPoint.transform.position;
+        _player.transform.rotation = _spawnPoint.transform.rotation;
+
+        StartCoroutine(EnableMovSys());
+    }
+
+    private void EnableCams()
+    {
+        Camera[] cams = _player.GetComponentsInChildren<Camera>();
+
+        foreach (Camera cam in cams)
+        {
+            cam.enabled = true;
         }
     }
 
@@ -60,11 +82,20 @@ public class StartOfLevel : MonoBehaviour
     {
         yield return null;
 
-        if(_levelSys._currentLevel.ToString() != "Level1")
+        if(_player.transform.position == _spawnPoint.transform.position)
         {
-            _player.transform.GetComponent<MovementSystem>().enabled = true;
-        }
+            EnableCams();
 
-        gameObject.SetActive(false);
+            _player.transform.GetComponent<CharacterController>().enabled = true;
+            _player.transform.GetComponent<MovementSystem>().enabled = true;
+
+            InitializePlot();
+
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            WarpPlayer();
+        }
     }
 }
