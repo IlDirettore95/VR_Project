@@ -74,7 +74,7 @@ public class PlayFootstepsSound : MonoBehaviour
         wasAttracting = false;
         wasReleasing = false;
         wasThrowing = false;
-            _footStepSoundLenght = 1.8f;
+        _footStepSoundLenght = 1.8f;
         
     }
 
@@ -85,9 +85,8 @@ public class PlayFootstepsSound : MonoBehaviour
         if (movementSystem.enabled)
         {
 
-            if ((movementSystem.walking||movementSystem.running) && _step)
-            {
-                _audioSources[0].PlayOneShot(footStepSound);
+            if ((movementSystem.walking || movementSystem.running) && _step)
+            {       
                 StartCoroutine(WaitForFootSteps(_footStepSoundLenght));
             }
             if(movementSystem.wasGrounded && movementSystem.hasJumped && !movementSystem.isGrounded)
@@ -121,7 +120,6 @@ public class PlayFootstepsSound : MonoBehaviour
 
             else if(movementSystem.falling && wasOnJetpack)
             {
-                Debug.Log("stop the jetpack");
                 _audioSources[1].Stop();
                 _audioSources[1].loop = false;
                 wasOnJetpack = false;
@@ -131,7 +129,6 @@ public class PlayFootstepsSound : MonoBehaviour
 
           if (_playerAnimationController.GetIsGrabbing() && !wasAttracting)
           {
-              Debug.Log("attract");
               wasAttracting = true;
               wasReleasing = false;
               wasThrowing = false;
@@ -141,7 +138,6 @@ public class PlayFootstepsSound : MonoBehaviour
           }
           else if (_playerAnimationController.GetIsReleasing() && !wasReleasing)
           {
-              Debug.Log("releasing");
               wasReleasing = true;
               wasAttracting = false;
               wasThrowing = false;
@@ -153,7 +149,6 @@ public class PlayFootstepsSound : MonoBehaviour
           
           else if (_playerAnimationController.GetIsThrowing() && !wasThrowing)
           {
-              Debug.Log("throwing");
               wasReleasing = false;
               wasAttracting = false;
               wasThrowing = true;
@@ -185,8 +180,15 @@ public class PlayFootstepsSound : MonoBehaviour
     IEnumerator WaitForFootSteps(float stepLenght)
     {
         _step = false;
+
+        if (movementSystem.running) yield return new WaitForSeconds(0.15f);
+
+        _audioSources[0].PlayOneShot(footStepSound);
+
         
-        yield return new WaitForSeconds(Mathf.Clamp(stepLenght/movementSystem.speed,0.2f,0.4f));
+        if (movementSystem.running) yield return new WaitForSeconds(0.15f);
+        else if (movementSystem.crouched) yield return new WaitForSeconds(1f);
+        else if (movementSystem.walking) yield return new WaitForSeconds(0.5f);
         _step = true;
     }
 

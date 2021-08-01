@@ -11,11 +11,8 @@ public class DialogueTrigger : MonoBehaviour
     public bool started { get; private set; }
     public bool finished { get; private set; }
 
-    [SerializeField] private bool skippable;
-    [SerializeField] private bool destroyable;
-
-    public bool IsSkippable() => skippable;
-    public bool IsDestroyable() => destroyable;
+    public bool skippable;
+    public bool destroyable;
 
     private void Start()
     {
@@ -26,8 +23,39 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        Debug.Log("TriggerDialogue");
         dm.StartDialogue(dialogue, this);
+
+        BoxCollider collider = GetComponent<BoxCollider>();
+        if (!started)
+        {
+            if (!skippable && !destroyable)
+            {
+                StartCoroutine(RetriggerDialogue());
+            }
+        }
+        else if (collider != null)
+        {
+            if (collider.isTrigger)
+            {
+                collider.enabled = false;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void TriggerDialogueDelayed(float delay)
+    {
+        StartCoroutine(Delay(delay));
+    }
+
+    private IEnumerator Delay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        TriggerDialogue();
     }
 
     public void Started()
@@ -39,5 +67,31 @@ public class DialogueTrigger : MonoBehaviour
     {
         started = false;
         finished = true;
+    }
+
+    private IEnumerator RetriggerDialogue()
+    {
+        while (!started)
+        {
+            TriggerDialogue();
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerStatus>() && !started)
+        {
+            TriggerDialogue();
+        }
+            
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerStatus>() && !started)
+        {
+            TriggerDialogue();
+        }
     }
 }

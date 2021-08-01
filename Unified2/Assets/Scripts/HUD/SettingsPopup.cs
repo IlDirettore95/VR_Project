@@ -49,6 +49,8 @@ public class SettingsPopup : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         crosshair.gameObject.SetActive(false);
+
+        AudioListener.pause = true;
         Time.timeScale = 0f;
 
         pause.enabled = true;
@@ -74,6 +76,8 @@ public class SettingsPopup : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         crosshair.gameObject.SetActive(true);
+
+        AudioListener.pause = false;
         Time.timeScale = 1f;
 
         if (wasOnDialoge)

@@ -15,6 +15,7 @@ public class MovementSystem : MonoBehaviour
       * HasJumped: the player isn't grounded due to a jump
       * Tired: the player consumed all the stamina and need to re-click LeftShift in order to run when the stamina will be recovered
       * WasGrounded: the player was grounded during last frame. This state is used to capture in what frame the player changes from grounded to notgrounded
+      * CanControl: the player can control the character's movement
      */
     [HideInInspector] public bool idle = false;
     [HideInInspector] public bool walking = false;
@@ -27,6 +28,7 @@ public class MovementSystem : MonoBehaviour
     [HideInInspector] public bool tired = false;
     [HideInInspector] public bool wasGrounded = false;
     [HideInInspector] public bool isGrounded = false;
+    [HideInInspector] public bool canControl = true;
 
     //Isgrounded Threashold
     public float isGroundedThreashold;
@@ -101,9 +103,19 @@ public class MovementSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("Delta Y = " + deltaY);
-        deltaX = Input.GetAxis("Horizontal");
-        deltaZ = Input.GetAxis("Vertical");
+        if(canControl)
+        {
+            deltaX = Input.GetAxis("Horizontal");
+            deltaZ = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            walking = false;
+            running = false;
+
+            deltaX = 0f;
+            deltaZ = 0f;
+        }
 
         //Setting player status according to the listened inputs
         SetIsGrounded();
@@ -122,21 +134,21 @@ public class MovementSystem : MonoBehaviour
             }
 
             //Crouching status
-            if (Input.GetKeyDown(KeyCode.C) && !crouching) SettingCrouchStatus();
+            if (Input.GetKeyDown(KeyCode.C) && !crouching && canControl) SettingCrouchStatus();
 
             //Is the player moving?
             if ((deltaX != 0 || deltaZ != 0))
             {
                 //DeltaZ != 1 means that the player cant run backward
-                if (Input.GetKey(KeyCode.LeftShift) && !tired && !crouching && !crouched && deltaZ != -1) Run();
+                if (Input.GetKey(KeyCode.LeftShift) && !tired && !crouching && !crouched && deltaZ != -1 && canControl) Run();
 
                 //The player is surely walking
                 else Walk();
 
-                if (CanJump() && Input.GetButtonDown("Jump")) Jump();
+                if (CanJump() && Input.GetButtonDown("Jump") && canControl) Jump();
             }
             //Jumping
-            else if (CanJump() && Input.GetButtonDown("Jump")) Jump();
+            else if (CanJump() && Input.GetButtonDown("Jump") && canControl) Jump();
 
             else
             {

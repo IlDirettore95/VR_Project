@@ -49,7 +49,7 @@ public class Jetpack : MonoBehaviour
         {
             if (_movementSystem.wasGrounded) _fuelRecover.enabled = false;
 
-            if (Input.GetButtonDown("Jump") && _playerStatus.HasEnoughFuel())
+            if (Input.GetButtonDown("Jump") && _playerStatus.HasEnoughFuel() && _movementSystem.canControl)
             {
                 //Jetpack Activation
                 _movementSystem.jetpack = true;
@@ -69,7 +69,7 @@ public class Jetpack : MonoBehaviour
                     _movementSystem.jetpack = false;
                 }
             }
-            else if (Input.GetButton("Jump") && _movementSystem.jetpack && _playerStatus.HasEnoughFuel())
+            else if (Input.GetButton("Jump") && _movementSystem.jetpack && _playerStatus.HasEnoughFuel() && _movementSystem.canControl)
             {
                 //Jetpack
 

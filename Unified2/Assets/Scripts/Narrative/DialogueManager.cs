@@ -41,35 +41,40 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue (Dialogue dialogue, DialogueTrigger trigger)
     {
-        if (!onDialogue && _movementSystem.IsLanded())
+        if((!onDialogue && !trigger.skippable && !trigger.destroyable)  || (!onDialogue && _movementSystem.IsLanded()))
         {
-            _currentTrigger = trigger;
-
-            //A Dialog will prevent the player from moving and using gravity power. If an object is attracted i will be immediatly released
-            couldMove = _movementSystem.enabled;
-            couldUseGravity = _gravityPower.enabled;
-            couldUseJetpack = _jetpack.enabled;
-            couldInteract = _interactiveRaycast.enabled;
-            _movementSystem.enabled = false;
-            _gravityPower.ForceRealease();
-            _gravityPower.enabled = false;
-            _jetpack.enabled = false;
-            _interactiveRaycast.enabled = false;
-
-            _animController.DialogEvent();
-
-            dialogueBox.gameObject.SetActive(true);
-            onDialogue = true;
-            trigger.Started();
-
-            sentences.Clear();
-
-            foreach (string sentence in dialogue.sentences)
-            {
-                sentences.Enqueue(sentence);
-            }
-
+            _movementSystem.canControl = false;
+            InitializeDialogue(dialogue, trigger);
             DisplayNextSentence();
+        }
+    }
+
+    private void InitializeDialogue(Dialogue dialogue, DialogueTrigger trigger)
+    {
+        _currentTrigger = trigger;
+
+        //A Dialog will prevent the player from moving and using gravity power. If an object is attracted i will be immediatly released
+        //couldMove = _movementSystem.enabled;
+        couldUseGravity = _gravityPower.enabled;
+        couldUseJetpack = _jetpack.enabled;
+        couldInteract = _interactiveRaycast.enabled;
+        //_movementSystem.enabled = false;
+        _gravityPower.ForceRealease();
+        _gravityPower.enabled = false;
+        _jetpack.enabled = false;
+        _interactiveRaycast.enabled = false;
+
+        _animController.DialogEvent();
+
+        dialogueBox.gameObject.SetActive(true);
+        onDialogue = true;
+        trigger.Started();
+
+        sentences.Clear();
+
+        foreach (string sentence in dialogue.sentences)
+        {
+            sentences.Enqueue(sentence);
         }
     }
 
@@ -132,7 +137,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(couldMove)
         {
-            _movementSystem.enabled = true;
+            //_movementSystem.enabled = true;
             couldMove = false;
         }
         if(couldUseGravity)
@@ -156,10 +161,13 @@ public class DialogueManager : MonoBehaviour
         nameTextArea.text = "";
         onDialogue = false;
         _currentTrigger.EndDialogue();
+
+        _movementSystem.canControl = true;
+
         _currentTrigger = null;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (onDialogue && (onWritingSentence || onWritingName) && Input.GetKeyDown(KeyCode.Space) && !GameEvent.isPaused)
         {

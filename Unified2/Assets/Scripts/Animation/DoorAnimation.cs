@@ -6,7 +6,6 @@ using UnityEngine;
 public class DoorAnimation : MonoBehaviour
 {
     private Animator _animator;
-    [SerializeField] private AudioClip doorOpening;
     private AudioSource _audioSource;
 
     // Start is called before the first frame update
@@ -22,7 +21,7 @@ public class DoorAnimation : MonoBehaviour
         if (pl != null && pl.tag.Equals("Player"))
         {
             _animator.SetBool("isOpening", true);
-            _audioSource.PlayOneShot(doorOpening);
+            _audioSource.PlayDelayed(0.5f);
         }
 
     }
@@ -33,7 +32,7 @@ public class DoorAnimation : MonoBehaviour
         if (pl != null && pl.tag.Equals("Player"))
         {
             _animator.SetBool("isOpening", false);
-            _audioSource.PlayOneShot(doorOpening);
+            _audioSource.PlayDelayed(0.1f);
         }
     }
 }

@@ -272,12 +272,7 @@ public class LevelPlot1 : MonoBehaviour
                 {
                     _jetpackSucceded.SetActive(true);
 
-                    if (_jetpackSuccededDialogue.finished)
-                    {
-                        _objectiveManager.DisplayObjective(objectives[9]);
-                        _currentState = LevelState1.FindAnExit;
-                    }
-                    else if (_lockedDoor2Dialogue.finished)
+                    if (_jetpackSuccededDialogue.finished || _lockedDoor2Dialogue.finished)
                     {
                         _objectiveManager.DisplayObjective(objectives[8]);
                         _currentState = LevelState1.FindAnExit;
@@ -353,7 +348,7 @@ public class LevelPlot1 : MonoBehaviour
                 {
                     dialogues[4].TriggerDialogue();
                 }
-                else if(_jetpackRoomDialogue.finished)
+                else if(_jetpackRoomDialogue.finished && !_jetpackStationDialogue.started)
                 {
                     _jetpackStationCollider.enabled = true;
                 }
@@ -361,9 +356,7 @@ public class LevelPlot1 : MonoBehaviour
 
             case LevelState1.FindAnExit:
                 if(_jetpackSuccededDialogue.finished)
-                {
-                    _objectiveManager.DisplayObjective(objectives[9]);
-
+                { 
                     enabled = false;
                 }
                 break;
