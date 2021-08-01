@@ -73,6 +73,8 @@ public class MiningSpider : Enemy
 
         timer = GetComponent<AudioSource>();
 
+        isAlive = true;
+
         _currentState = SpiderState.Guarding;
     }
 
@@ -107,10 +109,9 @@ public class MiningSpider : Enemy
                         
                         _currentState = SpiderState.Patrolling;
                     }
-                    if (playerDistance <= triggerPlayerDistance)
-                    {
-                        Triggered();
-                    }
+
+                    FindPlayer();
+
                     break;
                 }
             case SpiderState.Patrolling:
@@ -120,10 +121,9 @@ public class MiningSpider : Enemy
                         nextTimePatrol = Time.time + guardingCooldown;
                         _currentState = SpiderState.Guarding;
                     }
-                    if (playerDistance <= triggerPlayerDistance)
-                    {
-                        Triggered();
-                    }
+
+                    FindPlayer();
+
                     break;
                 }
             
@@ -348,6 +348,21 @@ public class MiningSpider : Enemy
             Hurt((speed - impactVelocityThreashold));
         }
 
+    }
+
+    private void FindPlayer()
+    {
+        Vector3 direzione = -(transform.position - playerTransform.position).normalized;
+
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position, 0.3f, direzione, out hit, triggerPlayerDistance))
+        {
+            GameObject hitObject = hit.transform.gameObject;
+            if (hitObject.tag.Equals("Player"))
+            {
+                Triggered();
+            }
+        }
     }
 
     public override void Triggered()

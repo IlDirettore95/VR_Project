@@ -113,6 +113,12 @@ public class MovementSystem : MonoBehaviour
             walking = false;
             running = false;
 
+            if (jetpack)
+            {
+                jetpack = false;
+                falling = true;
+            }
+
             deltaX = 0f;
             deltaZ = 0f;
         }

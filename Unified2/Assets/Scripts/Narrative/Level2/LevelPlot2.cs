@@ -43,6 +43,9 @@ public class LevelPlot2 : MonoBehaviour
     [SerializeField] private GameObject _secondDoor;
     private UnlockableDoorAnimation _secondDoorAnimation;
 
+    [SerializeField] private GameObject _enterDoor;
+    private UnlockableDoorAnimation _enterDoorAnimation;
+
     //Booleans and vars
     private float objectiveDelay = 0.5f; //The goal will be considered reached after a delay
     private float nextTimeObjective;
@@ -65,6 +68,7 @@ public class LevelPlot2 : MonoBehaviour
 
         _fightTutorial.SetActive(true);
         _fight.SetActive(false);
+        _industrialAccess.SetActive(false);
 
         _fightTutorialDialogue = _fightTutorial.GetComponent<DialogueTrigger>();
         _fightDialogue = _fight.GetComponent<DialogueTrigger>();
@@ -77,6 +81,8 @@ public class LevelPlot2 : MonoBehaviour
         _firstDoorAnimation.LockDoor();
         _secondDoorAnimation = _secondDoor.GetComponentInChildren<UnlockableDoorAnimation>();
         _secondDoorAnimation.LockDoor();
+        _enterDoorAnimation = _enterDoor.GetComponentInChildren<UnlockableDoorAnimation>();
+        _enterDoorAnimation.LockDoor();
     }
 
     // Update is called once per frame
@@ -117,11 +123,11 @@ public class LevelPlot2 : MonoBehaviour
                         objectiveDone = false;
                         dialogues[1].TriggerDialogue();
                         _terminalStationCollider.enabled = true;
-                        _secondDoorAnimation.UnLockDoor();
-                        _currentState = LevelState2.PostFight;
+                        _firstDoorAnimation.UnLockDoor();
+                        _currentState = LevelState2.PostTutorialFight;
                     }
                 }
-                else if (_drone.IsDestroyed())
+                else if (!_drone.isAlive)
                 {
                     objectiveDone = true;
                     nextTimeObjective = Time.time + objectiveDelay;
@@ -140,7 +146,7 @@ public class LevelPlot2 : MonoBehaviour
             case LevelState2.PreFight:
                 if (_fightDialogue.finished)
                 {
-                    _objectiveManager.DisplayObjective(objectives[2]);
+                    _objectiveManager.DisplayObjective(objectives[3]);
                     _firstDoorAnimation.LockDoor();
                     _currentState = LevelState2.Fight;
                 }
@@ -153,7 +159,7 @@ public class LevelPlot2 : MonoBehaviour
                     {
                         objectiveDone = false;
                         dialogues[2].TriggerDialogue();
-                        _terminalStationCollider.enabled = true;
+                        _secondDoorAnimation.UnLockDoor();
                         _firstDoorAnimation.UnLockDoor();
                         _currentState = LevelState2.PostFight;
                     }
@@ -168,7 +174,8 @@ public class LevelPlot2 : MonoBehaviour
             case LevelState2.PostFight:
                 if(dialogues[2].finished)
                 {
-                    _objectiveManager.DisplayObjective(objectives[3]);
+                    _objectiveManager.DisplayObjective(objectives[4]);
+                    _industrialAccess.SetActive(true);
                     _currentState = LevelState2.ContinueToIndustrial;
                 }
                 break;
@@ -186,7 +193,7 @@ public class LevelPlot2 : MonoBehaviour
     {
         for(int i = 0; i < _enemies.Length; i++)
         {
-            if (!_enemies[i].IsDestroyed()) return false;
+            if (_enemies[i].isAlive) return false;
         }
         return true;
     }

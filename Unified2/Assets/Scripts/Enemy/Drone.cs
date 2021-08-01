@@ -69,6 +69,8 @@ public class Drone : Enemy
         _health = MaxHealth;
         target = GameObject.Find("ObjectGrabber").transform;
 
+        isAlive = true;
+
         _currentState = DroneState.Guarding;
     }
 
@@ -102,7 +104,7 @@ public class Drone : Enemy
                         _currentState = DroneState.Patrolling;
                     }
 
-                    findPlayer();
+                    FindPlayer();
 
                     /*
                     if (playerDistance <= triggerPlayerDistance)
@@ -130,7 +132,7 @@ public class Drone : Enemy
                         _currentState = DroneState.Guarding;
                     }
 
-                    findPlayer();
+                    FindPlayer();
 
                     /*
                     if (playerDistance <= triggerPlayerDistance)
@@ -448,7 +450,7 @@ public class Drone : Enemy
         }
     }
 
-    private void findPlayer()
+    private void FindPlayer()
     {
         Vector3 direzione = -(transform.position - playerTransform.position).normalized;
 
@@ -497,5 +499,10 @@ public class Drone : Enemy
 
             _currentState = DroneState.Recovery;
         }
+    }
+
+    public override bool IsDestroyed()
+    {
+        return false;
     }
 }

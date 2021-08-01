@@ -8,7 +8,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     //general 
     protected bool attracted = false;
-    protected bool isAlive = true;
+    public bool isAlive { get; protected set; }
 
     //Enemy manager
     protected EnemiesManager enemyManager;
@@ -165,7 +165,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
     {
         yield return new WaitForSeconds(0.1f);
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, 50);
+        Collider[] hits = Physics.OverlapSphere(transform.position, triggerEnemyDistance);
         foreach (Collider col in hits)
         {
             if(col.gameObject.GetComponent<Enemy>() != null && col.gameObject.GetComponent<Enemy>().GetAreaID() == areaID)

@@ -29,6 +29,8 @@ public class StartOfLevel : MonoBehaviour
         {
             _levelSys.NextLevel();
 
+            InitializePlot();
+
             gameObject.SetActive(false);
         }
     }
