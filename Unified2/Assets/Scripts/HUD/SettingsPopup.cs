@@ -85,7 +85,6 @@ public class SettingsPopup : MonoBehaviour
             dialogueBox.SetActive(true);
             wasOnDialoge = false;
         }
-
     }
 
     public void openSettings()

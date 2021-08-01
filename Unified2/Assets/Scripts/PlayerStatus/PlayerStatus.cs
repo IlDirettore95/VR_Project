@@ -28,16 +28,15 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     //player status
     private bool isAlive;
 
-     private PlayFootstepsSound pfs;
-
     // Start is called before the first frame update
     void Start()
     {
+    
         _health = MaxHealth;
         _stamina = MaxStamina;
         _fuel = MaxFuel;
         _energy = MaxEnergy;
-        pfs = GetComponent<PlayFootstepsSound>();
+
         isAlive = true;
 
         _healRegeneration = GetComponent<HealthRegeneration>();
@@ -88,18 +87,32 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     {
         if (isAlive)
         {
+            
+
             _health -= damage;
+
             if (_health < 0) _health = 0;
-            if (_health == 0) isAlive = false;
-            pfs.Hurt();
+            else
+            {
+                gameObject.GetComponent<PlayFootstepsSound>().Hurt();
+            }
+
+            if (_health == 0)
+            {
+                gameObject.GetComponent<PlayFootstepsSound>().Death();
+
+                isAlive = false;
+                GameEvent.isDead = true;
+            }
+       
             _healRegeneration.enabled = false;
             _healRegeneration.enabled = true;
         }
-        
     }
 
     public void Heal(float cure)
     {
+
         _health += cure;
         if (_health > MaxHealth) _health = MaxHealth;   
     }
@@ -140,6 +153,8 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
         if (_energy > MaxEnergy) _energy = MaxEnergy;
     }
 
+
+
     public void reset()
     {
         _health = MaxHealth;
@@ -162,12 +177,12 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
         Hurt(damage);
     }
 
-    public void reactToFire(float damage)
+    public bool IsAttracted()
     {
         throw new NotImplementedException();
     }
 
-    public bool IsAttracted()
+    public void reactToFire(float damage)
     {
         throw new NotImplementedException();
     }
