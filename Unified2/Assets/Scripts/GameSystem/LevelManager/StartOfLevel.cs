@@ -54,7 +54,7 @@ public class StartOfLevel : MonoBehaviour
 
             case "Level3":
 
-                //_plot.GetComponent<LevelPlot3>().enabled = true;
+                _plot.GetComponent<LevelPlot3>().enabled = true;
 
                 break;
         }

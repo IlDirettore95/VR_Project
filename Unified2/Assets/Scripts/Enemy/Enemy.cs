@@ -5,15 +5,10 @@ using UnityEngine.AI;
 
 public abstract class Enemy : MonoBehaviour, ReactiveObject
 {
-
     //general 
     protected bool attracted = false;
     public bool isAlive { get; protected set; }
-
-    //Enemy manager
-    protected EnemiesManager enemyManager;
     public int areaID;
-    public int enemyID;
 
     //Enemy status
     public float MaxHealth;
@@ -65,12 +60,6 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
 
     public int GetAreaID() => areaID;
 
-    public void SetID(int id) => enemyID = id;
-
-    public int GetID() => enemyID;
-
-    
-
     public virtual void Hurt(float damage) //Take damage and decrease enemy healt
     {
         if (damage >= 1 && isAlive)
@@ -79,22 +68,6 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
             if (_health <= 0) _health = 0;
             if (_health == 0) isAlive = false;
         }  
-    }
-
-    protected void Die()
-    {
-        Debug.Log("Nemico morto");
-        enemyManager.CollectEnemy(gameObject);
-    }
-   
-    public virtual void Revive()
-    {
-        attracted = false;
-
-        _health = MaxHealth;
-        rb.useGravity = false;
-        rb.isKinematic = true;
-        _agent.enabled = true;
     }
 
     //This method handles enemy's patrolling between patrolling points
@@ -149,11 +122,6 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
     {
         Hurt(damage);
         rb.AddExplosionForce(power, center, radius, 0.2f, ForceMode.Impulse);
-    }
-
-    public virtual void Initialize()
-    {
-        throw new System.NotImplementedException();
     }
 
     public virtual void Triggered()

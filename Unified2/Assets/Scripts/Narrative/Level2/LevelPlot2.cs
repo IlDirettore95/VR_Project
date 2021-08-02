@@ -21,6 +21,8 @@ public class LevelPlot2 : MonoBehaviour
 
     private MovementSystem _movementSystem;
 
+    private LevelSystem _levelSys;
+
     [SerializeField] Enemy _drone;
     [SerializeField] Enemy[] _enemies;
 
@@ -65,6 +67,8 @@ public class LevelPlot2 : MonoBehaviour
 
         _movementSystem = _player.GetComponent<MovementSystem>();
         dialogues = GetComponents<DialogueTrigger>();
+
+        _levelSys = GameObject.FindObjectOfType<LevelSystem>();
 
         _fightTutorial.SetActive(true);
         _fight.SetActive(false);
@@ -161,6 +165,7 @@ public class LevelPlot2 : MonoBehaviour
                         dialogues[2].TriggerDialogue();
                         _secondDoorAnimation.UnLockDoor();
                         _firstDoorAnimation.UnLockDoor();
+                        _levelSys.EndLevel();
                         _currentState = LevelState2.PostFight;
                     }
                 }

@@ -950,7 +950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488c16ac8c16688429d5249d85b72ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 1
+  _type: 0
   _enabledMat: {fileID: 2100000, guid: b17650dbc8b7cfd4994ee943d7910e81, type: 2}
   _disabledMat: {fileID: 2100000, guid: 84a9c73a85f89a14c8d38c93c3a074c6, type: 2}
   _enabledLight1: {fileID: 0}
@@ -959,7 +959,7 @@ MonoBehaviour:
   _disabledLight2: {fileID: 0}
   _refProb1: {fileID: 0}
   _refProb2: {fileID: 0}
-  doorOpening: {fileID: 0}
+  doorOpening: {fileID: 8300000, guid: eef246c10e6a8fd4ca260d718ccacc3d, type: 3}
 --- !u!65 &271999982328846272
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -9,10 +9,13 @@ public class LevelSystem : MonoBehaviour
     {
         Level1,
         Level2,
-        Loading
+        Level3,
+        EndGame
     }
 
     public Scene _currentLevel;
+
+    [SerializeField] GameObject _saveLogo;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +23,22 @@ public class LevelSystem : MonoBehaviour
         SaveData data = SaveSystem.Load("save");
 
         _currentLevel = (Scene)System.Enum.Parse(typeof(Scene), data._currentScene);
+    }
+
+    public void NewGame()
+    {
+        _currentLevel = Scene.Level1;
+
+        Save();
+
+        Loader.Load(_currentLevel.ToString());
+    }
+
+    public void Continue()
+    {
+        SaveData data = SaveSystem.Load("save");
+
+        Loader.Load(_currentLevel.ToString());
     }
 
     public void NextLevel()
@@ -32,13 +51,18 @@ public class LevelSystem : MonoBehaviour
 
                     _currentLevel = Scene.Level2;
 
-                    SaveData oldData = SaveSystem.Load("save");
-                    int dp = oldData.dp;
-                    int quality = oldData.quality;
+                    Save();
 
-                    SaveData newData = new SaveData(_currentLevel.ToString(), dp, quality);
+                    break;
+                }
 
-                    SaveSystem.Save(newData, "save");
+            case Scene.Level2:
+                {
+                    SceneManager.UnloadSceneAsync(_currentLevel.ToString());
+
+                    _currentLevel = Scene.Level3;
+
+                    Save();
 
                     break;
                 }
@@ -55,32 +79,42 @@ public class LevelSystem : MonoBehaviour
 
                     break;
                 }
+
+            case Scene.Level2:
+                {
+                    SceneManager.LoadSceneAsync(Scene.Level3.ToString(), LoadSceneMode.Additive);
+
+                    break;
+                }
+
+            case Scene.Level3:
+                {
+                    SceneManager.LoadScene(Scene.EndGame.ToString());
+
+                    break;
+                }
         }
     }
 
-    public void EndGame()
+    private void Save()
     {
-        SceneManager.LoadScene("EndDemo");
-    }
-
-    public void NewGame()
-    {
-        _currentLevel = Scene.Level1;
+        _saveLogo.SetActive(true);
 
         SaveData oldData = SaveSystem.Load("save");
         int dp = oldData.dp;
         int quality = oldData.quality;
+
         SaveData newData = new SaveData(_currentLevel.ToString(), dp, quality);
 
         SaveSystem.Save(newData, "save");
 
-        Loader.Load(_currentLevel.ToString());
+        StartCoroutine(EndSave());
     }
 
-    public void Continue()
+    private IEnumerator EndSave()
     {
-        SaveData data = SaveSystem.Load("save");
-        
-        Loader.Load(_currentLevel.ToString());
+        yield return new WaitForSeconds(2f);
+
+        _saveLogo.SetActive(false);
     }
 }
