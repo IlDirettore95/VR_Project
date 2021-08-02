@@ -42,8 +42,8 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0, g: 0.22478104, b: 1, a: 1}
-  m_Intensity: 4
+  m_Color: {r: 0.3066038, g: 0.4615982, b: 1, a: 1}
+  m_Intensity: 6
   m_Range: 1
   m_SpotAngle: 83
   m_InnerSpotAngle: 1
@@ -184,7 +184,7 @@ Light:
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -393,7 +393,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaID: 0
-  enemyID: 0
   MaxHealth: 80
   walkingSpeed: 3
   triggeredSpeed: 6
