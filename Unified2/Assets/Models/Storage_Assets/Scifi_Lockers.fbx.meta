@@ -1,0 +1,172 @@
+fileFormatVersion: 2
+guid: a940d8cefef9a484b9b6721d167378db
+ModelImporter:
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      74: 1744518421539769758
+    second: Locker.013_low.004|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.000
+  - first:
+      74: -1097033035721084028
+    second: Locker.013_low.004|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.001
+  - first:
+      74: 4694326141886162932
+    second: Locker.013_low.004|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.002
+  - first:
+      74: 5256163585608831071
+    second: Locker.013_low.004|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.003
+  - first:
+      74: 8294386068139876543
+    second: Locker.013_low.004|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.013_l
+  - first:
+      74: -796308091809516797
+    second: Locker.013_low.003|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.000
+  - first:
+      74: 4086955737850045700
+    second: Locker.013_low.003|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.001
+  - first:
+      74: 7891030473073284763
+    second: Locker.013_low.003|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.002
+  - first:
+      74: 1902336224429762039
+    second: Locker.013_low.003|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.003
+  - first:
+      74: -8257899878506935539
+    second: Locker.013_low.003|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.013_l
+  - first:
+      74: 4861216620769621173
+    second: Locker.013_low.002|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.000
+  - first:
+      74: -1657994419297288402
+    second: Locker.013_low.002|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.001
+  - first:
+      74: -5115399709359809144
+    second: Locker.013_low.002|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.002
+  - first:
+      74: 1342616226376539612
+    second: Locker.013_low.002|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.003
+  - first:
+      74: 1335820588846686330
+    second: Locker.013_low.002|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.013_l
+  - first:
+      74: -8187155804035141773
+    second: Locker.013_low.001|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.000
+  - first:
+      74: 2285141489329646262
+    second: Locker.013_low.001|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.001
+  - first:
+      74: 2784442206549382488
+    second: Locker.013_low.001|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.002
+  - first:
+      74: -2771315372651768109
+    second: Locker.013_low.001|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.003
+  - first:
+      74: -9176111485760179684
+    second: Locker.013_low.001|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.013_l
+  - first:
+      74: -5589507357820526558
+    second: Locker.013_low|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.000
+  - first:
+      74: -5761168338839540354
+    second: Locker.013_low|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.001
+  - first:
+      74: 1768234795904185148
+    second: Locker.013_low|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.002
+  - first:
+      74: 7675983998626880873
+    second: Locker.013_low|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.0.003
+  - first:
+      74: 8108083348829689495
+    second: Locker.013_low|Locker.013_low|Locker.013_low|Locker.013_lowAction|Locker.013_l
+  externalObjects: {}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
