@@ -11,7 +11,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Models/Porte/DoorAnimation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Models/Porte/DoorAnimation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Scripts/Interactive_Objects/ReactiveGrid.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -25,6 +25,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Enemy/Drone.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/PlayerStatus.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/HUD/VideoToMenu.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1w2NQiHSZnP6UHBmh4s2aA0nFzI" />
@@ -72,6 +73,7 @@
       <updated>1627652710877</updated>
       <workItem from="1627652724669" duration="4234000" />
       <workItem from="1627662108989" duration="566000" />
+      <workItem from="1628005415949" duration="3551000" />
     </task>
     <servers />
   </component>
