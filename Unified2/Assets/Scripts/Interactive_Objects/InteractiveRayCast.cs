@@ -60,16 +60,17 @@ public class InteractiveRayCast : MonoBehaviour
                 
                 if (go.GetComponent<Switch>() && hit.distance <= interactionRange)
                 {
-                    //Debug.Log("ho colliso con un interruttore");
+                    Debug.Log("ho colliso con un interruttore");
                     InteractionKey.enabled = true;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;
                     InteractionGeneric.enabled = false;
+                    Debug.Log("cristo");
                     Switch sw = hit.collider.GetComponent<Switch>();
                 
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        sw.commutation();             
+                        sw.commutationDelayed(0.6f);             
                         _animController.Interact();
                         StartCoroutine(StopInteraction());
 
@@ -115,6 +116,7 @@ public class InteractiveRayCast : MonoBehaviour
                 
                 else 
                 {
+                    Debug.Log("diocristo");
                     InteractionKey.enabled = false;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;

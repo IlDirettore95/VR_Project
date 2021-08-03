@@ -14,6 +14,7 @@
     <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Models/Porte/DoorAnimation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Scripts/Interactive_Objects/ReactiveBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Desktop/LocalUnityProject/Unified1/Assets/Scripts/Interactive_Objects/ReactiveGrid.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Models/Platform/Platform.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -26,6 +27,7 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus/PlayerStatus.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Narrative/DialogueManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/HUD/VideoToMenu.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Interactive_Objects/InteractiveRayCast.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1w2NQiHSZnP6UHBmh4s2aA0nFzI" />
@@ -73,7 +75,8 @@
       <updated>1627652710877</updated>
       <workItem from="1627652724669" duration="4234000" />
       <workItem from="1627662108989" duration="566000" />
-      <workItem from="1628005415949" duration="3551000" />
+      <workItem from="1628005415949" duration="4632000" />
+      <workItem from="1628012724261" duration="2335000" />
     </task>
     <servers />
   </component>

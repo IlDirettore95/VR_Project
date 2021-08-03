@@ -7,20 +7,38 @@ public class Furnace : MonoBehaviour, InteractableObject
 {
     public float fireDamage;
 
-    private bool isEnabled = false;
+    public bool isEnabled;
 
     public GameObject fire;
 
     private ParticleSystem[] fires;
+
+    private AudioSource _audioSource;
+    
     
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+        
         fires =  fire.GetComponentsInChildren<ParticleSystem>();
-        foreach (var ps in fires)
+
+        if (!isEnabled)
         {
-            ps.Stop();
+            foreach (var ps in fires)
+            {
+                ps.Stop();
+            }
+            
+            _audioSource.Stop();
         }
+        else
+        {
+            
+            _audioSource.Play();
+        }
+        
+        
     }
 
     // Update is called once per frame
@@ -61,6 +79,8 @@ public class Furnace : MonoBehaviour, InteractableObject
        {
            ps.Play();
        }
+       
+       _audioSource.Play();
     }
 
     public void setFalse()
@@ -71,6 +91,8 @@ public class Furnace : MonoBehaviour, InteractableObject
         {
            ps.Stop();
         }
+        
+        _audioSource.Stop();
     }
 }
 

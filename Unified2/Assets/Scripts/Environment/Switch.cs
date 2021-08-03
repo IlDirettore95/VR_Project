@@ -4,19 +4,41 @@ using UnityEngine;
 
 public class Switch : MonoBehaviour
 {
-    private bool onoff = false;
+    public bool onoff;
     public GameObject interactObj;
     private InteractableObject objToInteract;
     private SwitchController sc;
-    public Light offLight;
-    public Light onLight;
+    
+    [SerializeField] private Material enabled_material;
+    [SerializeField] private Material disabled_material;
+
+   
+    
+   // public Light offLight;
+  // public Light onLight;
 
     private bool switchEnabled = true;
     // Start is called before the first frame update
     void Start()
     {
-        offLight.enabled = true;
-        onLight.enabled = false;
+        
+        
+        
+        if (onoff)
+        {
+            //offLight.enabled = false;
+            //onLight.enabled = true;
+
+            GetComponent<MeshRenderer>().material = enabled_material;
+
+        }
+        else
+        {
+           // offLight.enabled = true;
+            //onLight.enabled = false;
+            GetComponent<MeshRenderer>().material = disabled_material;
+        }
+        
         //passing from gameObject to a generic interactableObject defined by the interface
        objToInteract= interactObj.GetComponent<InteractableObject>();
 
@@ -38,8 +60,9 @@ public class Switch : MonoBehaviour
             {
                 onoff = false;
                 objToInteract.setFalse();
-                offLight.enabled = true;
-                onLight.enabled = false;
+                //offLight.enabled = true;
+                //onLight.enabled = false;
+                GetComponent<MeshRenderer>().material = disabled_material;
                 Debug.Log("ho disattivato l'interruttore");
 
             }
@@ -48,8 +71,9 @@ public class Switch : MonoBehaviour
             {
                 onoff = true;
                 objToInteract.setTrue();
-                offLight.enabled = false;
-                onLight.enabled = true;
+                //offLight.enabled = false;
+                //onLight.enabled = true;
+                GetComponent<MeshRenderer>().material = enabled_material;
                 Debug.Log("ho attivato l'interruttore");
             }
         }
@@ -70,5 +94,16 @@ public class Switch : MonoBehaviour
     public void disableSwitch()
     {
         switchEnabled = false;
+    }
+
+    public void commutationDelayed(float delay)
+    {
+        StartCoroutine(changeColor(delay));
+    }
+
+    private IEnumerator changeColor(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        commutation();
     }
 }
