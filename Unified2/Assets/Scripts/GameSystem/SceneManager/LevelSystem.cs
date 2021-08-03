@@ -9,6 +9,7 @@ public class LevelSystem : MonoBehaviour
     {
         Level1,
         Level2,
+        Level3,
         Loading
     }
 
