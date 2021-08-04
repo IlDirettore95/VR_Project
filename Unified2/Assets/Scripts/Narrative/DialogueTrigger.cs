@@ -41,7 +41,7 @@ public class DialogueTrigger : MonoBehaviour
             }
             else
             {
-                gameObject.SetActive(false);
+                Destroy(this);
             }
         }
     }

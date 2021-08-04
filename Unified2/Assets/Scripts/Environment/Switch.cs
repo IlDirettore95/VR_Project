@@ -21,9 +21,6 @@ public class Switch : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        
-        
         if (onoff)
         {
             //offLight.enabled = false;
@@ -41,13 +38,8 @@ public class Switch : MonoBehaviour
         
         //passing from gameObject to a generic interactableObject defined by the interface
        objToInteract= interactObj.GetComponent<InteractableObject>();
-
        sc = GetComponentInParent<SwitchController>();
     }
-
-  
-
-  
 
     public void commutation()
     {
@@ -63,7 +55,6 @@ public class Switch : MonoBehaviour
                 //offLight.enabled = true;
                 //onLight.enabled = false;
                 GetComponent<MeshRenderer>().material = disabled_material;
-                Debug.Log("ho disattivato l'interruttore");
 
             }
             else
@@ -74,7 +65,6 @@ public class Switch : MonoBehaviour
                 //offLight.enabled = false;
                 //onLight.enabled = true;
                 GetComponent<MeshRenderer>().material = enabled_material;
-                Debug.Log("ho attivato l'interruttore");
             }
         }
     }

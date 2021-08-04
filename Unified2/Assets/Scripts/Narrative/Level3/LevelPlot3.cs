@@ -26,6 +26,10 @@ public class LevelPlot3 : MonoBehaviour
 
     private LevelSystem _levelSys;
 
+    private bool furnaceOn = false; //The furnace is turned off
+
+    [SerializeField] private Switch _switch;
+
     [SerializeField] private GameObject _garbageChute;
     private DialogueTrigger _garbageChuteDialogue;
 
@@ -58,9 +62,11 @@ public class LevelPlot3 : MonoBehaviour
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
+        
         _objectiveManager = GameObject.FindObjectOfType<ObjectiveManager>();
 
         _movementSystem = _player.GetComponent<MovementSystem>();
+
         _jetpack = _player.GetComponent<Jetpack>();
 
         _jetpack.enabled = true;
@@ -72,12 +78,15 @@ public class LevelPlot3 : MonoBehaviour
         _garbageChute.SetActive(true);
 
         _garbageChuteDialogue = _garbageChute.GetComponent<DialogueTrigger>();
-        _garbageChuteDialogue = _garbageChute.GetComponent<DialogueTrigger>();
+        _inceneratorDialogue = _incenerator.GetComponent<DialogueTrigger>();
+        _finalDialogue = _final.GetComponent<DialogueTrigger>();
         _inceneratorSwitchDialogue = _inceneratorSwitch.GetComponent<DialogueTrigger>();
         _inceneratorSwitchCollider = _inceneratorSwitch.GetComponent<BoxCollider>();
         _inceneratorSwitchCollider.enabled = false;
 
         _enterDoorAnimation = _enterDoor.GetComponentInChildren<UnlockableDoorAnimation>();
+
+        
 
     }
 
@@ -104,11 +113,17 @@ public class LevelPlot3 : MonoBehaviour
                 break;
 
             case LevelState3.ApproachToGarbageShoot:
+
                 if (_garbageChuteDialogue.finished)
                 {
                     _inceneratorSwitchCollider.enabled = true;
                     _objectiveManager.DisplayObjective(objectives[1]);
                     _currentState = LevelState3.DeactivateTheIncinerator;
+                }
+                else if(!furnaceOn && _garbageChuteDialogue.started)
+                {
+                    _switch.commutation();
+                    furnaceOn = true;
                 }
                 break;
 

@@ -13,6 +13,8 @@ public class Furnace : MonoBehaviour, InteractableObject
 
     private ParticleSystem[] fires;
 
+    private Light light;
+
     private AudioSource _audioSource;
     
     
@@ -23,27 +25,22 @@ public class Furnace : MonoBehaviour, InteractableObject
         
         fires =  fire.GetComponentsInChildren<ParticleSystem>();
 
+        light = fire.GetComponentInChildren<Light>();
+
         if (!isEnabled)
         {
             foreach (var ps in fires)
             {
                 ps.Stop();
             }
-            
+            light.enabled = false;
             _audioSource.Stop();
         }
         else
         {
-            
             _audioSource.Play();
         }
         
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
@@ -55,43 +52,35 @@ public class Furnace : MonoBehaviour, InteractableObject
             {
                 PlayerStatus pl = gameObject.GetComponent<PlayerStatus>();
                 pl.Hurt(fireDamage * Time.deltaTime);
-                Debug.Log("faccio danno");
 
             }
-            else if (gameObject.GetComponentInParent<ReactiveObject>()!=null && isEnabled)
+            else if (gameObject.GetComponentInParent<ReactiveObject>() != null && isEnabled)
             {
-                Debug.Log("fire!");
                 ReactiveObject en = gameObject.GetComponentInParent<ReactiveObject>();
                 en.reactToFire(fireDamage);
-            }
-            
-            
-        
-        
+            } 
     }
 
     public void setTrue()
     {
-        Debug.Log("abilito");
         isEnabled = true;
       
        foreach (var ps in fires)
        {
            ps.Play();
        }
-       
-       _audioSource.Play();
+        light.enabled = true;
+        _audioSource.Play();
     }
 
     public void setFalse()
     {
-        Debug.Log("disabilito");
         isEnabled = false;
         foreach (var ps in fires)
         {
            ps.Stop();
         }
-        
+        light.enabled = false;
         _audioSource.Stop();
     }
 }
