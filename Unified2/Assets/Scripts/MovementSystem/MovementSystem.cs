@@ -71,7 +71,6 @@ public class MovementSystem : MonoBehaviour
     //Stamina handling for running
     [Range(0, 1)] public float tiredThreashold;
     public float staminaConsumingRate; //for running
-    public float staminaJumpCost; //for jumping
 
     //Crouching Height
     public float normalHeight;

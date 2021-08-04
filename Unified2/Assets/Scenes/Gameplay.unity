@@ -6320,7 +6320,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 40
+  far clip plane: 300
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -6490,10 +6490,10 @@ MonoBehaviour:
   initialGravity: 9.8
   jumpSpeed: 5
   walkingSpeed: 4
-  runningSpeed: 8
+  runningSpeed: 7
   crouchingSpeed: 1.5
   fallingSpeed: 1
-  runningBuildUp: 1
+  runningBuildUp: 0.8
   walkingBuildUp: 2
   fallingBuildUp: 0.5
   crouchOnBuildUp: 5
@@ -6503,11 +6503,10 @@ MonoBehaviour:
   startFallingY: -Infinity
   fallDamageThreashold: 5
   tiredThreashold: 0.5
-  staminaConsumingRate: 40
-  staminaJumpCost: 20
+  staminaConsumingRate: 30
   normalHeight: 2
   crouchingHeight: 1
-  checkGroundedRadius: 0.5
+  checkGroundedRadius: 0.33
   slidingFactor: 10
 --- !u!114 &3206729575049538961
 MonoBehaviour:
@@ -6521,7 +6520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df03c6e05ff0ebb488228ba7ab6ad488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoverCooldown: 2.5
+  recoverCooldown: 1.5
   recoverRate: 30
 --- !u!1 &3206729575049538962
 GameObject:
@@ -6603,6 +6602,7 @@ MonoBehaviour:
   MaxStamina: 100
   MaxFuel: 120
   MaxEnergy: 100
+  HurtSoundCooldown: 3
 --- !u!82 &3206729575049538966
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6614,7 +6614,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -6711,8 +6711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf54ba93a3ba03a4b93d0ae465b13aad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoverCooldown: 3
-  recoverRate: 10
+  recoverCooldown: 2
+  recoverRate: 12
 --- !u!114 &3206729575049538968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6725,8 +6725,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b6b8325855349b43bebeac9f9ad60a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regenerationCooldown: 8
-  regenerationRate: 2
+  regenerationCooldown: 5
+  regenerationRate: 4
 --- !u!33 &3206729575049538969
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6783,7 +6783,7 @@ CharacterController:
   m_GameObject: {fileID: 3206729575049538962}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5
@@ -6803,7 +6803,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -6912,7 +6912,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -7025,7 +7025,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -8891,14 +8891,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3206729575049538962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2f1d80b033c1a940b2f18abf1d1e9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jetpackSpeed: 2.5
-  jetpackYSpeed: 3.5
-  jetpackBuildUp: 0.33
+  jetpackSpeed: 2
+  jetpackYSpeed: 3.6
+  jetpackBuildUp: 0.66
   fConsumigRate: 50
   fActivationCost: 15
 --- !u!137 &4221767528829808470

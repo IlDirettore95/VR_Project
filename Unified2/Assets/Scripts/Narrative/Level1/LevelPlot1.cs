@@ -96,7 +96,6 @@ public class LevelPlot1 : MonoBehaviour
         _statusOverlay = _player.GetComponentInChildren<Overlay>();
 
         dialogues = GetComponents<DialogueTrigger>();
-        _jetpack.enabled = false; //The main character starts with no jetpack
         _gravityPower.enabled = false;   
 
         _lockedDoor_1.SetActive(false);

@@ -20,6 +20,7 @@ public class LevelPlot2 : MonoBehaviour
     private DialogueTrigger[] dialogues; //List of dialogues plot will trigger
 
     private MovementSystem _movementSystem;
+    private Jetpack _jetpack;
 
     private LevelSystem _levelSys;
 
@@ -66,6 +67,10 @@ public class LevelPlot2 : MonoBehaviour
         _objectiveManager = GameObject.FindObjectOfType<ObjectiveManager>();
 
         _movementSystem = _player.GetComponent<MovementSystem>();
+        _jetpack = _player.GetComponent<Jetpack>();
+
+        _jetpack.enabled = true; //The main character starts with no jetpack
+
         dialogues = GetComponents<DialogueTrigger>();
 
         _levelSys = GameObject.FindObjectOfType<LevelSystem>();

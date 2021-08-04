@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4166038782875528798
+--- !u!1 &5510708528728730715
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,44 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6770311677920206820}
-  - component: {fileID: 685055470375430178}
+  - component: {fileID: 8883382678982078066}
+  - component: {fileID: 8876129797828970383}
+  - component: {fileID: 1875316296522262087}
   m_Layer: 0
-  m_Name: Plot2Events
+  m_Name: DeathTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6770311677920206820
+--- !u!4 &8883382678982078066
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4166038782875528798}
+  m_GameObject: {fileID: 5510708528728730715}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.931124, y: 2.6777344, z: -30.38965}
+  m_LocalPosition: {x: 85.06196, y: 9.273103, z: -45.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &685055470375430178
+--- !u!65 &8876129797828970383
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510708528728730715}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1875316296522262087
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4166038782875528798}
+  m_GameObject: {fileID: 5510708528728730715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 395be2dfb7c3d314daf9bd81b8ff9f0e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2efa07c247783d44da54a13087c44684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectives:
-  - Explore
-  - Eliminate the drone
-  - Explore
-  - Eliminate all the enemies
-  - Access to the industrial department

@@ -60,12 +60,10 @@ public class InteractiveRayCast : MonoBehaviour
                 
                 if (go.GetComponent<Switch>() && hit.distance <= interactionRange)
                 {
-                    Debug.Log("ho colliso con un interruttore");
                     InteractionKey.enabled = true;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;
                     InteractionGeneric.enabled = false;
-                    Debug.Log("cristo");
                     Switch sw = hit.collider.GetComponent<Switch>();
                 
                     if (Input.GetKeyDown(KeyCode.E))
@@ -74,7 +72,7 @@ public class InteractiveRayCast : MonoBehaviour
                         _animController.Interact();
                         StartCoroutine(StopInteraction());
 
-                        go.GetComponent<AudioSource>().PlayDelayed(0.6f);
+                        go.GetComponent<AudioSource>().PlayDelayed(0.35f);
                     }
                     
                 }
@@ -93,18 +91,6 @@ public class InteractiveRayCast : MonoBehaviour
                         go.GetComponent<AudioSource>().PlayDelayed(0.6f);
                     }
                 }
-
-                //If this go has a dialogue trigger i start it
-                DialogueTrigger _dialogueTrigger = go.GetComponent<DialogueTrigger>();
-
-                if (_dialogueTrigger != null && _dialogueTrigger.enabled && hit.distance <= interactionRange)
-                {                   
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        go.GetComponent<DialogueTrigger>().TriggerDialogueDelayed(0.6f);
-                    }       
-                }
-                
             
                 else if (hit.distance <= attractionRange && _gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))//caso inter. cassa
                 {
@@ -116,11 +102,21 @@ public class InteractiveRayCast : MonoBehaviour
                 
                 else 
                 {
-                    Debug.Log("diocristo");
                     InteractionKey.enabled = false;
                     InteractionBox_throw.enabled = false;
                     InteractionBox_attract.enabled = false;
                     InteractionGeneric.enabled = false;
+                }
+
+                //If this go has a dialogue trigger i start it
+                DialogueTrigger _dialogueTrigger = go.GetComponent<DialogueTrigger>();
+
+                if (_dialogueTrigger != null && _dialogueTrigger.enabled && hit.distance <= interactionRange)
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        go.GetComponent<DialogueTrigger>().TriggerDialogueDelayed(0.6f);
+                    }
                 }
             }
             

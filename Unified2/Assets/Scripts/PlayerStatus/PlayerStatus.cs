@@ -23,6 +23,9 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     private float _fuel;
     private float _energy;
 
+    private float nextTimeHurtSound;
+    [SerializeField] private float HurtSoundCooldown;
+
     private HealthRegeneration _healRegeneration;
 
     //player status
@@ -87,14 +90,16 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     {
         if (isAlive)
         {
-            
-
             _health -= damage;
 
             if (_health < 0) _health = 0;
             else
             {
-                gameObject.GetComponent<PlayFootstepsSound>().Hurt();
+                if(Time.time > nextTimeHurtSound)
+                {
+                    nextTimeHurtSound = Time.time + HurtSoundCooldown;
+                    gameObject.GetComponent<PlayFootstepsSound>().Hurt();
+                }
             }
 
             if (_health == 0)
