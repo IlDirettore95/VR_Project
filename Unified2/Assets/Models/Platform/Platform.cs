@@ -23,7 +23,6 @@ public class Platform : MonoBehaviour
         GameObject go = other.gameObject;
         if (go != null && (go.tag.Equals("Player") || go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()) )
         {
-            Debug.Log("Player");
             go.transform.SetParent(transform);
         }
     }

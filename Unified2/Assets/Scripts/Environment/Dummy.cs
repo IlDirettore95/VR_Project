@@ -19,13 +19,11 @@ public class Dummy : MonoBehaviour, InteractableObject
 
     public void setTrue()
     {
-        Debug.Log("abilito");
         isEnabled = true;
     }
 
     public void setFalse()
     {
-        Debug.Log("disabilito");
         isEnabled = false;
     }
 

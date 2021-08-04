@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*This class handles level 1's objectives (plot)
+/*This class handles level 2's objectives (plot)
  * Every state rappresent an objective:
  *      Start: setting
  *      Introduction: first dialogue
- *      TutorialFight:
- *      PostFight,
- *      Fight,
- *      ContinueToIndustrial
+ *      PreTutorialFight: the player saw the first enemy
+ *      TutorialFight: the player must kill the first enemy
+ *      PostTutorialFight: the player has defeated the first enemy 
+ *      PreFight: AI informed the player about several
+ *      Fight: The player must eliminate all enemies
+ *      PostFight: the player won against the enemie
+ *      ContinueToIndustrial: the player must access to the industrial zone
  */
 public class LevelPlot2 : MonoBehaviour
 {
@@ -69,7 +72,7 @@ public class LevelPlot2 : MonoBehaviour
         _movementSystem = _player.GetComponent<MovementSystem>();
         _jetpack = _player.GetComponent<Jetpack>();
 
-        _jetpack.enabled = true; //The main character starts with no jetpack
+        _jetpack.enabled = true;
 
         dialogues = GetComponents<DialogueTrigger>();
 
