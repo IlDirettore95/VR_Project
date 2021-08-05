@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Kino;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour, ReactiveObject
+public class PlayerStatus : MonoBehaviour, ReactiveEntity
 {
     /*
      * This class handle Player status and statistics like
@@ -17,14 +18,20 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     [SerializeField] private float MaxStamina;
     [SerializeField] private float MaxFuel;
     [SerializeField] private float MaxEnergy;
+    [SerializeField] private AnalogGlitch _analogGlitch;
+    [SerializeField] private DigitalGlitch _digitalGlitch;
+    
+    
 
     private float _health;
     private float _stamina;
     private float _fuel;
     private float _energy;
-
+    private bool _hasGlitch;
     private float nextTimeHurtSound;
     [SerializeField] private float HurtSoundCooldown;
+    [SerializeField] private float HurtGlitchDuration;
+    private float hurtGlitchStop;
 
     private HealthRegeneration _healRegeneration;
 
@@ -34,7 +41,7 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
     // Start is called before the first frame update
     void Start()
     {
-    
+        _hasGlitch = false;
         _health = MaxHealth;
         _stamina = MaxStamina;
         _fuel = MaxFuel;
@@ -95,8 +102,26 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
             if (_health < 0) _health = 0;
             else
             {
+
+                if (!_hasGlitch)
+                {
+                    _digitalGlitch.enabled = true;
+                    _analogGlitch.enabled = true;
+                    _hasGlitch = true;
+                    hurtGlitchStop = Time.time + HurtGlitchDuration;
+                    StartCoroutine(shutdownDamage());
+                }
+                else
+                {
+                    hurtGlitchStop = Time.time + HurtGlitchDuration;
+                }
+                
+                
+                
+                
                 if(Time.time > nextTimeHurtSound)
                 {
+                    
                     nextTimeHurtSound = Time.time + HurtSoundCooldown;
                     gameObject.GetComponent<PlayFootstepsSound>().Hurt();
                 }
@@ -104,6 +129,8 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
 
             if (_health == 0)
             {
+                _digitalGlitch.enabled = true;
+                _analogGlitch.enabled = true;
                 gameObject.GetComponent<PlayFootstepsSound>().Death();
 
                 isAlive = false;
@@ -115,6 +142,21 @@ public class PlayerStatus : MonoBehaviour, ReactiveObject
         }
     }
 
+    public IEnumerator shutdownDamage()
+    {
+        while (true)
+        {
+            
+            if (Time.time > hurtGlitchStop)
+            {
+                _digitalGlitch.enabled = false;
+                _analogGlitch.enabled = false;
+                _hasGlitch = false;
+                break;
+            }
+            yield return null;
+        }
+    }
     public void Heal(float cure)
     {
 
