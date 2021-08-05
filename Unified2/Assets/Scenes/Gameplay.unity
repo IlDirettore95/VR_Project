@@ -15,10 +15,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.05
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -6486,7 +6486,7 @@ MonoBehaviour:
   wasGrounded: 0
   isGrounded: 0
   canControl: 1
-  isGroundedThreashold: 0.05
+  isGroundedThreashold: 0.1
   gravity: 9.8
   initialGravity: 9.8
   jumpSpeed: 5
@@ -6507,7 +6507,7 @@ MonoBehaviour:
   staminaConsumingRate: 30
   normalHeight: 2
   crouchingHeight: 1
-  checkGroundedRadius: 0.4
+  checkGroundedRadius: 0.5
   slidingFactor: 10
 --- !u!114 &3206729575049538961
 MonoBehaviour:

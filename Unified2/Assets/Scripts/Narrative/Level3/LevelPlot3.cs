@@ -85,9 +85,7 @@ public class LevelPlot3 : MonoBehaviour
         _inceneratorSwitchCollider.enabled = false;
 
         _enterDoorAnimation = _enterDoor.GetComponentInChildren<UnlockableDoorAnimation>();
-
-        
-
+        _enterDoorAnimation.LockDoor();
     }
 
     // Update is called once per frame
