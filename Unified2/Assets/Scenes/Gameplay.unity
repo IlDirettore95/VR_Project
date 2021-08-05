@@ -9,7 +9,7 @@ OcclusionCullingSettings:
     smallestHole: 0.25
     backfaceThreshold: 100
   m_SceneGUID: 92dd504df9269fb4980c3efa33f1c2ce
-  m_OcclusionCullingData: {fileID: 36300000, guid: 302c1389803080f4ab15861110c6993e,
+  m_OcclusionCullingData: {fileID: 36300000, guid: 2c8c337139d9d3943a75d660eed345db,
     type: 2}
 --- !u!104 &2
 RenderSettings:
@@ -6308,7 +6308,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
