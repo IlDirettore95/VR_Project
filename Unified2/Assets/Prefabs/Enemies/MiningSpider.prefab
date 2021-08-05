@@ -396,6 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   light: {fileID: 3704153373311837874}
   flickeringWait: 0.1
+  _enableLightOnDisable: 1
 --- !u!114 &3212402720347478291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   light: {fileID: 3704153373795099537}
   flickeringWait: 0.1
+  _enableLightOnDisable: 1
 --- !u!195 &5677318997056294037
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -430,7 +432,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 0.83
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 15
   m_ObstacleAvoidanceType: 4
 --- !u!114 &5914709692158759124
 MonoBehaviour:
@@ -464,7 +466,7 @@ MonoBehaviour:
   stunningDuration: 2
   light1: {fileID: 3704153373795099537}
   light2: {fileID: 3704153373311837874}
-  explosion: {fileID: 5602069587569534765, guid: 99d276773c2211041b0346f420eef19b,
+  explosion: {fileID: 4065492701148450181, guid: 0ba3ddd1afb7bbc40a3aea78267f726e,
     type: 3}
   sightRotationThreashold: 60
   rotationSpeed: 180

@@ -17,11 +17,6 @@ public class ExitDemo : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        SaveData oldData = SaveSystem.Load("save");
-        int dp = oldData.dp;
-        int quality = oldData.quality;
-        SaveData newData = new SaveData("Level1", dp, quality);
-        SaveSystem.Save(newData, "save");
         Loader.Load("MainMenu");
     }
 }

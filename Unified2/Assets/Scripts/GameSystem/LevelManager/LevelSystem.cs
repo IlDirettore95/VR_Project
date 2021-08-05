@@ -7,6 +7,7 @@ public class LevelSystem : MonoBehaviour
 {
     public enum Scene
     {
+        NewGame,
         Level1,
         Level2,
         Level3,
@@ -18,7 +19,7 @@ public class LevelSystem : MonoBehaviour
     [SerializeField] GameObject _saveLogo;
 
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         SaveData data = SaveSystem.Load("save");
 

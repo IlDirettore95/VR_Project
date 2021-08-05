@@ -11,7 +11,10 @@ GameObject:
   - component: {fileID: 4624187669267400937}
   - component: {fileID: 8611922325679621964}
   - component: {fileID: 5793677458439091078}
-  - component: {fileID: 4900293032350146248}
+  - component: {fileID: 2133754879281719350}
+  - component: {fileID: 8561429156518380114}
+  - component: {fileID: 5801877778029336314}
+  - component: {fileID: 8005647183933251993}
   m_Layer: 0
   m_Name: FurnaceEntrance
   m_TagString: Untagged
@@ -80,8 +83,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &4900293032350146248
-MeshCollider:
+--- !u!65 &2133754879281719350
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -90,7 +93,45 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5495902117074765545, guid: ec02c03f58e154c4ea954001bb4d47f0, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.026194992, y: 0.029000001, z: 0.001685445}
+  m_Center: {x: 0.00006111145, y: -0.0045000003, z: 0.00022577896}
+--- !u!65 &8561429156518380114
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5433516551340593747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.003120284, y: 0.029000001, z: 0.011999999}
+  m_Center: {x: 0.014783355, y: -0.0045000003, z: -0.004}
+--- !u!65 &5801877778029336314
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5433516551340593747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.042465333, y: 0.006276538, z: 0.011078453}
+  m_Center: {x: 0.0003433466, y: 0.006861719, z: -0.0044607734}
+--- !u!65 &8005647183933251993
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5433516551340593747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.003232708, y: 0.029000001, z: 0.011999999}
+  m_Center: {x: -0.014758806, y: -0.0045000003, z: -0.004}

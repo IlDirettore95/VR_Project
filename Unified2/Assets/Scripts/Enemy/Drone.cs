@@ -48,7 +48,7 @@ public class Drone : Enemy
     [SerializeField] Light _externalLight;
     private LightFlickering lfInt;
     private LightFlickering lfExt;
-    private AudioSource _audio;
+    private AudioSource[] _audio;
 
     //Animation
     Animator _animator;
@@ -64,7 +64,7 @@ public class Drone : Enemy
         _animator = GetComponentInChildren<Animator>();
         lfInt = GetComponents<LightFlickering>()[0];
         lfExt = GetComponents<LightFlickering>()[1];
-        _audio = gameObject.GetComponent<AudioSource>();
+        _audio = gameObject.GetComponents<AudioSource>();
 
         rb.useGravity = false;
         rb.isKinematic = true;
@@ -81,13 +81,16 @@ public class Drone : Enemy
     {
         float playerDistance = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (!isAlive)
+        if (!isAlive && _currentState != DroneState.Dead)
         {
             _currentState = DroneState.Dead;
-            _internalLight.enabled = false;
-            _externalLight.enabled = false;
             lfInt.enabled = false;
             lfExt.enabled = false;
+            _internalLight.enabled = false;
+            _externalLight.enabled = false;
+            
+
+            _audio[1].Play();
         }
 
         switch (_currentState)  //Finite State Machine
@@ -333,7 +336,7 @@ public class Drone : Enemy
         int rand = rnd.Next(2);
         GameObject projectile = Instantiate(projectilePrefab, firePoints[rand].transform.position, firePoints[rand].transform.rotation);
         projectile.transform.LookAt(playerTransform);
-        _audio.Play();
+        _audio[0].Play();
     }
 
     //Handles collision damage
@@ -376,7 +379,11 @@ public class Drone : Enemy
                 stunned = true;
 
                 if (speed > impactVelocityThreashold)
+                {
                     Hurt((speed - impactVelocityThreashold));
+
+                    _audio[2].Play();
+                }
             }
         }
     }
@@ -388,6 +395,7 @@ public class Drone : Enemy
         if (isAlive)
         {
             if (_currentState == DroneState.Attack) CancelInvoke("Shoot");
+            else if (_currentState == DroneState.Guarding || _currentState == DroneState.Patrolling) Triggered();
 
             _currentState = DroneState.Attracted;
         }

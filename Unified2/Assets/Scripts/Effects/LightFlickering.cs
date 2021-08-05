@@ -7,16 +7,20 @@ public class LightFlickering : MonoBehaviour
     [SerializeField] private Light light;
     public float flickeringWait;
     private float nextTimeFlickering;
+    [SerializeField] private bool _enableLightOnDisable;
    
     void OnEnable()
     {
         nextTimeFlickering = Time.time + flickeringWait;
     }
 
+    
     private void OnDisable()
     {
-        light.enabled = true;
+        if(_enableLightOnDisable)
+            light.enabled = true;
     }
+    
 
     // Update is called once per frame
     void Update()

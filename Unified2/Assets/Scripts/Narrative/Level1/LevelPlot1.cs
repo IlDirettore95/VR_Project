@@ -84,11 +84,16 @@ public class LevelPlot1 : MonoBehaviour
     //Graphics
     private ObjectiveManager _objectiveManager;
 
+    //Audio
+    private MusicManager _musicManager;
+    [SerializeField] private AudioClip _level1Music;
+
     // Start is called before the first frame update
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _objectiveManager = GameObject.FindObjectOfType<ObjectiveManager>();
+        _musicManager = GameObject.FindObjectOfType<MusicManager>();
 
         _movementSystem = _player.GetComponent<MovementSystem>();
         _jetpack = _player.GetComponent<Jetpack>();
@@ -130,6 +135,8 @@ public class LevelPlot1 : MonoBehaviour
         _jetpackStationCollider = _jetpackStation.GetComponent<BoxCollider>();
 
         _jetpackStationCollider.enabled = false;
+
+        _musicManager.PlayMusicTransition(_level1Music, 6f, 1f);
     }
 
     // Update is called once per frame

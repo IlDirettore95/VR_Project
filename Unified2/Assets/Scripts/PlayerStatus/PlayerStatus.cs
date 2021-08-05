@@ -20,13 +20,13 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
     [SerializeField] private float MaxEnergy;
     [SerializeField] private AnalogGlitch _analogGlitch;
     [SerializeField] private DigitalGlitch _digitalGlitch;
-    
-    
 
     private float _health;
     private float _stamina;
     private float _fuel;
     private float _energy;
+
+    //FX
     private bool _hasGlitch;
     private float nextTimeHurtSound;
     [SerializeField] private float HurtSoundCooldown;
@@ -102,7 +102,6 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
             if (_health < 0) _health = 0;
             else
             {
-
                 if (!_hasGlitch)
                 {
                     _digitalGlitch.enabled = true;
@@ -116,14 +115,11 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
                     hurtGlitchStop = Time.time + HurtGlitchDuration;
                 }
                 
-                
-                
-                
                 if(Time.time > nextTimeHurtSound)
                 {
                     
                     nextTimeHurtSound = Time.time + HurtSoundCooldown;
-                    gameObject.GetComponent<PlayFootstepsSound>().Hurt();
+                    gameObject.GetComponent<PlayerSFX>().Hurt();
                 }
             }
 
@@ -131,7 +127,7 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
             {
                 _digitalGlitch.enabled = true;
                 _analogGlitch.enabled = true;
-                gameObject.GetComponent<PlayFootstepsSound>().Death();
+                gameObject.GetComponent<PlayerSFX>().Death();
 
                 isAlive = false;
                 GameEvent.isDead = true;
@@ -199,8 +195,6 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
         _energy += charge;
         if (_energy > MaxEnergy) _energy = MaxEnergy;
     }
-
-
 
     public void reset()
     {

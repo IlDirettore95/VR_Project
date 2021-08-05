@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject settings;
     [SerializeField] private GameObject loadingInterface;
     [SerializeField] private Image loadingProgressBar;
+    [SerializeField] private Button _continueButton;
 
     [SerializeField] private Dropdown drop;
     [SerializeField] private Text dropText;
@@ -20,6 +21,9 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         SaveData data = SaveSystem.Load("save");
         if (data != null)
         {
@@ -37,9 +41,11 @@ public class MainMenu : MonoBehaviour
             QualitySettings.SetQualityLevel(quality, true);
             //drop.value = dpValue;
 
-            SaveData newData = new SaveData("Level1", dpValue, quality);
+            SaveData newData = new SaveData("NewGame", dpValue, quality);
             SaveSystem.Save(newData, "save");
         }
+
+        ShowMenu();
     }
 
     public void NewGame()
@@ -61,6 +67,20 @@ public class MainMenu : MonoBehaviour
     public void HideMenu()
     {
         menu.SetActive(false);
+    }
+
+    private void ShowMenu()
+    {
+        menu.SetActive(true);
+
+        if (levelSys._currentLevel.ToString().Equals("NewGame"))
+        {
+            _continueButton.interactable = false;
+        }
+        else
+        {
+            _continueButton.interactable = true;
+        }
     }
 
     public void ShowLoadingScreen()
@@ -87,7 +107,7 @@ public class MainMenu : MonoBehaviour
     public void CloseSettings()
     {
         HideSettings();
-        menu.SetActive(true);
+        ShowMenu();
     }
 
     public void ChangeGraphics()
