@@ -158,7 +158,7 @@ public class GravityPower : MonoBehaviour
     {
         if (attracting)
         {
-            _animController.Release();
+            _animController.ForceRelease();
             
             StartCoroutine(ForcingRealease());
         }

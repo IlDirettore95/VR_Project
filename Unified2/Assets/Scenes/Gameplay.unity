@@ -6177,7 +6177,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3206729574268842156}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
@@ -15130,6 +15130,7 @@ MonoBehaviour:
   dp: {fileID: 7480779009493360601}
   dialogueBox: {fileID: 3013563499506707858}
   objectiveBox: {fileID: 8280921157433444900}
+  _mainMenuMusic: {fileID: 8300000, guid: dc81a7975be7d4d4e84c8149537952dc, type: 3}
 --- !u!1 &7480779009123707736
 GameObject:
   m_ObjectHideFlags: 0

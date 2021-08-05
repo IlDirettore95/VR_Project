@@ -52,6 +52,12 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("IsReleasing", false);
     }
 
+    public void ForceRelease()
+    {
+        StopThrowing();
+        Release();
+    }
+
     public void NextState()
     {
         if (moveSys.running && !powers.IsAttracting())

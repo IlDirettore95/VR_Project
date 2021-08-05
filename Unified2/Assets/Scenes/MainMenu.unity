@@ -509,6 +509,7 @@ MonoBehaviour:
   drop: {fileID: 2829107691203402388}
   dropText: {fileID: 2829107691467651920}
   levelSys: {fileID: 517323763}
+  _mainMenuMusic: {fileID: 8300000, guid: dc81a7975be7d4d4e84c8149537952dc, type: 3}
 --- !u!114 &517323763
 MonoBehaviour:
   m_ObjectHideFlags: 0
