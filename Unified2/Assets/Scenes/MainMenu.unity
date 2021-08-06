@@ -8,9 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 4d52cdf0de9241b48a3056d440d62a47
-  m_OcclusionCullingData: {fileID: 36300000, guid: 2c8c337139d9d3943a75d660eed345db,
-    type: 2}
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -509,7 +508,6 @@ MonoBehaviour:
   drop: {fileID: 2829107691203402388}
   dropText: {fileID: 2829107691467651920}
   levelSys: {fileID: 517323763}
-  _mainMenuMusic: {fileID: 8300000, guid: dc81a7975be7d4d4e84c8149537952dc, type: 3}
 --- !u!114 &517323763
 MonoBehaviour:
   m_ObjectHideFlags: 0
