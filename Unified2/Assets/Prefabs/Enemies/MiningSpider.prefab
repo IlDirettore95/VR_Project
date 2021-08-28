@@ -459,9 +459,9 @@ MonoBehaviour:
   patrollingPoints: []
   patrollingDistanceThreashold: 0.2
   guardingCooldown: 2
-  explosionDamage: 50
+  explosionDamage: 70
   explosionCooldown: 3
-  explosionRadius: 5
+  explosionRadius: 4.5
   explosionImpact: 10
   stunningDuration: 2
   light1: {fileID: 3704153373795099537}

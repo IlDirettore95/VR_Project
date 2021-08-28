@@ -6395,9 +6395,9 @@ MonoBehaviour:
   isGroundedThreashold: 0.1
   gravity: 9.8
   initialGravity: 9.8
-  jumpSpeed: 5
-  walkingSpeed: 4
-  runningSpeed: 7
+  jumpSpeed: 5.5
+  walkingSpeed: 4.5
+  runningSpeed: 7.5
   crouchingSpeed: 1.5
   fallingSpeed: 1
   runningBuildUp: 0.8
@@ -6408,6 +6408,7 @@ MonoBehaviour:
   crouchingBuildUp: 4
   minDeltaY: -80
   startFallingY: -Infinity
+  fallDamageMul: 5
   fallDamageThreashold: 5
   tiredThreashold: 0.5
   staminaConsumingRate: 30
@@ -6505,7 +6506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1008a625ca5dfc4483d7115ea8a5648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 20
+  MaxHealth: 100
   MaxStamina: 100
   MaxFuel: 120
   MaxEnergy: 100

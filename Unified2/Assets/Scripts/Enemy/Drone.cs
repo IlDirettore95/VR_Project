@@ -84,6 +84,8 @@ public class Drone : Enemy
         if (!isAlive && _currentState != DroneState.Dead)
         {
             _currentState = DroneState.Dead;
+            lfInt._enableLightOnDisable = false;
+            lfExt._enableLightOnDisable = false;
             lfInt.enabled = false;
             lfExt.enabled = false;
             _internalLight.enabled = false;

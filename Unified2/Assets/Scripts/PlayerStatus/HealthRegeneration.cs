@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*This class handles health recovery.
+ * Once all health is recovered this script disables itself
+ */
 public class HealthRegeneration : MonoBehaviour
 {
     public float regenerationCooldown;
@@ -10,6 +13,7 @@ public class HealthRegeneration : MonoBehaviour
 
     private PlayerStatus _playerStatus;
 
+    //This script must be enabled when conditions for stamina's recovery are in place.
     private void OnEnable()
     {
         nextTimeRegeneration = Time.time + regenerationCooldown;

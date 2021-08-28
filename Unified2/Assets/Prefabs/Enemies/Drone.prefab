@@ -395,7 +395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaID: 0
-  MaxHealth: 80
+  MaxHealth: 70
   walkingSpeed: 3
   triggeredSpeed: 6
   walkingSpeedBuildUp: 1
@@ -466,6 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   light: {fileID: 7925933800121385935}
   flickeringWait: 0.1
+  _enableLightOnDisable: 1
 --- !u!114 &2788456838768639847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   light: {fileID: 4483244552613691674}
   flickeringWait: 0.1
+  _enableLightOnDisable: 1
 --- !u!82 &7868856576663561578
 AudioSource:
   m_ObjectHideFlags: 0

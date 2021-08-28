@@ -73,7 +73,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         while (!started)
         {
-            TriggerDialogue();
+            dm.StartDialogue(dialogue, this);
             yield return new WaitForSeconds(0.5f);
         }
     }

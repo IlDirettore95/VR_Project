@@ -18,8 +18,6 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
     [SerializeField] private float MaxStamina;
     [SerializeField] private float MaxFuel;
     [SerializeField] private float MaxEnergy;
-    [SerializeField] private AnalogGlitch _analogGlitch;
-    [SerializeField] private DigitalGlitch _digitalGlitch;
 
     private float _health;
     private float _stamina;
@@ -27,13 +25,16 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
     private float _energy;
 
     //FX
+    [SerializeField] private AnalogGlitch _analogGlitch;
+    [SerializeField] private DigitalGlitch _digitalGlitch;
+
     private bool _hasGlitch;
     private float nextTimeHurtSound;
     [SerializeField] private float HurtSoundCooldown;
     [SerializeField] private float HurtGlitchDuration;
     private float hurtGlitchStop;
 
-    private HealthRegeneration _healRegeneration;
+    private HealthRegeneration _healthRegeneration;
 
     //player status
     private bool isAlive;
@@ -49,7 +50,7 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
 
         isAlive = true;
 
-        _healRegeneration = GetComponent<HealthRegeneration>();
+        _healthRegeneration = GetComponent<HealthRegeneration>();
     }
 
     public float GetMaxHealth() => MaxHealth;
@@ -133,8 +134,8 @@ public class PlayerStatus : MonoBehaviour, ReactiveEntity
                 GameEvent.isDead = true;
             }
        
-            _healRegeneration.enabled = false;
-            _healRegeneration.enabled = true;
+            _healthRegeneration.enabled = false;
+            _healthRegeneration.enabled = true;
         }
     }
 

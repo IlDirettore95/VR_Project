@@ -24,6 +24,7 @@ public class DoorAnimation : MonoBehaviour
             if (!_isOpen)
             {
                 _animator.SetBool("isOpening", true);
+                _audioSource.PlayDelayed(0.6f);
                 _isOpen = true;
             }
         }
@@ -36,6 +37,7 @@ public class DoorAnimation : MonoBehaviour
         if (pl != null)
         {
             _animator.SetBool("isOpening", false);
+            _audioSource.PlayDelayed(0.35f);
             _isOpen = false;
         }
     }

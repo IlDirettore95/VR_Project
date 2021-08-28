@@ -31,7 +31,7 @@ public class UnlockableDoorAnimation : MonoBehaviour
     [SerializeField] private ReflectionProbe _refProb2;
     
     private AudioSource _audioSource;
-    [SerializeField] private AudioClip doorOpening;
+    //[SerializeField] private AudioClip doorOpening;
     
     // Start is called before the first frame update
     void Start()
@@ -49,7 +49,7 @@ public class UnlockableDoorAnimation : MonoBehaviour
             if (!_isOpen)
             {
                 _animator.SetBool("isOpening", true);
-                _audioSource.PlayOneShot(doorOpening);
+                _audioSource.PlayDelayed(0.6f);
                 _isOpen = true;
             }
         }
@@ -62,7 +62,7 @@ public class UnlockableDoorAnimation : MonoBehaviour
         if (pl != null)
         {
             _animator.SetBool("isOpening", false);
-            _audioSource.PlayOneShot(doorOpening);
+            _audioSource.PlayDelayed(0.35f);
             _isOpen = false;
         }
     }

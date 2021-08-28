@@ -9,8 +9,6 @@ public class MusicManager : MonoBehaviour
     private AudioSource _audioSource;
     private AudioSource _auxAudioSource; //Used in transition
 
-    [SerializeField] AudioClip _mainMenuMusic;
-
     public static MusicManager instance;
 
     private void Awake()
@@ -26,37 +24,44 @@ public class MusicManager : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        _auxAudioSource = gameObject.AddComponent<AudioSource>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        _audioSource = gameObject.AddComponent<AudioSource>();
+        
         _audioSource.loop = true;
         _audioSource.spatialBlend = 0f;
         _audioSource.playOnAwake = false;
 
-        _auxAudioSource = gameObject.AddComponent<AudioSource>();
+        
         _auxAudioSource.loop = true;
         _auxAudioSource.spatialBlend = 0f;
         _auxAudioSource.playOnAwake = false;
 
-
-        //MainMenuMusic
-        PlayMusic(_mainMenuMusic, 0f);
     }
 
     public void PlayMusic(AudioClip audioClip, float delay)
     {
-        _audioSource.clip = audioClip;
-        _audioSource.PlayDelayed(delay);
+        if(!audioClip.Equals(_audioSource.clip))
+        {
+            _audioSource.clip = audioClip;
+            _audioSource.PlayDelayed(delay);
+        }
+        
     }
 
     public void PlayMusicFade(AudioClip audioClip, float fadeInDuration, float delay)
     {
-        _audioSource.clip = audioClip;
-        _audioSource.volume = 0f;
-        _audioSource.PlayDelayed(delay);
-        StartCoroutine(FadeIn(_audioSource, fadeInDuration));
+        if (!audioClip.Equals(_audioSource.clip))
+        {
+            _audioSource.clip = audioClip;
+            _audioSource.volume = 0f;
+            _audioSource.PlayDelayed(delay);
+            StartCoroutine(FadeIn(_audioSource, fadeInDuration));
+        }
     }
 
     public void StopMusic()
@@ -71,12 +76,18 @@ public class MusicManager : MonoBehaviour
 
     public void PlayMusicTransition(AudioClip audioClip, float fadeInDuration, float fadeOutDuration)
     {
-        StartCoroutine(Transition(audioClip, fadeInDuration, fadeOutDuration));
+        if (!audioClip.Equals(_audioSource.clip))
+        {
+            StartCoroutine(Transition(audioClip, fadeInDuration, fadeOutDuration));
+        }
     }
 
     public void PlayMusicOverlapTransition(AudioClip audioClip, float fadeInDuration, float fadeOutDuration, float delayIn)
     {
-        StartCoroutine(OverlapTransition(audioClip, fadeInDuration, fadeOutDuration, delayIn));
+        if (!audioClip.Equals(_audioSource.clip))
+        {
+            StartCoroutine(OverlapTransition(audioClip, fadeInDuration, fadeOutDuration, delayIn));
+        }
     }
 
     private IEnumerator FadeIn(AudioSource source, float duration)
@@ -107,50 +118,55 @@ public class MusicManager : MonoBehaviour
 
     private IEnumerator Transition(AudioClip nextMusic, float fadeInDuration, float fadeOutDuration)
     {
-        float incrementPerSecond = 1 / fadeInDuration;
-        float decrementPerSecond = 1 / fadeOutDuration;
-
-        StartCoroutine(FadeOut(_audioSource, fadeOutDuration));
-        while (true)
+        if (!nextMusic.Equals(_audioSource.clip))
         {
-            if (_audioSource.volume == 0)
+            float incrementPerSecond = 1 / fadeInDuration;
+            float decrementPerSecond = 1 / fadeOutDuration;
+
+            StartCoroutine(FadeOut(_audioSource, fadeOutDuration));
+            while (true)
             {
-                break;
+                if (_audioSource.volume == 0)
+                {
+                    break;
+                }
+                else yield return null;
             }
-            else yield return null;
+
+            _audioSource.clip = nextMusic;
+            _audioSource.Play();
+
+            StartCoroutine(FadeIn(_audioSource, fadeInDuration));
         }
-
-        _audioSource.clip = nextMusic;
-        _audioSource.Play();
-
-        StartCoroutine(FadeIn(_audioSource, fadeInDuration));
     }
 
     private IEnumerator OverlapTransition(AudioClip nextMusic, float fadeInDuration, float fadeOutDuration, float delayIn)
     {
-
-        _auxAudioSource.volume = 0f;
-        _auxAudioSource.clip = nextMusic;
-        _auxAudioSource.PlayDelayed(delayIn);
-
-        StartCoroutine(FadeOut(_audioSource, fadeOutDuration));
-
-        yield return new WaitForSeconds(delayIn);
-
-        StartCoroutine(FadeIn(_auxAudioSource, fadeInDuration));
-
-        while (true)
+        if (!nextMusic.Equals(_audioSource.clip))
         {
-            if (_auxAudioSource.volume == 1)
-            {
-                break;
-            }
-            else yield return null;
-        }
+            _auxAudioSource.volume = 0f;
+            _auxAudioSource.clip = nextMusic;
+            _auxAudioSource.PlayDelayed(delayIn);
 
-        AudioSource tmp = new AudioSource();
-        tmp = _audioSource;
-        _audioSource = _auxAudioSource;
-        _auxAudioSource = tmp;
+            StartCoroutine(FadeOut(_audioSource, fadeOutDuration));
+
+            yield return new WaitForSeconds(delayIn);
+
+            StartCoroutine(FadeIn(_auxAudioSource, fadeInDuration));
+
+            while (true)
+            {
+                if (_auxAudioSource.volume == 1)
+                {
+                    break;
+                }
+                else yield return null;
+            }
+
+            AudioSource tmp = new AudioSource();
+            tmp = _audioSource;
+            _audioSource = _auxAudioSource;
+            _auxAudioSource = tmp;
+        }
     }
 }

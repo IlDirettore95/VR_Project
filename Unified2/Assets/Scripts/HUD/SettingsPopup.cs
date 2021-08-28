@@ -33,7 +33,11 @@ public class SettingsPopup : MonoBehaviour
 
     //Audio
     private MusicManager _musicManager;
-    [SerializeField] private AudioClip _mainMenuMusic;
+
+    private void Awake()
+    {
+        _musicManager = GameObject.FindObjectOfType<MusicManager>();
+    }
 
     public void open()
     {
@@ -127,7 +131,8 @@ public class SettingsPopup : MonoBehaviour
         AudioListener.pause = false;
         Time.timeScale = 1f;
 
-        _musicManager.PlayMusicTransition(_mainMenuMusic, 6f, 1f);
+        //Audio
+        _musicManager.StopMusic();
 
         SceneManager.LoadScene("MainMenu");
     }
@@ -158,8 +163,6 @@ public class SettingsPopup : MonoBehaviour
 
     private void Start()
     {
-        _musicManager = GameObject.FindObjectOfType<MusicManager>();
-
         SaveData data = SaveSystem.Load("save");
         int dpValue = data.dp;
         dp.value = dpValue;

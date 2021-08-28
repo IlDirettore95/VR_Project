@@ -66,6 +66,7 @@ public class MovementSystem : MonoBehaviour
 
     //Fall Damage
     [HideInInspector] public float startFallingY = float.NegativeInfinity;
+    public float fallDamageMul;
     public float fallDamageThreashold;
 
     //Stamina handling for running
@@ -139,7 +140,7 @@ public class MovementSystem : MonoBehaviour
             }
 
             //Crouching status
-            if (Input.GetKeyDown(KeyCode.C) && !crouching && canControl) SettingCrouchStatus();
+            if (Input.GetKeyDown(KeyCode.C) && !crouching && canControl) SettingCrouchState();
 
             //Is the player moving?
             if ((deltaX != 0 || deltaZ != 0))
@@ -214,7 +215,7 @@ public class MovementSystem : MonoBehaviour
     private void HandlingFallDamage()
     {
         float fallDistance = startFallingY - transform.position.y;
-        if (fallDistance > fallDamageThreashold) _playerStatus.Hurt(fallDistance - fallDamageThreashold);
+        if (fallDistance > fallDamageThreashold) _playerStatus.Hurt((fallDistance - fallDamageThreashold)*fallDamageMul);
         startFallingY = float.NegativeInfinity;
     }
 
@@ -251,7 +252,7 @@ public class MovementSystem : MonoBehaviour
 
     /*Setting the crouch status when the player precc the crouch button
      */
-    private void SettingCrouchStatus()
+    private void SettingCrouchState()
     {
         //Crouching state changes
 

@@ -50207,3 +50207,4 @@ MonoBehaviour:
   - Explore
   - Eliminate all enemies
   - Access to the industrial department
+  _level1Music: {fileID: 8300000, guid: 7460cb764d0de814d89b1d66de027990, type: 3}

@@ -7,7 +7,7 @@ public class LightFlickering : MonoBehaviour
     [SerializeField] private Light light;
     public float flickeringWait;
     private float nextTimeFlickering;
-    [SerializeField] private bool _enableLightOnDisable;
+    public bool _enableLightOnDisable;
    
     void OnEnable()
     {
@@ -17,8 +17,7 @@ public class LightFlickering : MonoBehaviour
     
     private void OnDisable()
     {
-        if(_enableLightOnDisable)
-            light.enabled = true;
+        if(_enableLightOnDisable) light.enabled = true;
     }
     
 

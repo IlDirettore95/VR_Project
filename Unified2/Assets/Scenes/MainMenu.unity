@@ -508,6 +508,7 @@ MonoBehaviour:
   drop: {fileID: 2829107691203402388}
   dropText: {fileID: 2829107691467651920}
   levelSys: {fileID: 517323763}
+  _mainMenuMusic: {fileID: 8300000, guid: 192ac979467e15e4dbe349bd1271f8ad, type: 3}
 --- !u!114 &517323763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3368,7 +3369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15aecb655bc6de49b10812531f2cb4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainMenuMusic: {fileID: 8300000, guid: dc81a7975be7d4d4e84c8149537952dc, type: 3}
 --- !u!1 &7473172089292663418
 GameObject:
   m_ObjectHideFlags: 0

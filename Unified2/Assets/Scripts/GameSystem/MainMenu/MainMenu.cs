@@ -17,6 +17,9 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private LevelSystem levelSys;
 
+    [SerializeField] private AudioClip _mainMenuMusic;
+    private MusicManager _musicManager;
+
     List<AsyncOperation> scenesToLoad = new List<AsyncOperation>();
 
     private void Start()
@@ -45,6 +48,9 @@ public class MainMenu : MonoBehaviour
             SaveSystem.Save(newData, "save");
         }
 
+        //Play MenuMusic
+        _musicManager = GameObject.FindObjectOfType<MusicManager>();
+        _musicManager.PlayMusicFade(_mainMenuMusic, 0.3f, 0f);
         ShowMenu();
     }
 
