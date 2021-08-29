@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExitDemo : MonoBehaviour
 {
@@ -17,6 +18,6 @@ public class ExitDemo : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        Loader.Load("MainMenu");
+        SceneManager.LoadScene("MainMenu");
     }
 }

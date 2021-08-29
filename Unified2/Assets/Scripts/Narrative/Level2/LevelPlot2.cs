@@ -67,12 +67,17 @@ public class LevelPlot2 : MonoBehaviour
     private MusicManager _musicManager;
     [SerializeField] private AudioClip _level1Music;
 
+    //EnableingCanvas
+    private Canvas _canvas;
+
     // Start is called before the first frame update
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _objectiveManager = GameObject.FindObjectOfType<ObjectiveManager>();
         _musicManager = GameObject.FindObjectOfType<MusicManager>();
+        _canvas = GameObject.FindObjectOfType<Canvas>();
+        _canvas.enabled = true;
 
         _movementSystem = _player.GetComponent<MovementSystem>();
         _jetpack = _player.GetComponent<Jetpack>();

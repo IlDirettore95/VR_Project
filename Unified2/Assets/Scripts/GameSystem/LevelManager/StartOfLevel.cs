@@ -11,6 +11,7 @@ public class StartOfLevel : MonoBehaviour
     [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private string _previousLevel;
     [SerializeField] private GameObject _plot;
+    
 
     private void Start()
     {

@@ -85,6 +85,13 @@ public class UnlockableDoorAnimation : MonoBehaviour
 
             _refProb2.RenderProbe();
         }
+
+        if(_isOpen)
+        {
+            _animator.SetBool("isOpening", false);
+            _audioSource.PlayDelayed(0.35f);
+            _isOpen = false;
+        }  
     }
 
     public void UnLockDoor()
