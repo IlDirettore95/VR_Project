@@ -47,7 +47,6 @@ public class Jetpack : MonoBehaviour
         //Not Grounded
         else
         {
-            if (_movementSystem.wasGrounded) _fuelRecover.enabled = false;
 
             if (Input.GetButtonDown("Jump") && _playerStatus.HasEnoughFuel() && _movementSystem.canControl)
             {
@@ -62,6 +61,8 @@ public class Jetpack : MonoBehaviour
                 _movementSystem.SetYSpeed(jetpackYSpeed);
 
                 _playerStatus.ConsumeFuel(fActivationCost);
+
+                _fuelRecover.enabled = false;
 
                 if (!_playerStatus.HasEnoughFuel())
                 {

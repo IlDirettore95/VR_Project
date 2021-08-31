@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /* This class handles the player gravity powers
- * Attraction:
+ * Attraction: attract an an entity that can be moved around while there's enough energy
  * Releasing: 
- * Launching: launching an entity while attracted
+ * Launching: launching an entity while attracted while there's enough energy
  */
 public class GravityPower : MonoBehaviour
 {
