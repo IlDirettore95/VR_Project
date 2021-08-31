@@ -18,12 +18,14 @@ public class StartOfLevel : MonoBehaviour
         _levelSys = GameObject.FindObjectOfType<LevelSystem>();
         _player = GameObject.FindGameObjectWithTag("Player");
 
+        // Check if the player has just reached the new level in game or if the level was loaded from the menu
         if (_levelSys._currentLevel.ToString() != _previousLevel)
         {
             WarpPlayer();
         }
     }
 
+    // Used when the player reaches the new level zone while playing
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -36,7 +38,7 @@ public class StartOfLevel : MonoBehaviour
         }
     }
 
-    
+    // Activate the current level story plot
     private void InitializePlot()
     {
         switch (_levelSys._currentLevel.ToString())
@@ -61,7 +63,7 @@ public class StartOfLevel : MonoBehaviour
         }
     }
     
-
+    // Try to teleport the player to the current level spawn point
     private void WarpPlayer()
     {
         _player.transform.position = _spawnPoint.transform.position;
@@ -70,6 +72,7 @@ public class StartOfLevel : MonoBehaviour
         StartCoroutine(EnableMovSys());
     }
 
+    // Enables the two player cams (Main camera and Arms Camera). Used to avoid to see the player arms during the loading screen, due to the loading of the Gameplay scene before the level scene
     private void EnableCams()
     {
         Camera[] cams = _player.GetComponentsInChildren<Camera>();
@@ -90,6 +93,9 @@ public class StartOfLevel : MonoBehaviour
             EnableCams();
 
             _player.transform.GetComponent<CharacterController>().enabled = true;
+
+            yield return null; // Wait another frame to avoid any possible conflict between the CharacterController and the MovementSystem.
+
             _player.transform.GetComponent<MovementSystem>().enabled = true;
 
             InitializePlot();
