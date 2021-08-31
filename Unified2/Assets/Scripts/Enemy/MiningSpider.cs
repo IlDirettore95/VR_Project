@@ -20,15 +20,15 @@ public class MiningSpider : Enemy
     private SpiderState _currentState;
 
     //Explosion
-    public float explosionDamage;
-    public float explosionCooldown;
+    [SerializeField] private float explosionDamage;
+    [SerializeField] private float explosionCooldown;
     private float nextTimeExplosion;
-    public float explosionRadius;
-    public float explosionImpact;
+    [SerializeField] private float explosionRadius;
+    [SerializeField] private float explosionImpact;
 
     //Throwed stunning
-    public float stunningDuration;
-    private float nextTimeStunning;
+    [SerializeField] private float stunningDuration;
+    [SerializeField] private float nextTimeStunning;
 
     //Exploding procedure animation
     private LightFlickering fLight1;
@@ -45,8 +45,8 @@ public class MiningSpider : Enemy
     private AudioSource timer;
 
     //Rotation of sight before moving
-    public float sightRotationThreashold;
-    public float rotationSpeed;
+    [SerializeField] private float sightRotationThreashold;
+    [SerializeField] private float rotationSpeed;
 
     //Animation
     SpiderAnimationController _animController;
@@ -77,21 +77,6 @@ public class MiningSpider : Enemy
 
         _currentState = SpiderState.Guarding;
     }
-
-    /*
-    public override void Initialize()
-    {
-        _agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.isKinematic = true;
-        playerTransform = GameObject.Find("Player").transform;
-        _playerStatus = playerTransform.GetComponent<PlayerStatus>();
-        _health = MaxHealth;
-        target = GameObject.Find("ObjectGrabber").transform;
-        enemyManager = GameObject.Find("EnemiesManager").GetComponent<EnemiesManager>();
-    }
-    */
 
     // Update is called once per frame
     void Update()
@@ -230,6 +215,7 @@ public class MiningSpider : Enemy
         //Kill the spider
         isAlive = false;
 
+        //Finds other reactive entities nearby that will react to the explosion
         Collider[] collisions = Physics.OverlapSphere(transform.position, explosionRadius);
         for (int i = 0; i < collisions.Length; i++)
         {
@@ -350,6 +336,8 @@ public class MiningSpider : Enemy
 
     }
 
+    /* Before transit to the trigger state check if the player is currently visible for the enemy. 
+     * This avoid that an enemy can transit on the chasing state when the player is nearby but in another room or hided behind a big object. */
     private void FindPlayer()
     {
         Vector3 direzione = -(transform.position - playerTransform.position).normalized;

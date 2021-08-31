@@ -27,8 +27,10 @@ public class MainMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        //Try to load a save file
         SaveData data = SaveSystem.Load("save");
-        if (data != null)
+
+        if (data != null) //If a save file exists set the correct graphycs settings
         {
             int dpValue = data.dp;
             int quality = data.quality;
@@ -36,13 +38,12 @@ public class MainMenu : MonoBehaviour
             QualitySettings.SetQualityLevel(quality, true);
             drop.value = dpValue;
         }
-        else
+        else //If it not exists, creates a new one with the Ultra graphycs setting by default
         {
             int dpValue = 2;
-            int quality = 5;
+            int quality = 5; //The 5 int corresponds to the Ultra preset
 
             QualitySettings.SetQualityLevel(quality, true);
-            //drop.value = dpValue;
 
             SaveData newData = new SaveData("NewGame", dpValue, quality);
             SaveSystem.Save(newData, "save");
@@ -51,6 +52,7 @@ public class MainMenu : MonoBehaviour
         //Play MenuMusic
         _musicManager = GameObject.FindObjectOfType<MusicManager>();
         _musicManager.PlayMusicFade(_mainMenuMusic, 0.3f, 0f);
+
         ShowMenu();
     }
 
@@ -116,6 +118,7 @@ public class MainMenu : MonoBehaviour
         ShowMenu();
     }
 
+    //Change the graphycs preset and updates the save file
     public void ChangeGraphics()
     {
         int quality = 5;    //default : ultra

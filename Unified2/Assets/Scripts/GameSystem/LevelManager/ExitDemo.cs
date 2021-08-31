@@ -13,7 +13,7 @@ public class ExitDemo : MonoBehaviour
 
     private IEnumerator EndGame()
     {
-        yield return new WaitForSeconds(6f);
+        yield return new WaitForSeconds(10f);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

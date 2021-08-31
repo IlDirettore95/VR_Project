@@ -19,14 +19,13 @@ public class Drone : Enemy
     }
 
     //Attack
-    public float attackDamage;
-    public float fireCooldown;
-    public float fireRate;
+    [SerializeField] private float attackDamage;
+    [SerializeField] private float fireCooldown;
+    [SerializeField] private float fireRate;
     private float nextTimeFire;
     private float nextTimeCooldown;
-    //private bool coolDown = false;
-    public Transform[] firePoints;
-    public GameObject projectilePrefab;
+    [SerializeField] private Transform[] firePoints;
+    [SerializeField] private GameObject projectilePrefab;
 
     //AI
     private Vector3 lastPlayerPosition;
@@ -35,13 +34,9 @@ public class Drone : Enemy
     private readonly float posBuildUp = 1f;
     private float pos;
     private DroneState _currentState;
-    public GameObject _droneBody;
+    [SerializeField] private GameObject _droneBody;
     private bool navmeshFinded = false;
     private bool stunned = false;
-
-    //Rotation of sight before moving
-    public float sightRotationThreashold;
-    public float rotationSpeed;
 
     //VFX
     [SerializeField] Light _internalLight;
@@ -51,7 +46,7 @@ public class Drone : Enemy
     private AudioSource[] _audio;
 
     //Animation
-    Animator _animator;
+    private Animator _animator;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +79,7 @@ public class Drone : Enemy
         if (!isAlive && _currentState != DroneState.Dead)
         {
             _currentState = DroneState.Dead;
+
             lfInt._enableLightOnDisable = false;
             lfExt._enableLightOnDisable = false;
             lfInt.enabled = false;
@@ -91,7 +87,6 @@ public class Drone : Enemy
             _internalLight.enabled = false;
             _externalLight.enabled = false;
             
-
             _audio[1].Play();
         }
 
@@ -113,22 +108,6 @@ public class Drone : Enemy
 
                     FindPlayer();
 
-                    /*
-                    if (playerDistance <= triggerPlayerDistance)
-                    {
-                        //_droneBody.transform.LookAt(playerTransform);
-                        nextTimeFire = Time.time + fireCooldown;
-                        lastPlayerPosition = playerTransform.position;
-                        TriggerArea(areaID);
-                        _animator.SetBool("Triggered", true);
-
-                        _internalLight.color = new Color(1, 0, 0, 1);
-                        _externalLight.color = new Color(1, 0, 0, 1);
-
-                        _currentState = DroneState.Chasing;
-                    }
-                    */
-
                     break;
                 }
             case DroneState.Patrolling:
@@ -141,38 +120,19 @@ public class Drone : Enemy
 
                     FindPlayer();
 
-                    /*
-                    if (playerDistance <= triggerPlayerDistance)
-                    {
-                        //_droneBody.transform.LookAt(playerTransform);
-                        nextTimeFire = Time.time + fireCooldown;
-                        lastPlayerPosition = playerTransform.position;
-                        TriggerArea(areaID);
-                        _animator.SetBool("Triggered", true);
-
-                        _internalLight.color = new Color(1, 0, 0, 1);
-                        _externalLight.color = new Color(1, 0, 0, 1);
-
-                        _currentState = DroneState.Chasing;
-                    }
-                    */
-
                     break;
                 }
             case DroneState.Chasing:
                 {
                     _droneBody.transform.rotation = transform.rotation;
 
-                    
                     //Lerping speed to triggered speed
                     currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
                     speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
                     _agent.speed = speed;
                     
-
                     if (playerDistance > attackDistance)
                     {
-                        
                         _agent.SetDestination(playerTransform.position);
 
                         if (_agent.hasPath)
@@ -181,44 +141,10 @@ public class Drone : Enemy
                         }
                         else
                         {
-                            _agent.SetDestination(lastPlayerPosition);
+                            _agent.SetDestination(lastPlayerPosition); // If a path for the agent is not available, the enemy will go to the last known player position
                         }
-                        
-
-                        /*
-                        //Following the player
-                        //Calculate the angle beetween the enemy's transform.forward and the player
-                        float angle = Vector3.SignedAngle((playerTransform.position - transform.position), transform.forward, Vector3.up);
-                        if (angle < -sightRotationThreashold || angle > sightRotationThreashold)
-                        {
-                            //turn left or turn right
-                            _agent.isStopped = true;
-                            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation((playerTransform.position - transform.position).normalized), rotationSpeed * Time.deltaTime);
-                        }
-                        else
-                        {
-                            _agent.isStopped = false;
-
-                            //Lerping speed to triggered speed
-                            currentStateBuildUp += triggeredSpeedBuildUp * Time.deltaTime;
-                            speed = Mathf.Lerp(walkingSpeed, triggeredSpeed, currentStateBuildUp);
-                            _agent.speed = speed;
-
-                            //Finding the player
-                            _agent.SetDestination(playerTransform.position);
-
-                            if (_agent.hasPath)
-                            {
-                                lastPlayerPosition = _agent.destination;
-                            }
-                            else
-                            {
-                                _agent.SetDestination(lastPlayerPosition);
-                            }
-                        }
-                        */
                     }
-                    else if(!_agent.isOnOffMeshLink)
+                    else if(!_agent.isOnOffMeshLink) // If the drone is not on an offMeshLink, the player is inside his attack range and is visible, transit to the attack state
                     {
                         Vector3 direzione = -(transform.position - playerTransform.position).normalized;
 
@@ -239,16 +165,18 @@ public class Drone : Enemy
                 }
             case DroneState.Attack:
                 {
+                    // Rotate the drone model towards the player
                     _droneBody.transform.LookAt(playerTransform);
 
+                    // Rotate the navmesh agent towards the player. Is important for the navmesh agent that his orientation along the Y axis remains hortogonal to the surface. 
                     float angle = Vector3.SignedAngle((playerTransform.position - transform.position), transform.forward, Vector3.up);
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation((playerTransform.position - transform.position).normalized), 1);
 
                     if (playerDistance <= attackDistance)
                     {
-                        if (Time.time >= nextTimeFire)
+                        if (Time.time >= nextTimeFire) // The Time class was used to implement a cooldown before the next shoots burst
                         {
-                            InvokeRepeating("Shoot", 0f, 1f / fireRate);
+                            InvokeRepeating("Shoot", 0f, 1f / fireRate); // The InvokeRepeating handles the shoots burst
                             nextTimeCooldown = Time.time + fireCooldown;
                             nextTimeFire = Time.time + 2 * fireCooldown;
                         }
@@ -268,18 +196,6 @@ public class Drone : Enemy
                 }
             case DroneState.Attracted:
                 {
-                    /*
-                    RaycastHit hit;
-                    if (Physics.SphereCast(transform.position, 0.3f, transform.forward, out hit))
-                    {
-                        if (hit.transform.gameObject.tag.Equals("Player") && Time.time >= nextTimeFire)
-                        {
-                            Shoot();
-                            nextTimeFire = Time.time + fireCooldown;
-                        }
-                    }
-                    */
-
                     break;
                 }
             case DroneState.Throwed:
@@ -321,10 +237,10 @@ public class Drone : Enemy
                     }
                     else
                     {
+                        // After a suitable navmesh surface is finded, the current position is lerped to the correct position where the navmesh agent can be safely reactivated
                         pos += posBuildUp * Time.deltaTime;
                         transform.position = Vector3.Lerp(startPos, targetPos, pos);
                         _agent.transform.position = Vector3.Lerp(startPos, targetPos, pos);
-                        //_droneBody.transform.position = Vector3.Lerp(startPos, targetPos, pos);
                     }
 
                     break;
@@ -332,6 +248,7 @@ public class Drone : Enemy
         }
     }
 
+    // Execute a single laser shoot
     private void Shoot()
     {
         System.Random rnd = new System.Random();
@@ -423,6 +340,7 @@ public class Drone : Enemy
         }
     }
 
+    // Used to avoid the surrounding obstacle while searching a navmesh surface in the recovery state
     private void Scan(Vector3 direction)
     {
         RaycastHit hit;
@@ -443,6 +361,7 @@ public class Drone : Enemy
         }
     }
 
+    // Try to find a suitable navmesh surface under the drone in order to reactive the NavMesh agent
     private void FindNavMesh()
     {
         transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -456,13 +375,13 @@ public class Drone : Enemy
                 targetPos = hit.point + Vector3.up * _agent.baseOffset;
                 pos = 0;
                 rb.isKinematic = true;
-                //if(startPos != targetPos) navmeshFinded = true;
-                navmeshFinded = true;
-                //if (navmeshFinded) Debug.Log("NavMesh finded!");
+                navmeshFinded = true; 
             }
         }
     }
 
+    /* Before transit to the trigger state check if the player is currently visible for the enemy. 
+     * This avoid that an enemy can transit on the chasing state when the player is nearby but in another room or hided behind a big object. */
     private void FindPlayer()
     {
         Vector3 direzione = -(transform.position - playerTransform.position).normalized;
@@ -488,6 +407,7 @@ public class Drone : Enemy
 
             _animator.SetBool("Triggered", true);
 
+            // Changes the color of the drone's light from blue to red
             _internalLight.color = new Color(1, 0, 0, 1);
             _externalLight.color = new Color(1, 0, 0, 1);
 
@@ -495,7 +415,8 @@ public class Drone : Enemy
         }
     }
 
-    private IEnumerator StartRecovery()
+    // After 2 seconds of stunning, the drone start to recover his normal flying position
+    private IEnumerator StartRecovery() 
     {
         yield return new WaitForSeconds(2f);
 

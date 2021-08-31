@@ -14,7 +14,7 @@ public class LevelSystem : MonoBehaviour
         EndGame
     }
 
-    public Scene _currentLevel;
+    public Scene _currentLevel; //This is the current level zone reached by the player. When the game is played for the first time is value is NewGame
 
     [SerializeField] GameObject _saveLogo;
 
@@ -37,8 +37,6 @@ public class LevelSystem : MonoBehaviour
 
     public void Continue()
     {
-        SaveData data = SaveSystem.Load("save");
-
         Loader.Load(_currentLevel.ToString());
     }
 
@@ -99,7 +97,7 @@ public class LevelSystem : MonoBehaviour
 
     private void Save()
     {
-        _saveLogo.SetActive(true);
+        _saveLogo.SetActive(true); //Active the save icon to alerts the player that the game is saving and the game must not be quitted until it finishes.
 
         SaveData oldData = SaveSystem.Load("save");
         int dp = oldData.dp;
@@ -112,6 +110,7 @@ public class LevelSystem : MonoBehaviour
         StartCoroutine(EndSave());
     }
 
+    //Used to hide the save icon after two seconds has passed.
     private IEnumerator EndSave()
     {
         yield return new WaitForSeconds(2f);

@@ -41,6 +41,7 @@ public static class Loader
 
         scenesToLoad.Clear();
 
+        //Load the scenes asynchronously in additive mode
         scenesToLoad.Add(SceneManager.LoadSceneAsync("Gameplay"));
         scenesToLoad.Add(SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive));
 

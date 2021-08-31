@@ -129,6 +129,7 @@ public abstract class Enemy : MonoBehaviour, ReactiveObject
         throw new System.NotImplementedException();
     }
 
+    //Trigger all the enemies nearby in a certain range which are placed in the same area
     protected IEnumerator TriggerArea(int areaID)
     {
         yield return new WaitForSeconds(0.1f);
