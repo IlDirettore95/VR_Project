@@ -39,7 +39,15 @@ public class InteractiveRayCast : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_gravityPower.enabled && _gravityPower.IsAttracting())//rado al suolo tutto
+        /*
+        * hud image managing, this is attraction case so you can see
+        * throw and release hud images, everything else must be disabled.
+        * Note that image enabling on screen is mutually exclusive,
+        * only one image could be enabled at once.
+        * It doesn't need to check raycasting at this stage because 
+        * we are checking gravityPower's booleans.
+        */
+        if(_gravityPower.enabled && _gravityPower.IsAttracting())
         {
             InteractionGeneric.enabled = false;
             InteractionKey.enabled = false;
@@ -47,6 +55,7 @@ public class InteractiveRayCast : MonoBehaviour
             InteractionBox_throw.enabled = true;
             
         }
+        //this is the case of raycasting check within a certain range, starting from the camera point.
         else
         {
             Vector3 point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
@@ -56,8 +65,8 @@ public class InteractiveRayCast : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 GameObject go = hit.collider.gameObject;
-                //Debug.Log("sparo raggio");
                 
+                //switch collision check, the switch sound and animation are fine tuned with coroutines.
                 if (go.GetComponent<Switch>() && hit.distance <= interactionRange)
                 {
                     InteractionKey.enabled = true;
@@ -76,6 +85,7 @@ public class InteractiveRayCast : MonoBehaviour
                     }
                     
                 }
+                //terminal collision check, the same as switch.
                 else if(go.tag.Equals("Terminal") && hit.distance <= interactionRange)
                 {
                     InteractionGeneric.enabled = true;
@@ -91,15 +101,15 @@ public class InteractiveRayCast : MonoBehaviour
                         go.GetComponent<AudioSource>().PlayDelayed(0.6f);
                     }
                 }
-            
-                else if (hit.distance <= attractionRange && _gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))//caso inter. cassa
+                //this is the case of raycasting hitting some grabbable obj that can have one of theese component attached.
+                else if (hit.distance <= attractionRange && _gravityPower.enabled && (go.GetComponentInParent<ReactiveBox>() || go.GetComponentInParent<Enemy>() || go.GetComponentInParent<ReactiveFan>() || go.GetComponentInParent<ReactiveGrid>()))
                 {
-                   InteractionBox_attract.enabled = true;//gestire immagini
+                   InteractionBox_attract.enabled = true; //inform the player that he can grab the obj on screen.
                    InteractionKey.enabled = false;
                    InteractionBox_throw.enabled = false;
                    InteractionGeneric.enabled = false;
                 }
-                
+                //exit case to disable the images.
                 else 
                 {
                     InteractionKey.enabled = false;
@@ -119,8 +129,11 @@ public class InteractiveRayCast : MonoBehaviour
                     }
                 }
             }
-            
-            else//rado al suolo tutto
+            /*
+             * this is the case where you pass with the mouse from an interactable obj
+             * to none of them. Must disable all images on screen.
+             */
+            else
             {
             
                 InteractionKey.enabled = false;

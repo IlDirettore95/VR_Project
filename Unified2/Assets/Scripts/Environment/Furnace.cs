@@ -27,6 +27,7 @@ public class Furnace : MonoBehaviour, InteractableObject
 
         light = fire.GetComponentInChildren<Light>();
 
+        //disable particle system if fire is not enabled, enable viceversa.
         if (!isEnabled)
         {
             foreach (var ps in fires)
@@ -43,7 +44,7 @@ public class Furnace : MonoBehaviour, InteractableObject
         
         
     }
-
+    //damage the player while he stay in the fire collider or react to fire for ReactiveObject
     public void OnTriggerStay(Collider other)
     {
         

@@ -20,6 +20,12 @@ public class SwitchController : MonoBehaviour
         objToInteract= interactObj.GetComponent<InteractableObject>();
     }
 
+    /*
+     * switch controller enables the interactive object only if the inner combination
+     * is equal to all switch combination. This system forms a binary code that must be
+     * setted in order to enable that object. If you have only one dummy to check this is
+     * the case of only on-off simple mechanism.
+     */
     // Update is called once per frame
     void Update()
     {
@@ -33,7 +39,7 @@ public class SwitchController : MonoBehaviour
                     canEnable = false;
                     break;
                 }
-
+                
                 if (i == numberOfChildrens - 1)
                 {
                     canEnable = true;
