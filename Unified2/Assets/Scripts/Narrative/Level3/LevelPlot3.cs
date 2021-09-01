@@ -6,10 +6,10 @@ using UnityEngine;
  * Every state rappresent an objective:
  *      Start: setting
  *      Introduction: first dialogue
- *      AppreachToGarbageShoot
- *      DeactivateTheIncinerator
- *      AccessToIncenerator
- *      ExitFromIncinerator
+ *      ApproachToGarbageShoot: the player went near to the garbage chute and Prometheus turned on the furnace
+ *      DeactivateTheIncinerator: the player must find a way to deactivate the furnace
+ *      AccessToIncenerator: the player can acces to the incinerator
+ *      ExitFromIncinerator: the player must jump into the incinerator without dying to proceed
  */
 
 public class LevelPlot3 : MonoBehaviour

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* This script handles dialogues which want to be displayed using the dialogue system 
+ */
 public class DialogueManager : MonoBehaviour
 {
     private Queue<string> sentences;
@@ -39,6 +41,9 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
+    /* This method is called when something wants to start a dialogue
+     * The manager will start it only if the player is not onDialogue already or if he is falling
+     */
     public void StartDialogue (Dialogue dialogue, DialogueTrigger trigger)
     {
         if((!onDialogue && !trigger.skippable && !trigger.destroyable)  || (!onDialogue && _movementSystem.IsLanded()))
@@ -49,6 +54,8 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /*When a dialogue starts the player can only move the his view, he cannot move or use the gravity poers
+     */
     private void InitializeDialogue(Dialogue dialogue, DialogueTrigger trigger)
     {
         _currentTrigger = trigger;
@@ -78,6 +85,8 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    /* This method will display the next dialogue sentence 
+     */
     public void DisplayNextSentence()
     {
         _continueBox.SetActive(false);
@@ -103,6 +112,8 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(TypeSentence(words[1])); 
     }
 
+    /*The following coroutine will display the current sentence using an animation that display a letter per frame
+     */
     IEnumerator TypeSentence (string sentence)
     {
         textArea.text = "";

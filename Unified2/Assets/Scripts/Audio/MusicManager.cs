@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*This class handles game music
+ * Other scripts can ask to it to play a music or transition from the current one to the next one
  */
 public class MusicManager : MonoBehaviour
 {
